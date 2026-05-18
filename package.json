@@ -1,0 +1,11 @@
+{
+  "name": "graceandgrithomeco",
+  "version": "1.0.0",
+  "description": "Grace and Grit Home Co. website",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
