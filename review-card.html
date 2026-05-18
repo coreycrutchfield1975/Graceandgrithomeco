@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -84,7 +84,7 @@ input:focus{outline:none;border-color:var(--burg);}
   </div>
   <div class="field">
     <label>Phone Number (shown on card)</label>
-    <input type="text" id="phoneNum" value="(573) 555-0100" oninput="updateCards()">
+    <input type="text" id="phoneNum" value="573-778-7309" oninput="updateCards()">
   </div>
 
   <div class="action-row">
@@ -108,7 +108,7 @@ function qrSrc(url) {
 
 function buildCard() {
   const url = document.getElementById('reviewUrl').value.trim() || DEFAULT_URL;
-  const phone = document.getElementById('phoneNum').value.trim() || '(573) 555-0100';
+  const phone = document.getElementById('phoneNum').value.trim() || '573-778-7309';
   return `
     <div class="card">
       <div class="card-top">

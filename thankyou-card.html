@@ -143,7 +143,7 @@ If you ever need us again â€” whether it's a small repair or a big new project â
 Thank you again for choosing Grace &amp; Grit. It truly means the world to us.</div>
       <div class="card-closing">
         <div class="closing-script" id="cardSigned">Michelle &amp; the Grace &amp; Grit Team</div>
-        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; (573) 555-0100</div>
+        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; 573-778-7309</div>
       </div>
     </div>
     <div class="accent-strip"></div>
@@ -174,7 +174,7 @@ function copyMessage() {
   const project = document.getElementById('projectDesc').value.trim();
   const custom = document.getElementById('customMsg').value.trim();
   const signed = document.getElementById('signedBy').value.trim() || 'Grace & Grit Home Co.';
-  const msg = `Dear ${first},\n\n${custom || defaultMsg(first, project)}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | (573) 555-0100`;
+  const msg = `Dear ${first},\n\n${custom || defaultMsg(first, project)}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | 573-778-7309`;
 
   navigator.clipboard.writeText(msg).then(() => {
     const note = document.getElementById('copiedNote');
