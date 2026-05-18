@@ -144,63 +144,12 @@ footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;
 </footer>
 
 <script>
-// ============================================================
-// ADD YOUR PROJECTS HERE
-// before / after can be image URLs or left empty ("")
-// cat options: outdoor | interior | kitchen | repair
-// ============================================================
-const PROJECTS = [
-  {
-    title: 'Back Deck Rebuild',
-    cat: 'outdoor',
-    catLabel: 'Outdoor',
-    desc: 'Full tear-down and rebuild of a rotting deck. New treated lumber, composite decking, and custom railing.',
-    before: '',
-    after: ''
-  },
-  {
-    title: 'Kitchen Cabinet Refresh',
-    cat: 'kitchen',
-    catLabel: 'Kitchen & Bath',
-    desc: 'Painted and refinished original oak cabinets, replaced hardware, and added under-cabinet lighting.',
-    before: '',
-    after: ''
-  },
-  {
-    title: 'Master Bath Tile',
-    cat: 'kitchen',
-    catLabel: 'Kitchen & Bath',
-    desc: 'Full shower re-tile with new floor, niche, and modern fixtures.',
-    before: '',
-    after: ''
-  },
-  {
-    title: 'Living Room Flooring',
-    cat: 'interior',
-    catLabel: 'Interior',
-    desc: 'Removed old carpet and installed luxury vinyl plank throughout the main living area.',
-    before: '',
-    after: ''
-  },
-  {
-    title: 'Front Porch Repair',
-    cat: 'repair',
-    catLabel: 'Repair',
-    desc: 'Replaced rotted porch boards, painted columns, and added new storm door.',
-    before: '',
-    after: ''
-  },
-  {
-    title: 'Fence Installation',
-    cat: 'outdoor',
-    catLabel: 'Outdoor',
-    desc: '140 ft of privacy fence installed with double-gate access on corner lot.',
-    before: '',
-    after: ''
-  }
-];
-
-// ============================================================
+// Projects are managed through the admin gallery page and stored in localStorage.
+function loadProjects() {
+  try { return JSON.parse(localStorage.getItem('gg_gallery_v1')) || []; }
+  catch(e) { return []; }
+}
+const PROJECTS = loadProjects();
 
 function placeholder(label) {
   return `<div class="img-placeholder">
