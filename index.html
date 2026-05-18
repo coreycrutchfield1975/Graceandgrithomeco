@@ -144,8 +144,8 @@ section{padding:5rem 1.5rem;}
 .work-tags{display:flex;gap:0.5rem;flex-wrap:wrap;}
 .tag{background:var(--cream-dark);border:1px solid var(--border);border-radius:20px;padding:0.28rem 0.85rem;font-size:0.72rem;font-weight:700;color:var(--text-light);letter-spacing:0.05em;text-transform:uppercase;}
 .about-photos-ph{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
-.photo-ph{background:var(--cream-dark);border:2px dashed var(--border);border-radius:14px;height:190px;display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:0.8rem;font-weight:600;text-align:center;padding:1rem;}
-.photo-ph.ph-wide{grid-column:1/-1;height:130px;}
+.about-photos-ph img{width:100%;border-radius:14px;object-fit:cover;height:195px;box-shadow:0 6px 24px rgba(0,0,0,0.15);}
+.about-photos-ph img:last-child{grid-column:1/-1;height:210px;}
 
 /* SCHEDULE */
 .sched-sec{background:var(--charcoal);position:relative;overflow:hidden;}
@@ -235,9 +235,9 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
   <div class="wrap">
     <div class="about-grid">
       <div class="about-photos about-photos-ph">
-        <div class="photo-ph"><span>Add a photo of Michelle</span></div>
-        <div class="photo-ph"><span>Add a photo of Michelle</span></div>
-        <div class="photo-ph ph-wide"><span>Add a photo of Michelle</span></div>
+        <img src="/images/michelle1.jpg" alt="Michelle and family with horses">
+        <img src="/images/michelle2.jpg" alt="Michelle horseback riding">
+        <img src="/images/michelle3.jpg" alt="Michelle on the farm with a calf">
       </div>
       <div>
         <p class="lbl lbl-burg">About Michelle</p>
