@@ -368,10 +368,12 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
     <div class="sched-grid">
       <div class="form-wrap">
         <form id="sf" onsubmit="doSubmit(event)">
-          <div class="fg"><label>Full Name</label><input type="text" placeholder="Jane Smith" required></div>
+          <input type="hidden" name="_subject" value="New Service Request — Grace &amp; Grit Home Co.">
+          <input type="hidden" name="contact_method" id="contactMethod" value="Call / Text">
+          <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Jane Smith" required></div>
           <div class="row2">
-            <div class="fg"><label>Phone Number</label><input type="tel" placeholder="573-000-0000" required></div>
-            <div class="fg"><label>Email Address</label><input type="email" placeholder="you@email.com"></div>
+            <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="573-000-0000" required></div>
+            <div class="fg"><label>Email Address</label><input type="email" name="_replyto" placeholder="you@email.com"></div>
           </div>
           <div class="fg">
             <label>Preferred Contact Method</label>
@@ -383,7 +385,7 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
           </div>
           <div class="fg">
             <label>Service Needed</label>
-            <select required>
+            <select name="service" required>
               <option value="" disabled selected>— Choose a Service —</option>
               <optgroup label="🌿 Outdoor &amp; Land Services">
                 <option>Bushhogging</option>
@@ -404,10 +406,10 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
             </select>
           </div>
           <div class="row2">
-            <div class="fg"><label>Preferred Date</label><input type="date" id="d1" required></div>
+            <div class="fg"><label>Preferred Date</label><input type="date" id="d1" name="preferred_date" required></div>
             <div class="fg">
               <label>Preferred Time</label>
-              <select required>
+              <select name="preferred_time" required>
                 <option value="" disabled selected>Select Time</option>
                 <option>Morning (8am – 10am)</option>
                 <option>Mid-Morning (10am – 12pm)</option>
@@ -417,10 +419,11 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
               </select>
             </div>
           </div>
-          <div class="fg"><label>Alternate Date (optional)</label><input type="date" id="d2"></div>
-          <div class="fg"><label>Tell Me About Your Project</label><textarea placeholder="Describe what you need — acreage size, room details, type of work — anything helps!"></textarea></div>
+          <div class="fg"><label>Alternate Date (optional)</label><input type="date" id="d2" name="alternate_date"></div>
+          <div class="fg"><label>Tell Me About Your Project</label><textarea name="message" placeholder="Describe what you need — acreage size, room details, type of work — anything helps!"></textarea></div>
           <button type="submit" class="sub-btn" id="subBtn">✉️ Send My Request</button>
           <div class="ok-msg" id="okMsg">🎉 Your request has been sent! Michelle will reach out within 24 hours to confirm your appointment and provide a free estimate.</div>
+          <div class="err-msg" id="errMsg" style="display:none;color:#c0392b;text-align:center;margin-top:10px;font-weight:700;">⚠️ Something went wrong. Please email us directly at mcrutchfield2012@gmail.com</div>
         </form>
       </div>
       <div class="info-side">
@@ -467,14 +470,35 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
 </footer>
 
 <script>
-function pick(btn){document.querySelectorAll('.mb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
-function doSubmit(e){
+function pick(btn){
+  document.querySelectorAll('.mb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('contactMethod').value=btn.textContent.replace(/[^\w\s\/]/g,'').trim();
+}
+async function doSubmit(e){
   e.preventDefault();
-  document.getElementById('subBtn').disabled=true;
-  document.getElementById('subBtn').textContent='✅ Request Sent!';
-  const m=document.getElementById('okMsg');m.style.display='block';
-  document.getElementById('sf').querySelectorAll('input,select,textarea').forEach(el=>el.disabled=true);
-  setTimeout(()=>m.scrollIntoView({behavior:'smooth',block:'center'}),150);
+  const btn=document.getElementById('subBtn');
+  btn.disabled=true;
+  btn.textContent='⏳ Sending…';
+  try{
+    const res=await fetch('https://formspree.io/f/xredgqjd',{
+      method:'POST',
+      body:new FormData(document.getElementById('sf')),
+      headers:{Accept:'application/json'}
+    });
+    if(res.ok){
+      btn.textContent='✅ Request Sent!';
+      const m=document.getElementById('okMsg');m.style.display='block';
+      document.getElementById('sf').querySelectorAll('input,select,textarea').forEach(el=>el.disabled=true);
+      setTimeout(()=>m.scrollIntoView({behavior:'smooth',block:'center'}),150);
+    }else{
+      throw new Error('failed');
+    }
+  }catch{
+    btn.disabled=false;
+    btn.textContent='✉️ Send My Request';
+    document.getElementById('errMsg').style.display='block';
+  }
 }
 const today=new Date().toISOString().split('T')[0];
 document.getElementById('d1').min=today;document.getElementById('d2').min=today;
