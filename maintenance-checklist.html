@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Seasonal Maintenance Checklist | Grace & Grit Home Co.</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --burg:#7a2a35;--burg-light:#a84050;
+  --sage:#6a8568;--sage-dark:#4a6349;--sage-light:#9ab897;
+  --cream:#fdf8f0;--cream-dark:#f0e8d8;
+  --gold:#b8894a;--gold-light:#d4a96a;
+  --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
+  --white:#fff;--border:#d4c4b0;
+  --spring:#6a8568;--summer:#b8894a;--fall:#7a2a35;--winter:#3a5f7a;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);}
+nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;}
+.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
+.nav-logo span{color:#fff;font-style:italic;}
+.nav-right{margin-left:auto;display:flex;gap:1rem;}
+.nav-link{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
+.nav-link:hover{color:var(--gold-light);}
+
+/* EDITOR */
+.editor{max-width:720px;margin:2rem auto;padding:0 1.25rem;}
+.editor h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--burg);margin-bottom:0.3rem;}
+.editor p{font-size:0.84rem;color:var(--text-light);margin-bottom:1.5rem;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:520px){.field-row{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:0.3rem;}
+label{font-size:0.75rem;font-weight:700;color:var(--text-light);letter-spacing:0.05em;text-transform:uppercase;}
+input,select{border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 0.85rem;font-family:'Nunito',sans-serif;font-size:0.92rem;color:var(--text);background:var(--white);}
+input:focus,select:focus{outline:none;border-color:var(--burg);}
+.action-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.25rem;}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.75rem 1.75rem;border-radius:40px;font-weight:800;font-size:0.88rem;letter-spacing:0.03em;transition:all 0.22s;cursor:pointer;border:none;font-family:'Nunito',sans-serif;}
+.btn-burg{background:var(--burg);color:#fff;}
+.btn-burg:hover{background:var(--burg-light);transform:translateY(-2px);}
+
+/* CHECKLIST PAGE */
+.cl-page{max-width:800px;margin:2rem auto 4rem;padding:0 1.25rem;}
+.cl-header{background:linear-gradient(135deg,var(--charcoal),#3d1e28);border-radius:16px 16px 0 0;padding:2rem 2rem 1.5rem;color:var(--white);display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;}
+.cl-header-left h1{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:0.2rem;}
+.cl-header-left h1 em{color:var(--gold-light);font-style:italic;}
+.cl-header-left p{font-size:0.78rem;color:rgba(255,255,255,0.55);letter-spacing:0.06em;text-transform:uppercase;}
+.cl-header-right{text-align:right;font-size:0.8rem;color:rgba(255,255,255,0.65);}
+.cl-header-right strong{display:block;color:var(--gold-light);font-size:0.9rem;margin-bottom:0.15rem;}
+.cl-client-info{background:var(--cream-dark);border-left:4px solid var(--gold);border-right:4px solid var(--gold);padding:0.85rem 1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cl-client-info span{font-size:0.82rem;color:var(--text-light);}
+.cl-client-info strong{color:var(--text);}
+
+/* SEASON BLOCKS */
+.seasons{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+@media(max-width:560px){.seasons{grid-template-columns:1fr;}}
+.season{padding:1.5rem 1.75rem;border:1px solid var(--border);}
+.season:nth-child(1){border-top:none;border-left:none;border-bottom-color:var(--border);}
+.season:nth-child(2){border-top:none;border-right:none;}
+.season:nth-child(3){border-bottom:none;border-left:none;}
+.season:nth-child(4){border-bottom:none;border-right:none;}
+@media(max-width:560px){
+  .season{border-left:none;border-right:none;}
+  .season:first-child{border-top:none;}
+  .season:last-child{border-bottom:none;}
+}
+.season-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem;}
+.season-icon{font-size:1.4rem;}
+.season-title{font-family:'Playfair Display',serif;font-size:1.05rem;}
+.season:nth-child(1) .season-title{color:var(--spring);}
+.season:nth-child(2) .season-title{color:var(--summer);}
+.season:nth-child(3) .season-title{color:var(--fall);}
+.season:nth-child(4) .season-title{color:var(--winter);}
+
+.checklist{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}
+.checklist li{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.83rem;color:var(--text);line-height:1.4;}
+.checklist li input[type="checkbox"]{width:15px;height:15px;margin-top:0.15rem;flex-shrink:0;accent-color:var(--burg);cursor:pointer;}
+
+/* FOOTER */
+.cl-footer{background:var(--charcoal);border-radius:0 0 16px 16px;padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;}
+.cl-footer-left{font-size:0.78rem;color:rgba(255,255,255,0.5);}
+.cl-footer-right{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:0.85rem;font-style:italic;}
+
+@media print{
+  nav,.editor,.action-row{display:none!important;}
+  body{background:#fff;}
+  .cl-page{max-width:100%;margin:0;padding:0;}
+  .cl-header{border-radius:0;}
+  .cl-footer{border-radius:0;}
+  .checklist li input[type="checkbox"]{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{margin:0.4in;size:letter;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/">Grace &amp; <span>Grit</span> Home Co.</a>
+  <div class="nav-right">
+    <a class="nav-link" href="/admin.html">&#8592; Admin</a>
+  </div>
+</nav>
+
+<div class="editor">
+  <h2>Seasonal Maintenance Checklist</h2>
+  <p>Personalize for a client and print. A great leave-behind after every completed job — keeps your name front of mind all year.</p>
+  <div class="field-row">
+    <div class="field">
+      <label>Client Name</label>
+      <input type="text" id="clientName" value="The Johnson Family" oninput="updateCl()">
+    </div>
+    <div class="field">
+      <label>Property Address</label>
+      <input type="text" id="clientAddr" value="123 Elm St, Poplar Bluff, MO" oninput="updateCl()">
+    </div>
+  </div>
+  <div class="field-row">
+    <div class="field">
+      <label>Prepared By</label>
+      <input type="text" id="prepBy" value="Grace &amp; Grit Home Co." oninput="updateCl()">
+    </div>
+    <div class="field">
+      <label>Year</label>
+      <input type="text" id="clYear" oninput="updateCl()">
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-burg" onclick="window.print()">&#128438; Print Checklist</button>
+  </div>
+</div>
+
+<div class="cl-page">
+  <div class="cl-header">
+    <div class="cl-header-left">
+      <h1>Home <em>Maintenance</em> Checklist</h1>
+      <p>Seasonal Guide for Your Property</p>
+    </div>
+    <div class="cl-header-right">
+      <strong>Grace &amp; Grit Home Co.</strong>
+      Poplar Bluff, MO<br>
+      (573) 555-0100
+    </div>
+  </div>
+  <div class="cl-client-info">
+    <span><strong>Prepared for:</strong> <span id="dispClient">The Johnson Family</span></span>
+    <span><strong>Property:</strong> <span id="dispAddr">123 Elm St, Poplar Bluff, MO</span></span>
+    <span><strong>Year:</strong> <span id="dispYear"></span></span>
+  </div>
+
+  <div class="seasons">
+
+    <!-- SPRING -->
+    <div class="season">
+      <div class="season-header">
+        <span class="season-icon">&#127800;</span>
+        <span class="season-title">Spring</span>
+      </div>
+      <ul class="checklist">
+        <li><input type="checkbox"> <span>Inspect roof for winter damage, missing shingles</span></li>
+        <li><input type="checkbox"> <span>Clean gutters and downspouts</span></li>
+        <li><input type="checkbox"> <span>Check exterior caulking around windows &amp; doors</span></li>
+        <li><input type="checkbox"> <span>Inspect deck or porch for rot, loose boards, or nails</span></li>
+        <li><input type="checkbox"> <span>Test and reset GFCI outlets</span></li>
+        <li><input type="checkbox"> <span>Service HVAC / replace air filter</span></li>
+        <li><input type="checkbox"> <span>Check sump pump is operational</span></li>
+        <li><input type="checkbox"> <span>Inspect and clean dryer vent</span></li>
+        <li><input type="checkbox"> <span>Test smoke and CO detectors</span></li>
+        <li><input type="checkbox"> <span>Flush hot water heater sediment</span></li>
+        <li><input type="checkbox"> <span>Inspect foundation for cracks or settling</span></li>
+        <li><input type="checkbox"> <span>Power wash siding, driveway, or walkways</span></li>
+      </ul>
+    </div>
+
+    <!-- SUMMER -->
+    <div class="season">
+      <div class="season-header">
+        <span class="season-icon">&#9728;&#65039;</span>
+        <span class="season-title">Summer</span>
+      </div>
+      <ul class="checklist">
+        <li><input type="checkbox"> <span>Check A/C unit — clean coils, ensure drainage</span></li>
+        <li><input type="checkbox"> <span>Inspect window and door screens for tears</span></li>
+        <li><input type="checkbox"> <span>Trim trees and shrubs away from house</span></li>
+        <li><input type="checkbox"> <span>Inspect and seal driveway cracks</span></li>
+        <li><input type="checkbox"> <span>Test outdoor outlets and lighting</span></li>
+        <li><input type="checkbox"> <span>Check sprinkler / irrigation system</span></li>
+        <li><input type="checkbox"> <span>Inspect attic for signs of moisture or pests</span></li>
+        <li><input type="checkbox"> <span>Grease garage door hinges and tracks</span></li>
+        <li><input type="checkbox"> <span>Check weatherstripping on all doors</span></li>
+        <li><input type="checkbox"> <span>Inspect crawl space vents</span></li>
+        <li><input type="checkbox"> <span>Clean refrigerator coils</span></li>
+        <li><input type="checkbox"> <span>Service lawn equipment</span></li>
+      </ul>
+    </div>
+
+    <!-- FALL -->
+    <div class="season">
+      <div class="season-header">
+        <span class="season-icon">&#127810;</span>
+        <span class="season-title">Fall</span>
+      </div>
+      <ul class="checklist">
+        <li><input type="checkbox"> <span>Inspect and clean chimney / fireplace</span></li>
+        <li><input type="checkbox"> <span>Service heating system before first use</span></li>
+        <li><input type="checkbox"> <span>Drain and store garden hoses; shut off exterior spigots</span></li>
+        <li><input type="checkbox"> <span>Clean gutters after leaves fall</span></li>
+        <li><input type="checkbox"> <span>Inspect roof again before winter</span></li>
+        <li><input type="checkbox"> <span>Caulk any gaps around windows, doors, pipes</span></li>
+        <li><input type="checkbox"> <span>Check attic insulation and ventilation</span></li>
+        <li><input type="checkbox"> <span>Replace furnace filter</span></li>
+        <li><input type="checkbox"> <span>Test smoke and CO detectors; replace batteries</span></li>
+        <li><input type="checkbox"> <span>Winterize sprinkler system</span></li>
+        <li><input type="checkbox"> <span>Seal gaps where pests could enter</span></li>
+        <li><input type="checkbox"> <span>Store patio furniture or cover for winter</span></li>
+      </ul>
+    </div>
+
+    <!-- WINTER -->
+    <div class="season">
+      <div class="season-header">
+        <span class="season-icon">&#10052;&#65039;</span>
+        <span class="season-title">Winter</span>
+      </div>
+      <ul class="checklist">
+        <li><input type="checkbox"> <span>Know where your main water shutoff is located</span></li>
+        <li><input type="checkbox"> <span>Insulate exposed pipes in unheated spaces</span></li>
+        <li><input type="checkbox"> <span>Keep thermostat at 55°F+ when away</span></li>
+        <li><input type="checkbox"> <span>Check roof after heavy snowfall for ice dams</span></li>
+        <li><input type="checkbox"> <span>Clear snow from HVAC exhaust / intake vents</span></li>
+        <li><input type="checkbox"> <span>Test garage door auto-reverse safety feature</span></li>
+        <li><input type="checkbox"> <span>Check fire extinguisher charge</span></li>
+        <li><input type="checkbox"> <span>Inspect for drafts around outlets on exterior walls</span></li>
+        <li><input type="checkbox"> <span>Run water in rarely-used fixtures to prevent freezing</span></li>
+        <li><input type="checkbox"> <span>Stock emergency supplies (flashlights, batteries)</span></li>
+        <li><input type="checkbox"> <span>Review homeowner's insurance policy</span></li>
+        <li><input type="checkbox"> <span>Schedule spring projects now — book early!</span></li>
+      </ul>
+    </div>
+
+  </div><!-- end seasons -->
+
+  <div class="cl-footer">
+    <div class="cl-footer-left">
+      Prepared by: <span id="dispPrepBy">Grace &amp; Grit Home Co.</span> &bull; Questions? Call (573) 555-0100 &bull; We're here to help all year long.
+    </div>
+    <div class="cl-footer-right">Built with Grace. Done with Grit.</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('clYear').value = new Date().getFullYear();
+document.getElementById('dispYear').textContent = new Date().getFullYear();
+
+function updateCl() {
+  document.getElementById('dispClient').textContent = document.getElementById('clientName').value || 'Homeowner';
+  document.getElementById('dispAddr').textContent = document.getElementById('clientAddr').value || '';
+  document.getElementById('dispYear').textContent = document.getElementById('clYear').value || '';
+  document.getElementById('dispPrepBy').textContent = document.getElementById('prepBy').value || 'Grace & Grit Home Co.';
+}
+</script>
+</body>
+</html>

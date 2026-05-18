@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Our Work | Grace & Grit Home Co.</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --burg:#7a2a35;--burg-dark:#541c23;--burg-light:#a84050;
+  --sage:#6a8568;--sage-dark:#4a6349;
+  --cream:#fdf8f0;--cream-dark:#f0e8d8;
+  --gold:#b8894a;--gold-light:#d4a96a;
+  --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
+  --white:#fff;--border:#d4c4b0;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);backdrop-filter:blur(8px);box-shadow:0 2px 18px rgba(0,0,0,0.4);}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.5rem;}
+.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.15rem;font-weight:700;text-decoration:none;}
+.nav-logo span{color:var(--white);font-style:italic;}
+.nav-links{display:flex;gap:1.4rem;list-style:none;}
+.nav-links a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.82rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-light);}
+.nav-cta{background:var(--burg)!important;color:var(--white)!important;padding:0.4rem 1rem;border-radius:20px;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--white);border-radius:2px;}
+@media(max-width:760px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:var(--charcoal);flex-direction:column;padding:1rem 1.5rem;gap:0.7rem;}
+  .nav-links.open{display:flex;}
+  .hamburger{display:flex;}
+}
+
+/* PAGE HERO */
+.gallery-hero{padding:8rem 1.5rem 3.5rem;text-align:center;background:linear-gradient(180deg,rgba(44,36,24,0.04) 0%,var(--cream) 100%);}
+.gallery-hero .badge{display:inline-block;background:rgba(184,137,74,0.15);border:1px solid rgba(184,137,74,0.4);color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 1.2rem;border-radius:20px;margin-bottom:1.2rem;}
+.gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);color:var(--charcoal);line-height:1.2;margin-bottom:0.75rem;}
+.gallery-hero h1 em{color:var(--burg);font-style:italic;}
+.gallery-hero p{color:var(--text-light);font-size:0.95rem;max-width:520px;margin:0 auto;}
+
+/* FILTER TABS */
+.filter-bar{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;padding:1rem 1.5rem 2rem;}
+.filter-btn{padding:0.45rem 1.2rem;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;color:var(--text-light);cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;}
+.filter-btn:hover,.filter-btn.active{background:var(--burg);border-color:var(--burg);color:var(--white);}
+
+/* GALLERY GRID */
+.gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem 5rem;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.75rem;}
+@media(max-width:500px){.gallery-grid{grid-template-columns:1fr;}}
+
+/* PROJECT CARD */
+.project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(44,36,24,0.08);transition:transform 0.22s,box-shadow 0.22s;}
+.project-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(44,36,24,0.14);}
+.project-card[data-cat].hidden{display:none;}
+
+/* BEFORE/AFTER SLIDER */
+.slider-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;cursor:col-resize;user-select:none;}
+.slider-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.slider-after{clip-path:inset(0 50% 0 0);}
+.slider-divider{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--white);transform:translateX(-50%);z-index:3;pointer-events:none;}
+.slider-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;background:var(--white);border-radius:50%;box-shadow:0 2px 12px rgba(0,0,0,0.25);z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.slider-handle svg{width:18px;height:18px;color:var(--burg);}
+.ba-labels{position:absolute;bottom:0.75rem;left:0;right:0;display:flex;justify-content:space-between;padding:0 0.75rem;z-index:5;pointer-events:none;}
+.ba-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;background:rgba(44,36,24,0.65);color:var(--white);padding:0.2rem 0.55rem;border-radius:4px;}
+
+/* PLACEHOLDER (no image) */
+.img-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;background:var(--cream-dark);}
+.img-placeholder svg{width:36px;height:36px;color:var(--border);}
+.img-placeholder span{font-size:0.72rem;color:var(--text-light);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+
+/* CARD INFO */
+.card-info{padding:1.1rem 1.25rem 1.25rem;}
+.card-tag{display:inline-block;font-size:0.68rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--charcoal);margin-bottom:0.3rem;}
+.card-desc{font-size:0.82rem;color:var(--text-light);line-height:1.55;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:4rem 1rem;color:var(--text-light);}
+.empty-state svg{width:48px;height:48px;color:var(--border);margin-bottom:1rem;}
+.empty-state p{font-size:0.9rem;}
+
+/* CTA STRIP */
+.cta-strip{background:linear-gradient(135deg,var(--burg-dark),var(--burg));padding:3.5rem 1.5rem;text-align:center;}
+.cta-strip h2{font-family:'Playfair Display',serif;color:var(--white);font-size:1.8rem;margin-bottom:0.75rem;}
+.cta-strip h2 em{color:var(--gold-light);font-style:italic;}
+.cta-strip p{color:rgba(255,255,255,0.72);font-size:0.9rem;margin-bottom:1.75rem;}
+.btn-white{display:inline-block;padding:0.85rem 2.2rem;border-radius:40px;background:var(--white);color:var(--burg);font-weight:800;font-size:0.93rem;text-decoration:none;transition:all 0.22s;letter-spacing:0.03em;}
+.btn-white:hover{background:var(--cream-dark);transform:translateY(-2px);}
+
+footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;padding:2rem 1rem;font-size:0.78rem;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><span>Grace &amp;</span> Grit Home Co.</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#outdoor">Outdoor</a></li>
+      <li><a href="/#indoor">Home Services</a></li>
+      <li><a href="/gallery.html" class="active">Our Work</a></li>
+      <li><a href="/#schedule" class="nav-cta">Schedule Now</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="gallery-hero">
+  <div class="badge">Project Gallery</div>
+  <h1>Built with <em>Grace.</em><br>Done with Grit.</h1>
+  <p>Real homes. Real results. Browse our before &amp; after transformations and see what we can do for yours.</p>
+</div>
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-filter="all" onclick="filterGallery(this,'all')">All Projects</button>
+  <button class="filter-btn" data-filter="outdoor" onclick="filterGallery(this,'outdoor')">Outdoor</button>
+  <button class="filter-btn" data-filter="interior" onclick="filterGallery(this,'interior')">Interior</button>
+  <button class="filter-btn" data-filter="kitchen" onclick="filterGallery(this,'kitchen')">Kitchen &amp; Bath</button>
+  <button class="filter-btn" data-filter="repair" onclick="filterGallery(this,'repair')">Repairs</button>
+</div>
+
+<div class="gallery-wrap">
+  <div class="gallery-grid" id="galleryGrid">
+    <!-- Cards rendered by JS from PROJECTS array below -->
+  </div>
+</div>
+
+<div class="cta-strip">
+  <h2>Ready to transform<br><em>your home?</em></h2>
+  <p>Let's talk about what Grace &amp; Grit can do for you.</p>
+  <a href="/#schedule" class="btn-white">Get a Free Estimate</a>
+</div>
+
+<footer>
+  &copy; 2025 Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; All Rights Reserved
+</footer>
+
+<script>
+// ============================================================
+// ADD YOUR PROJECTS HERE
+// before / after can be image URLs or left empty ("")
+// cat options: outdoor | interior | kitchen | repair
+// ============================================================
+const PROJECTS = [
+  {
+    title: 'Back Deck Rebuild',
+    cat: 'outdoor',
+    catLabel: 'Outdoor',
+    desc: 'Full tear-down and rebuild of a rotting deck. New treated lumber, composite decking, and custom railing.',
+    before: '',
+    after: ''
+  },
+  {
+    title: 'Kitchen Cabinet Refresh',
+    cat: 'kitchen',
+    catLabel: 'Kitchen & Bath',
+    desc: 'Painted and refinished original oak cabinets, replaced hardware, and added under-cabinet lighting.',
+    before: '',
+    after: ''
+  },
+  {
+    title: 'Master Bath Tile',
+    cat: 'kitchen',
+    catLabel: 'Kitchen & Bath',
+    desc: 'Full shower re-tile with new floor, niche, and modern fixtures.',
+    before: '',
+    after: ''
+  },
+  {
+    title: 'Living Room Flooring',
+    cat: 'interior',
+    catLabel: 'Interior',
+    desc: 'Removed old carpet and installed luxury vinyl plank throughout the main living area.',
+    before: '',
+    after: ''
+  },
+  {
+    title: 'Front Porch Repair',
+    cat: 'repair',
+    catLabel: 'Repair',
+    desc: 'Replaced rotted porch boards, painted columns, and added new storm door.',
+    before: '',
+    after: ''
+  },
+  {
+    title: 'Fence Installation',
+    cat: 'outdoor',
+    catLabel: 'Outdoor',
+    desc: '140 ft of privacy fence installed with double-gate access on corner lot.',
+    before: '',
+    after: ''
+  }
+];
+
+// ============================================================
+
+function placeholder(label) {
+  return `<div class="img-placeholder">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+      <polyline points="21 15 16 10 5 21"/>
+    </svg>
+    <span>${label}</span>
+  </div>`;
+}
+
+function renderCard(p) {
+  const hasImages = p.before || p.after;
+  const beforeContent = p.before
+    ? `<img class="slider-img" src="${p.before}" alt="Before" loading="lazy">`
+    : placeholder('Before Photo');
+  const afterContent = p.after
+    ? `<img class="slider-img slider-after" src="${p.after}" alt="After" loading="lazy">`
+    : `<div class="slider-img slider-after" style="display:flex;">${placeholder('After Photo')}</div>`;
+
+  return `
+  <div class="project-card" data-cat="${p.cat}">
+    <div class="slider-wrap" data-slider>
+      ${beforeContent}
+      ${afterContent}
+      <div class="slider-divider"></div>
+      <div class="slider-handle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/><polyline points="9 18 15 12 9 6" transform="translate(6,0)"/>
+        </svg>
+      </div>
+      <div class="ba-labels">
+        <span class="ba-label">Before</span>
+        <span class="ba-label">After</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-tag">${p.catLabel}</div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-desc">${p.desc}</div>
+    </div>
+  </div>`;
+}
+
+function renderGallery(filter = 'all') {
+  const grid = document.getElementById('galleryGrid');
+  const filtered = filter === 'all' ? PROJECTS : PROJECTS.filter(p => p.cat === filter);
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <path d="M9 9l6 6M15 9l-6 6"/>
+      </svg>
+      <p>No projects in this category yet. Check back soon!</p>
+    </div>`;
+  } else {
+    grid.innerHTML = filtered.map(renderCard).join('');
+  }
+  initSliders();
+}
+
+function filterGallery(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGallery(cat);
+}
+
+// ---- Before/After Slider Logic ----
+function initSliders() {
+  document.querySelectorAll('[data-slider]').forEach(wrap => {
+    const after = wrap.querySelector('.slider-after');
+    const divider = wrap.querySelector('.slider-divider');
+    const handle = wrap.querySelector('.slider-handle');
+    let dragging = false;
+
+    function setPos(pct) {
+      pct = Math.max(2, Math.min(98, pct));
+      divider.style.left = pct + '%';
+      handle.style.left = pct + '%';
+      after.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+    }
+
+    function getPos(e) {
+      const rect = wrap.getBoundingClientRect();
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      return (x / rect.width) * 100;
+    }
+
+    wrap.addEventListener('mousedown', e => { dragging = true; setPos(getPos(e)); });
+    wrap.addEventListener('touchstart', e => { dragging = true; setPos(getPos(e)); }, {passive:true});
+    window.addEventListener('mousemove', e => { if (dragging) setPos(getPos(e)); });
+    window.addEventListener('touchmove', e => { if (dragging) setPos(getPos(e)); }, {passive:true});
+    window.addEventListener('mouseup', () => dragging = false);
+    window.addEventListener('touchend', () => dragging = false);
+
+    setPos(50);
+  });
+}
+
+renderGallery();
+</script>
+</body>
+</html>

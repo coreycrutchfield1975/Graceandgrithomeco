@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin | Grace & Grit Home Co.</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --burg:#7a2a35;--burg-dark:#541c23;--burg-light:#a84050;
+  --sage:#6a8568;--sage-dark:#4a6349;--sage-light:#9ab897;
+  --cream:#fdf8f0;--cream-dark:#f0e8d8;
+  --gold:#b8894a;--gold-light:#d4a96a;
+  --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
+  --white:#fff;--border:#d4c4b0;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+/* PASSWORD GATE */
+#gate{position:fixed;inset:0;background:rgba(44,36,24,0.97);display:flex;align-items:center;justify-content:center;z-index:999;}
+#gate.hidden{display:none;}
+.gate-box{background:var(--cream);border-radius:16px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.gate-logo{font-family:'Playfair Display',serif;color:var(--burg);font-size:1.3rem;font-weight:700;margin-bottom:0.25rem;}
+.gate-logo span{font-style:italic;}
+.gate-sub{font-size:0.78rem;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.75rem;}
+.gate-box label{display:block;font-size:0.75rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem;text-align:left;}
+.gate-box input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'Nunito',sans-serif;font-size:1rem;color:var(--text);background:var(--white);margin-bottom:1rem;letter-spacing:0.1em;}
+.gate-box input:focus{outline:none;border-color:var(--burg);}
+.gate-err{color:var(--burg);font-size:0.8rem;font-weight:700;margin-bottom:0.75rem;display:none;}
+.btn-full{width:100%;padding:0.8rem;border-radius:40px;background:var(--burg);color:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;border:none;cursor:pointer;transition:background 0.2s;}
+.btn-full:hover{background:var(--burg-light);}
+.gate-hint{font-size:0.72rem;color:var(--text-light);margin-top:1rem;}
+
+/* NAV */
+nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
+.nav-logo span{color:var(--white);font-style:italic;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:1rem;}
+.nav-back{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
+.nav-back:hover{color:var(--gold-light);}
+.nav-logout{font-size:0.75rem;color:rgba(255,255,255,0.4);background:none;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:0.25rem 0.75rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;transition:all 0.2s;}
+.nav-logout:hover{color:var(--white);border-color:rgba(255,255,255,0.4);}
+
+/* DASHBOARD */
+.dash{max-width:960px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+.dash-header{margin-bottom:2.5rem;}
+.dash-header h1{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--burg);}
+.dash-header p{color:var(--text-light);font-size:0.88rem;margin-top:0.3rem;}
+
+.section-label{font-size:0.72rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;padding-bottom:0.4rem;border-bottom:2px solid var(--cream-dark);}
+
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin-bottom:2.5rem;}
+.tool-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:1.5rem;text-decoration:none;color:inherit;transition:all 0.22s;display:flex;flex-direction:column;gap:0.5rem;}
+.tool-card:hover{border-color:var(--burg);box-shadow:0 6px 24px rgba(122,42,53,0.12);transform:translateY(-2px);}
+.tool-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:0.25rem;font-size:1.3rem;}
+.icon-burg{background:rgba(122,42,53,0.1);}
+.icon-sage{background:rgba(106,133,104,0.12);}
+.icon-gold{background:rgba(184,137,74,0.12);}
+.tool-card h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--charcoal);}
+.tool-card p{font-size:0.8rem;color:var(--text-light);line-height:1.55;}
+.tool-arrow{margin-top:auto;padding-top:0.75rem;font-size:0.78rem;font-weight:700;color:var(--burg);letter-spacing:0.04em;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">Grace &amp; <span>Grit</span> Home Co.</div>
+    <div class="gate-sub">Admin Access</div>
+    <label for="pwInput">Password</label>
+    <input type="password" id="pwInput" placeholder="Enter password" autocomplete="current-password">
+    <div class="gate-err" id="gateErr">Incorrect password. Try again.</div>
+    <button class="btn-full" onclick="checkPassword()">Enter</button>
+    <p class="gate-hint">Contact the site owner if you need access.</p>
+  </div>
+</div>
+
+<!-- MAIN NAV -->
+<nav>
+  <a class="nav-logo" href="/">Grace &amp; <span>Grit</span> Home Co.</a>
+  <div class="nav-right">
+    <a class="nav-back" href="/">&#8592; Back to Site</a>
+    <button class="nav-logout" onclick="logout()">Log Out</button>
+  </div>
+</nav>
+
+<!-- DASHBOARD -->
+<div class="dash">
+  <div class="dash-header">
+    <h1>Business Tools</h1>
+    <p>Everything you need to run a job from estimate to thank you.</p>
+  </div>
+
+  <!-- JOB DOCUMENTS -->
+  <div class="section-label">Job Documents</div>
+  <div class="tool-grid">
+
+    <a class="tool-card" href="/estimate.html">
+      <div class="tool-icon icon-gold">&#128196;</div>
+      <h3>Estimate / Quote</h3>
+      <p>Build a line-item project estimate with auto-calculated totals. Print or save as PDF to send to a prospect.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+    <a class="tool-card" href="/contract.html">
+      <div class="tool-icon icon-burg">&#128út</div>
+      <h3>Work Order Contract</h3>
+      <p>Full service agreement with scope, payment schedule, terms, and electronic signature capture.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+    <a class="tool-card" href="/invoice.html">
+      <div class="tool-icon icon-gold">&#128181;</div>
+      <h3>Invoice</h3>
+      <p>Itemized invoice with deposit tracking and balance due. Print or save as PDF for final billing.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+  </div>
+
+  <!-- CLIENT RELATIONS -->
+  <div class="section-label">Client Relations</div>
+  <div class="tool-grid">
+
+    <a class="tool-card" href="/thankyou-card.html">
+      <div class="tool-icon icon-sage">&#10084;</div>
+      <h3>Thank You Card</h3>
+      <p>Personalized thank you card for after job completion. Print and mail, or copy the message to send via text or email.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+    <a class="tool-card" href="/referral-card.html">
+      <div class="tool-icon icon-sage">&#127381;</div>
+      <h3>Referral Thank You</h3>
+      <p>A special thank you card for clients who send a referral, with a built-in incentive offer.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+    <a class="tool-card" href="/review-card.html">
+      <div class="tool-icon icon-gold">&#11088;</div>
+      <h3>Review Request Card</h3>
+      <p>Printable cards with a QR code you can hand to happy clients, linking directly to your Google review page.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="section-label">Client Resources</div>
+  <div class="tool-grid">
+
+    <a class="tool-card" href="/maintenance-checklist.html">
+      <div class="tool-icon icon-sage">&#9989;</div>
+      <h3>Seasonal Maintenance Checklist</h3>
+      <p>A branded four-season home maintenance checklist to leave with clients after every job.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+    <a class="tool-card" href="/gallery.html">
+      <div class="tool-icon icon-burg">&#128247;</div>
+      <h3>Project Gallery</h3>
+      <p>Public-facing before &amp; after showcase linked from the main site nav. Manage your project photos here.</p>
+      <div class="tool-arrow">Open &rarr;</div>
+    </a>
+
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = 'graceandgrit2025';
+const SESSION_KEY = 'gg_admin_auth';
+
+function checkPassword() {
+  const val = document.getElementById('pwInput').value;
+  if (val === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('gate').classList.add('hidden');
+  } else {
+    document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  window.location.href = '/';
+}
+
+// Allow Enter key in password field
+document.getElementById('pwInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPassword();
+});
+
+// Check session on load
+if (sessionStorage.getItem(SESSION_KEY) === '1') {
+  document.getElementById('gate').classList.add('hidden');
+}
+</script>
+</body>
+</html>

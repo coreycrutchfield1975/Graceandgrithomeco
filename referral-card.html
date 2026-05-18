@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Referral Thank You | Grace & Grit Home Co.</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --burg:#7a2a35;--burg-dark:#541c23;--burg-light:#a84050;
+  --sage:#6a8568;--sage-dark:#4a6349;
+  --cream:#fdf8f0;--cream-dark:#f0e8d8;
+  --gold:#b8894a;--gold-light:#d4a96a;
+  --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
+  --white:#fff;--border:#d4c4b0;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);}
+nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;}
+.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
+.nav-logo span{color:#fff;font-style:italic;}
+.nav-right{margin-left:auto;}
+.nav-link{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
+.nav-link:hover{color:var(--gold-light);}
+
+/* EDITOR */
+.editor{max-width:640px;margin:2rem auto;padding:0 1.25rem;}
+.editor h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--burg);margin-bottom:0.3rem;}
+.editor p{font-size:0.84rem;color:var(--text-light);margin-bottom:1.5rem;}
+.field{margin-bottom:1rem;}
+label{display:block;font-size:0.75rem;font-weight:700;color:var(--text-light);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.35rem;}
+input,textarea,select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 0.85rem;font-family:'Nunito',sans-serif;font-size:0.92rem;color:var(--text);background:var(--white);}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--burg);}
+textarea{resize:vertical;min-height:80px;}
+.action-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.75rem 1.75rem;border-radius:40px;font-weight:800;font-size:0.88rem;letter-spacing:0.03em;transition:all 0.22s;cursor:pointer;border:none;font-family:'Nunito',sans-serif;}
+.btn-burg{background:var(--burg);color:#fff;}
+.btn-burg:hover{background:var(--burg-light);transform:translateY(-2px);}
+.btn-ghost{background:transparent;color:var(--burg);border:2px solid var(--burg);}
+.btn-ghost:hover{background:var(--burg);color:#fff;}
+.copied-note{font-size:0.8rem;color:var(--sage-dark);font-weight:700;display:none;align-self:center;}
+
+.preview-label{font-size:0.72rem;font-weight:700;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin:2rem 0 0.75rem;}
+
+/* CARD */
+.card-wrap{max-width:640px;margin:0 auto 3rem;padding:0 1.25rem;}
+.card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(44,36,24,0.14);}
+.accent-strip{height:6px;background:linear-gradient(90deg,var(--gold) 0%,var(--burg) 50%,var(--sage) 100%);}
+
+/* Card front */
+.card-front{background:linear-gradient(145deg,var(--charcoal) 0%,#3d1e28 60%,var(--burg-dark) 100%);padding:3rem 2.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+.card-front::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:rgba(184,137,74,0.06);}
+.card-front::after{content:'';position:absolute;bottom:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:rgba(122,42,53,0.2);}
+.gift-icon{font-size:2.5rem;margin-bottom:0.75rem;display:block;}
+.card-headline{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,2.6rem);color:var(--white);line-height:1.2;margin-bottom:0.5rem;}
+.card-headline em{color:var(--gold-light);font-style:italic;}
+.card-subline{font-size:0.8rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;}
+
+/* Incentive badge */
+.incentive-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--charcoal);font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;padding:0.65rem 1.75rem;border-radius:40px;position:relative;z-index:1;box-shadow:0 4px 16px rgba(184,137,74,0.4);}
+.incentive-badge span{display:block;font-family:'Nunito',sans-serif;font-size:0.68rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.1rem;opacity:0.75;}
+
+/* Card inside */
+.card-inside{padding:2.5rem 2.5rem 2rem;}
+.greeting{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--burg);margin-bottom:1.2rem;}
+.card-message{font-size:0.96rem;line-height:1.85;color:var(--text);white-space:pre-wrap;}
+.card-closing{margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--cream-dark);}
+.closing-script{font-family:'Dancing Script','Playfair Display',serif;font-size:1.5rem;color:var(--burg);line-height:1.3;}
+.closing-meta{font-size:0.78rem;color:var(--text-light);margin-top:0.25rem;}
+
+@media print{
+  nav,.editor,.preview-label,.action-row,.copied-note{display:none!important;}
+  body{background:#fff;}
+  .card-wrap{max-width:100%;padding:0;margin:0;}
+  .card{box-shadow:none;border-radius:0;}
+  @page{margin:0.5in;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/">Grace &amp; <span>Grit</span> Home Co.</a>
+  <div class="nav-right">
+    <a class="nav-link" href="/admin.html">&#8592; Admin</a>
+  </div>
+</nav>
+
+<div class="editor">
+  <h2>Referral Thank You Card</h2>
+  <p>For clients who send a referral your way. Personalize it, then print and mail or copy to send digitally.</p>
+
+  <div class="field">
+    <label>Client First Name</label>
+    <input type="text" id="clientFirst" value="Sarah" oninput="updateCard()">
+  </div>
+  <div class="field">
+    <label>Who They Referred (optional)</label>
+    <input type="text" id="referredName" value="the Johnson family" oninput="updateCard()">
+  </div>
+  <div class="field">
+    <label>Referral Incentive</label>
+    <select id="incentive" onchange="updateCard()">
+      <option value="$25 off your next service">$25 off your next service</option>
+      <option value="$50 off your next project">$50 off your next project</option>
+      <option value="10% off your next project">10% off your next project</option>
+      <option value="a free service call">a free service call</option>
+      <option value="a special thank-you gift">a special thank-you gift</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Personal Note (optional — leave blank for default)</label>
+    <textarea id="customMsg" placeholder="Add a personal touch..."></textarea>
+  </div>
+  <div class="field">
+    <label>Signed By</label>
+    <input type="text" id="signedBy" value="Corey &amp; the Grace &amp; Grit Team" oninput="updateCard()">
+  </div>
+
+  <div class="action-row">
+    <button class="btn btn-burg" onclick="window.print()">&#128438; Print Card</button>
+    <button class="btn btn-ghost" onclick="copyMessage()">&#128203; Copy for Text / Email</button>
+    <span class="copied-note" id="copiedNote">&#10003; Copied!</span>
+  </div>
+</div>
+
+<p class="preview-label">&#8213; Card Preview &#8213;</p>
+
+<div class="card-wrap">
+  <div class="card">
+    <div class="accent-strip"></div>
+    <div class="card-front">
+      <span class="gift-icon">&#127873;</span>
+      <div class="card-headline">You Made<br>Our <em>Day!</em></div>
+      <div class="card-subline">Thank you for the referral</div>
+      <div class="incentive-badge" id="badgeText">
+        $25 off your next service
+        <span>As our thanks to you</span>
+      </div>
+    </div>
+    <div class="card-inside">
+      <div class="greeting" id="cardGreeting">Dear Sarah,</div>
+      <div class="card-message" id="cardMessage"></div>
+      <div class="card-closing">
+        <div class="closing-script" id="cardSigned">Corey &amp; the Grace &amp; Grit Team</div>
+        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; (573) 555-0100</div>
+      </div>
+    </div>
+    <div class="accent-strip"></div>
+  </div>
+</div>
+
+<script>
+function defaultMsg(first, referred, incentive) {
+  const referredLine = referred.trim()
+    ? `sending ${referred.trim()} our way`
+    : 'the kind referral';
+  return `We just wanted to take a moment to say how truly grateful we are for ${referredLine}. Word-of-mouth referrals from people like you are the heartbeat of this business, and we don't take that trust lightly.\n\nAs a small token of our appreciation, we'd love to offer you ${incentive} — no strings attached. Just our way of saying thank you for believing in what we do.\n\nWe promise to take just as good care of everyone you send our way. You have our word on that.`;
+}
+
+function updateCard() {
+  const first = document.getElementById('clientFirst').value.trim() || 'Friend';
+  const referred = document.getElementById('referredName').value.trim();
+  const incentive = document.getElementById('incentive').value;
+  const custom = document.getElementById('customMsg').value.trim();
+  const signed = document.getElementById('signedBy').value.trim() || 'Grace & Grit Home Co.';
+
+  document.getElementById('cardGreeting').textContent = `Dear ${first},`;
+  document.getElementById('cardMessage').textContent = custom || defaultMsg(first, referred, incentive);
+  document.getElementById('cardSigned').textContent = signed;
+  document.getElementById('badgeText').innerHTML = `${incentive}<span>As our thanks to you</span>`;
+}
+
+function copyMessage() {
+  const first = document.getElementById('clientFirst').value.trim() || 'Friend';
+  const referred = document.getElementById('referredName').value.trim();
+  const incentive = document.getElementById('incentive').value;
+  const custom = document.getElementById('customMsg').value.trim();
+  const signed = document.getElementById('signedBy').value.trim() || 'Grace & Grit Home Co.';
+  const body = custom || defaultMsg(first, referred, incentive);
+  const full = `Dear ${first},\n\n${body}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | (573) 555-0100`;
+  navigator.clipboard.writeText(full).then(() => {
+    const n = document.getElementById('copiedNote');
+    n.style.display = 'inline';
+    setTimeout(() => n.style.display = 'none', 3000);
+  });
+}
+
+updateCard();
+</script>
+</body>
+</html>
