@@ -61,7 +61,7 @@ input:focus{outline:none;border-color:var(--burg);}
   <h2>Review Request Cards</h2>
   <p>Enter your Google review link below, then print the sheet. You'll get 4 cards per page — cut them out and hand one to each satisfied client.</p>
   <div class="field"><label>Your Google Review Link</label><input type="url" id="reviewUrl" placeholder="https://g.page/r/your-review-link/review" oninput="updateQR()"><p class="hint">Find this in your Google Business Profile dashboard under &ldquo;Get more reviews.&rdquo;</p></div>
-  <div class="field"><label>Phone Number (shown on card)</label><input type="text" id="phoneNum" value="573-778-7309" oninput="updateCards()"></div>
+  <div class="field"><label>Phone Number (shown on card)</label><input type="text" id="phoneNum" value="573-840-0702" oninput="updateCards()"></div>
   <div class="action-row"><button class="btn btn-burg" onclick="window.print()">&#128438; Print Cards (4-up)</button></div>
 </div>
 <p class="preview-label">&#8213; Card Preview (prints 4 per page) &#8213;</p>
@@ -69,7 +69,7 @@ input:focus{outline:none;border-color:var(--burg);}
 <script>
 const DEFAULT_URL='https://g.page/r/YOUR-GOOGLE-REVIEW-LINK/review';
 function qrSrc(url){return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(url||DEFAULT_URL)}`;}
-function buildCard(){const url=document.getElementById('reviewUrl').value.trim()||DEFAULT_URL;const phone=document.getElementById('phoneNum').value.trim()||'573-778-7309';return `<div class="card"><div class="card-top"><div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div><div class="card-headline">Love your new <em>home</em>?<br>Tell the world!</div></div><div class="card-body"><p class="card-msg">Your review helps us reach more homeowners in Poplar Bluff. It only takes 30 seconds and means everything to us.</p><div class="qr-wrap"><img src="${qrSrc(url)}" alt="Scan to leave a Google review" loading="lazy"></div><span class="scan-label">Scan to Review on Google</span></div><div class="card-footer"><div class="card-biz">Grace &amp; Grit Home Co.</div><div class="card-contact">Poplar Bluff, MO &bull; ${phone}</div></div></div>`;}
+function buildCard(){const url=document.getElementById('reviewUrl').value.trim()||DEFAULT_URL;const phone=document.getElementById('phoneNum').value.trim()||'573-840-0702';return `<div class="card"><div class="card-top"><div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div><div class="card-headline">Love your new <em>home</em>?<br>Tell the world!</div></div><div class="card-body"><p class="card-msg">Your review helps us reach more homeowners in Poplar Bluff. It only takes 30 seconds and means everything to us.</p><div class="qr-wrap"><img src="${qrSrc(url)}" alt="Scan to leave a Google review" loading="lazy"></div><span class="scan-label">Scan to Review on Google</span></div><div class="card-footer"><div class="card-biz">Grace &amp; Grit Home Co.</div><div class="card-contact">Poplar Bluff, MO &bull; ${phone}</div></div></div>`;}
 function updateCards(){document.getElementById('cardsGrid').innerHTML=buildCard()+buildCard()+buildCard()+buildCard();}
 function updateQR(){updateCards();}
 updateCards();

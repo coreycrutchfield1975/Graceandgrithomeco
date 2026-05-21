@@ -92,7 +92,7 @@ textarea{resize:vertical;min-height:80px;}
       <div class="card-message" id="cardMessage"></div>
       <div class="card-closing">
         <div class="closing-script" id="cardSigned">Michelle &amp; the Grace &amp; Grit Team</div>
-        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; 573-778-7309</div>
+        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; 573-840-0702</div>
       </div>
     </div>
     <div class="accent-strip"></div>
@@ -101,7 +101,7 @@ textarea{resize:vertical;min-height:80px;}
 <script>
 const defaultMsg=(first,project)=>{const projectLine=project.trim()?`working on ${project.trim()}`:'working on your project';return `It was a genuine pleasure ${projectLine}, and we're so grateful for the trust you placed in us.\n\nAt Grace & Grit Home Co., every project is personal to us — we treat your home the way we'd treat our own. Knowing you're happy with the finished result is what makes this work so rewarding.\n\nIf you ever need us again — whether it's a small repair or a big new project — we're just a call away. And if you know anyone who could use a hand with their home, we'd be honored by the referral.\n\nThank you again for choosing Grace & Grit. It truly means the world to us.`;};
 function updateCard(){const first=document.getElementById('clientFirst').value.trim()||'Friend';const project=document.getElementById('projectDesc').value.trim();const custom=document.getElementById('customMsg').value.trim();const signed=document.getElementById('signedBy').value.trim()||'Grace & Grit Home Co.';document.getElementById('cardGreeting').textContent=`Dear ${first},`;document.getElementById('cardMessage').textContent=custom||defaultMsg(first,project);document.getElementById('cardSigned').textContent=signed;}
-function copyMessage(){const first=document.getElementById('clientFirst').value.trim()||'Friend';const project=document.getElementById('projectDesc').value.trim();const custom=document.getElementById('customMsg').value.trim();const signed=document.getElementById('signedBy').value.trim()||'Grace & Grit Home Co.';const msg=`Dear ${first},\n\n${custom||defaultMsg(first,project)}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | 573-778-7309`;navigator.clipboard.writeText(msg).then(()=>{const note=document.getElementById('copiedNote');note.style.display='inline';setTimeout(()=>note.style.display='none',3000);});}
+function copyMessage(){const first=document.getElementById('clientFirst').value.trim()||'Friend';const project=document.getElementById('projectDesc').value.trim();const custom=document.getElementById('customMsg').value.trim();const signed=document.getElementById('signedBy').value.trim()||'Grace & Grit Home Co.';const msg=`Dear ${first},\n\n${custom||defaultMsg(first,project)}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | 573-840-0702`;navigator.clipboard.writeText(msg).then(()=>{const note=document.getElementById('copiedNote');note.style.display='inline';setTimeout(()=>note.style.display='none',3000);});}
 updateCard();
 </script>
 </body>

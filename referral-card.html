@@ -92,7 +92,7 @@ textarea{resize:vertical;min-height:80px;}
       <div class="card-message" id="cardMessage"></div>
       <div class="card-closing">
         <div class="closing-script" id="cardSigned">Michelle &amp; the Grace &amp; Grit Team</div>
-        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; 573-778-7309</div>
+        <div class="closing-meta">Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; 573-840-0702</div>
       </div>
     </div>
     <div class="accent-strip"></div>
@@ -101,7 +101,7 @@ textarea{resize:vertical;min-height:80px;}
 <script>
 function defaultMsg(first,referred,incentive){const referredLine=referred.trim()?`sending ${referred.trim()} our way`:'the kind referral';return `We just wanted to take a moment to say how truly grateful we are for ${referredLine}. Word-of-mouth referrals from people like you are the heartbeat of this business, and we don't take that trust lightly.\n\nAs a small token of our appreciation, we'd love to offer you ${incentive} — no strings attached. Just our way of saying thank you for believing in what we do.\n\nWe promise to take just as good care of everyone you send our way. You have our word on that.`;}
 function updateCard(){const first=document.getElementById('clientFirst').value.trim()||'Friend';const referred=document.getElementById('referredName').value.trim();const incentive=document.getElementById('incentive').value;const custom=document.getElementById('customMsg').value.trim();const signed=document.getElementById('signedBy').value.trim()||'Grace & Grit Home Co.';document.getElementById('cardGreeting').textContent=`Dear ${first},`;document.getElementById('cardMessage').textContent=custom||defaultMsg(first,referred,incentive);document.getElementById('cardSigned').textContent=signed;document.getElementById('badgeText').innerHTML=`${incentive}<span>As our thanks to you</span>`;}
-function copyMessage(){const first=document.getElementById('clientFirst').value.trim()||'Friend';const referred=document.getElementById('referredName').value.trim();const incentive=document.getElementById('incentive').value;const custom=document.getElementById('customMsg').value.trim();const signed=document.getElementById('signedBy').value.trim()||'Grace & Grit Home Co.';const body=custom||defaultMsg(first,referred,incentive);const full=`Dear ${first},\n\n${body}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | 573-778-7309`;navigator.clipboard.writeText(full).then(()=>{const n=document.getElementById('copiedNote');n.style.display='inline';setTimeout(()=>n.style.display='none',3000);});}
+function copyMessage(){const first=document.getElementById('clientFirst').value.trim()||'Friend';const referred=document.getElementById('referredName').value.trim();const incentive=document.getElementById('incentive').value;const custom=document.getElementById('customMsg').value.trim();const signed=document.getElementById('signedBy').value.trim()||'Grace & Grit Home Co.';const body=custom||defaultMsg(first,referred,incentive);const full=`Dear ${first},\n\n${body}\n\nWarm regards,\n${signed}\nGrace & Grit Home Co.\nPoplar Bluff, MO | 573-840-0702`;navigator.clipboard.writeText(full).then(()=>{const n=document.getElementById('copiedNote');n.style.display='inline';setTimeout(()=>n.style.display='none',3000);});}
 updateCard();
 </script>
 </body>
