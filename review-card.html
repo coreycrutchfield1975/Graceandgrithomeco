@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,22 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --burg:#7a2a35;--burg-light:#a84050;
-  --cream:#fdf8f0;--cream-dark:#f0e8d8;
-  --gold:#b8894a;--gold-light:#d4a96a;
-  --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
-  --white:#fff;--border:#d4c4b0;
-}
+:root{--burg:#7a2a35;--burg-light:#a84050;--cream:#fdf8f0;--cream-dark:#f0e8d8;--gold:#b8894a;--gold-light:#d4a96a;--charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;--white:#fff;--border:#d4c4b0;}
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);}
 nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
 .nav-logo span{color:#fff;font-style:italic;}
-.nav-right{margin-left:auto;}
-.nav-link{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
-.nav-link:hover{color:var(--gold-light);}
-
-/* EDITOR */
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:1rem;}
+.nav-back{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
+.nav-back:hover{color:var(--gold-light);}
+.nav-site{color:rgba(255,255,255,0.5);font-size:0.78rem;text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:0.25rem 0.85rem;}
+.nav-site:hover{color:var(--gold-light);border-color:rgba(255,255,255,0.35);}
 .editor{max-width:640px;margin:2rem auto;padding:0 1.25rem;}
 .editor h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--burg);margin-bottom:0.3rem;}
 .editor p{font-size:0.84rem;color:var(--text-light);margin-bottom:1.5rem;line-height:1.6;}
@@ -36,12 +30,9 @@ input:focus{outline:none;border-color:var(--burg);}
 .btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.75rem 1.75rem;border-radius:40px;font-weight:800;font-size:0.88rem;letter-spacing:0.03em;transition:all 0.22s;cursor:pointer;border:none;font-family:'Nunito',sans-serif;}
 .btn-burg{background:var(--burg);color:#fff;}
 .btn-burg:hover{background:var(--burg-light);transform:translateY(-2px);}
-
-/* CARDS GRID (4-up on screen, 4-up on print) */
 .preview-label{font-size:0.72rem;font-weight:700;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin:2rem 0 0.75rem;}
 .cards-page{max-width:720px;margin:0 auto 3rem;padding:0 1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
 @media(max-width:500px){.cards-page{grid-template-columns:1fr;}}
-
 .card{background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(44,36,24,0.1);display:flex;flex-direction:column;}
 .card-top{background:linear-gradient(135deg,var(--burg) 0%,var(--burg-light) 100%);padding:1.25rem 1.25rem 1rem;text-align:center;}
 .stars{color:var(--gold-light);font-size:1.1rem;letter-spacing:0.15em;margin-bottom:0.5rem;}
@@ -55,87 +46,32 @@ input:focus{outline:none;border-color:var(--burg);}
 .card-footer{padding:0.75rem 1.25rem;border-top:1px solid var(--cream-dark);text-align:center;}
 .card-biz{font-family:'Playfair Display',serif;font-size:0.8rem;color:var(--burg);font-weight:700;}
 .card-contact{font-size:0.68rem;color:var(--text-light);margin-top:0.15rem;}
-
-@media print{
-  nav,.editor,.preview-label,.action-row{display:none!important;}
-  body{background:#fff;}
-  .cards-page{max-width:100%;margin:0;padding:0.3in;gap:0.25in;grid-template-columns:1fr 1fr;}
-  .card{box-shadow:none;border:1px solid #ccc;border-radius:6px;break-inside:avoid;}
-  @page{margin:0.4in;size:letter;}
-}
+@media print{nav,.editor,.preview-label,.action-row{display:none!important;}body{background:#fff;}.cards-page{max-width:100%;margin:0;padding:0.3in;gap:0.25in;grid-template-columns:1fr 1fr;}.card{box-shadow:none;border:1px solid #ccc;border-radius:6px;break-inside:avoid;}@page{margin:0.4in;size:letter;}}
 </style>
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="/">Grace &amp; <span>Grit</span> Home Co.</a>
+  <a class="nav-logo" href="/admin.html">Grace &amp; <span>Grit</span> Admin</a>
   <div class="nav-right">
-    <a class="nav-link" href="/admin.html">&#8592; Admin</a>
+    <a class="nav-back" href="/admin.html">&#8592; Admin Home</a>
+    <a class="nav-site" href="/" target="_blank">View Site &#8599;</a>
   </div>
 </nav>
-
 <div class="editor">
   <h2>Review Request Cards</h2>
   <p>Enter your Google review link below, then print the sheet. You'll get 4 cards per page — cut them out and hand one to each satisfied client.</p>
-
-  <div class="field">
-    <label>Your Google Review Link</label>
-    <input type="url" id="reviewUrl" placeholder="https://g.page/r/your-review-link/review" oninput="updateQR()">
-    <p class="hint">Find this in your Google Business Profile dashboard under &ldquo;Get more reviews.&rdquo;</p>
-  </div>
-  <div class="field">
-    <label>Phone Number (shown on card)</label>
-    <input type="text" id="phoneNum" value="573-778-7309" oninput="updateCards()">
-  </div>
-
-  <div class="action-row">
-    <button class="btn btn-burg" onclick="window.print()">&#128438; Print Cards (4-up)</button>
-  </div>
+  <div class="field"><label>Your Google Review Link</label><input type="url" id="reviewUrl" placeholder="https://g.page/r/your-review-link/review" oninput="updateQR()"><p class="hint">Find this in your Google Business Profile dashboard under &ldquo;Get more reviews.&rdquo;</p></div>
+  <div class="field"><label>Phone Number (shown on card)</label><input type="text" id="phoneNum" value="573-778-7309" oninput="updateCards()"></div>
+  <div class="action-row"><button class="btn btn-burg" onclick="window.print()">&#128438; Print Cards (4-up)</button></div>
 </div>
-
 <p class="preview-label">&#8213; Card Preview (prints 4 per page) &#8213;</p>
-
-<div class="cards-page" id="cardsGrid">
-  <!-- Cards injected by JS -->
-</div>
-
+<div class="cards-page" id="cardsGrid"></div>
 <script>
-const DEFAULT_URL = 'https://g.page/r/YOUR-GOOGLE-REVIEW-LINK/review';
-
-function qrSrc(url) {
-  const encoded = encodeURIComponent(url || DEFAULT_URL);
-  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encoded}`;
-}
-
-function buildCard() {
-  const url = document.getElementById('reviewUrl').value.trim() || DEFAULT_URL;
-  const phone = document.getElementById('phoneNum').value.trim() || '573-778-7309';
-  return `
-    <div class="card">
-      <div class="card-top">
-        <div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
-        <div class="card-headline">Love your new <em>home</em>?<br>Tell the world!</div>
-      </div>
-      <div class="card-body">
-        <p class="card-msg">Your review helps us reach more homeowners in Poplar Bluff. It only takes 30 seconds and means everything to us.</p>
-        <div class="qr-wrap">
-          <img src="${qrSrc(url)}" alt="Scan to leave a Google review" loading="lazy">
-        </div>
-        <span class="scan-label">Scan to Review on Google</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-biz">Grace &amp; Grit Home Co.</div>
-        <div class="card-contact">Poplar Bluff, MO &bull; ${phone}</div>
-      </div>
-    </div>`;
-}
-
-function updateCards() {
-  const grid = document.getElementById('cardsGrid');
-  grid.innerHTML = buildCard() + buildCard() + buildCard() + buildCard();
-}
-
-function updateQR() { updateCards(); }
-
+const DEFAULT_URL='https://g.page/r/YOUR-GOOGLE-REVIEW-LINK/review';
+function qrSrc(url){return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(url||DEFAULT_URL)}`;}
+function buildCard(){const url=document.getElementById('reviewUrl').value.trim()||DEFAULT_URL;const phone=document.getElementById('phoneNum').value.trim()||'573-778-7309';return `<div class="card"><div class="card-top"><div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div><div class="card-headline">Love your new <em>home</em>?<br>Tell the world!</div></div><div class="card-body"><p class="card-msg">Your review helps us reach more homeowners in Poplar Bluff. It only takes 30 seconds and means everything to us.</p><div class="qr-wrap"><img src="${qrSrc(url)}" alt="Scan to leave a Google review" loading="lazy"></div><span class="scan-label">Scan to Review on Google</span></div><div class="card-footer"><div class="card-biz">Grace &amp; Grit Home Co.</div><div class="card-contact">Poplar Bluff, MO &bull; ${phone}</div></div></div>`;}
+function updateCards(){document.getElementById('cardsGrid').innerHTML=buildCard()+buildCard()+buildCard()+buildCard();}
+function updateQR(){updateCards();}
 updateCards();
 </script>
 </body>

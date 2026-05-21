@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,39 +9,27 @@
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --burg:#7a2a35;--burg-dark:#541c23;--burg-light:#a84050;
-  --sage:#6a8568;--sage-dark:#4a6349;
-  --cream:#fdf8f0;--cream-dark:#f0e8d8;
-  --gold:#b8894a;--gold-light:#d4a96a;
-  --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
-  --white:#fff;--border:#d4c4b0;
-}
+:root{--burg:#7a2a35;--burg-dark:#541c23;--burg-light:#a84050;--sage:#6a8568;--sage-dark:#4a6349;--cream:#fdf8f0;--cream-dark:#f0e8d8;--gold:#b8894a;--gold-light:#d4a96a;--charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;--white:#fff;--border:#d4c4b0;}
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);}
-
-/* NAV */
-nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
-.nav-logo span{color:var(--white);font-style:italic;}
-.nav-back{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;margin-left:auto;font-weight:600;letter-spacing:0.05em;}
+.nav-logo span{color:#fff;font-style:italic;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:1rem;}
+.nav-back{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
 .nav-back:hover{color:var(--gold-light);}
-
-/* SCREEN LAYOUT */
+.nav-site{color:rgba(255,255,255,0.5);font-size:0.78rem;text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:0.25rem 0.85rem;}
+.nav-site:hover{color:var(--gold-light);border-color:rgba(255,255,255,0.35);}
 .page-wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem;}
 .page-header{text-align:center;margin-bottom:2.5rem;}
 .page-header h1{font-family:'Playfair Display',serif;font-size:2rem;color:var(--burg);margin-bottom:0.4rem;}
 .page-header p{color:var(--text-light);font-size:0.88rem;}
-
-/* FORM SECTIONS */
 .section{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.5rem;}
 .section-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--burg);border-bottom:2px solid var(--cream-dark);padding-bottom:0.6rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
 .section-title svg{width:18px;height:18px;color:var(--gold);}
-
 .field-row{display:grid;gap:1rem;margin-bottom:1rem;}
 .field-row.cols-2{grid-template-columns:1fr 1fr;}
 .field-row.cols-3{grid-template-columns:1fr 1fr 1fr;}
 @media(max-width:600px){.field-row.cols-2,.field-row.cols-3{grid-template-columns:1fr;}}
-
 .field{display:flex;flex-direction:column;gap:0.35rem;}
 label{font-size:0.78rem;font-weight:700;color:var(--text-light);letter-spacing:0.05em;text-transform:uppercase;}
 input,textarea,select{border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 0.85rem;font-family:'Nunito',sans-serif;font-size:0.92rem;color:var(--text);background:var(--cream);transition:border-color 0.2s;}
@@ -50,14 +38,9 @@ textarea{resize:vertical;min-height:100px;}
 .price-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;}
 @media(max-width:600px){.price-row{grid-template-columns:1fr 1fr;}}
 .price-field input{font-weight:800;font-size:1rem;}
-.note{font-size:0.78rem;color:var(--text-light);margin-top:0.25rem;}
-
-/* CONTRACT BODY TEXT */
 .contract-terms{font-size:0.82rem;color:var(--text-light);line-height:1.7;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-top:0.5rem;}
 .contract-terms p{margin-bottom:0.6rem;}
 .contract-terms strong{color:var(--text);}
-
-/* SIGNATURE AREA */
 .sig-block{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1rem;}
 @media(max-width:600px){.sig-block{grid-template-columns:1fr;}}
 .sig-party{display:flex;flex-direction:column;gap:0.5rem;}
@@ -70,11 +53,7 @@ textarea{resize:vertical;min-height:100px;}
 .sig-name{border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent;padding:0.4rem 0;font-size:0.9rem;}
 .sig-name:focus{border-color:var(--burg);}
 .sig-date{border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent;padding:0.4rem 0;font-size:0.9rem;color:var(--text-light);}
-
-/* CONTRACTOR SIG STATIC */
 .contractor-sig-line{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--burg);font-style:italic;padding:0.75rem 0 0.5rem;}
-
-/* ACTIONS */
 .action-row{display:flex;gap:1rem;justify-content:center;margin-top:2rem;flex-wrap:wrap;}
 .btn{display:inline-block;padding:0.85rem 2.2rem;border-radius:40px;font-weight:800;font-size:0.93rem;text-decoration:none;letter-spacing:0.03em;transition:all 0.25s;cursor:pointer;border:none;font-family:'Nunito',sans-serif;}
 .btn-burg{background:var(--burg);color:var(--white);}
@@ -82,11 +61,8 @@ textarea{resize:vertical;min-height:100px;}
 .btn-ghost{background:transparent;color:var(--burg);border:2px solid var(--burg);}
 .btn-ghost:hover{background:var(--burg);color:var(--white);}
 .validation-msg{text-align:center;color:var(--burg);font-size:0.85rem;font-weight:700;margin-top:0.75rem;display:none;}
-
-/* CALCULATED FIELDS */
 .calc-note{font-size:0.72rem;color:var(--sage-dark);font-weight:700;margin-top:0.2rem;}
-
-/* ---- PRINT STYLES ---- */
+.print-sig-img{display:none;}
 @media print{
   nav,.action-row,.btn-sm,.sig-tools{display:none!important;}
   body{background:var(--white);}
@@ -98,250 +74,123 @@ textarea{resize:vertical;min-height:100px;}
   .section-title{color:#000;}
   .print-sig-img{display:block!important;}
   canvas{display:none!important;}
+  @page{margin:0.6in;}
 }
-.print-sig-img{display:none;}
 </style>
 </head>
 <body>
-
 <nav>
-  <a class="nav-logo" href="/">Grace &amp; <span>Grit</span> Home Co.</a>
-  <a class="nav-back" href="/">&#8592; Back to Site</a>
+  <a class="nav-logo" href="/admin.html">Grace &amp; <span>Grit</span> Admin</a>
+  <div class="nav-right">
+    <a class="nav-back" href="/admin.html">&#8592; Admin Home</a>
+    <a class="nav-site" href="/" target="_blank">View Site &#8599;</a>
+  </div>
 </nav>
-
 <div class="page-wrap">
   <div class="page-header">
     <h1>Work Order Agreement</h1>
     <p>Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; 573-778-7309</p>
   </div>
-
   <form id="contractForm" novalidate>
-
-    <!-- CLIENT INFORMATION -->
     <div class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Client Information
+      <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Client Information</div>
+      <div class="field-row cols-2">
+        <div class="field"><label>Client Full Name *</label><input type="text" id="clientName" placeholder="Jane Smith" required></div>
+        <div class="field"><label>Phone *</label><input type="tel" id="clientPhone" placeholder="(573) 555-0000" required></div>
       </div>
       <div class="field-row cols-2">
-        <div class="field">
-          <label>Client Full Name *</label>
-          <input type="text" id="clientName" placeholder="Jane Smith" required>
-        </div>
-        <div class="field">
-          <label>Phone *</label>
-          <input type="tel" id="clientPhone" placeholder="(573) 555-0000" required>
-        </div>
-      </div>
-      <div class="field-row cols-2">
-        <div class="field">
-          <label>Email</label>
-          <input type="email" id="clientEmail" placeholder="jane@example.com">
-        </div>
-        <div class="field">
-          <label>Job Site Address *</label>
-          <input type="text" id="jobAddress" placeholder="123 Main St, Poplar Bluff, MO" required>
-        </div>
+        <div class="field"><label>Email</label><input type="email" id="clientEmail" placeholder="jane@example.com"></div>
+        <div class="field"><label>Job Site Address *</label><input type="text" id="jobAddress" placeholder="123 Main St, Poplar Bluff, MO" required></div>
       </div>
     </div>
-
-    <!-- SCOPE OF WORK -->
     <div class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        Scope of Work
-      </div>
-      <div class="field">
-        <label>Description of Work to Be Performed *</label>
-        <textarea id="scopeOfWork" placeholder="Describe in detail the work to be completed, materials to be used, areas affected, etc." required></textarea>
-      </div>
+      <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scope of Work</div>
+      <div class="field"><label>Description of Work *</label><textarea id="scopeOfWork" placeholder="Describe in detail the work to be completed..." required></textarea></div>
       <div class="field-row cols-2" style="margin-top:1rem;">
-        <div class="field">
-          <label>Estimated Start Date *</label>
-          <input type="date" id="startDate" required>
-        </div>
-        <div class="field">
-          <label>Estimated Completion Date *</label>
-          <input type="date" id="endDate" required>
-        </div>
+        <div class="field"><label>Estimated Start Date *</label><input type="date" id="startDate" required></div>
+        <div class="field"><label>Estimated Completion Date *</label><input type="date" id="endDate" required></div>
       </div>
     </div>
-
-    <!-- PRICING & PAYMENT -->
     <div class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Pricing &amp; Payment
-      </div>
+      <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Pricing &amp; Payment</div>
       <div class="price-row">
-        <div class="field price-field">
-          <label>Total Contract Price *</label>
-          <input type="number" id="totalPrice" placeholder="0.00" min="0" step="0.01" required>
-          <span class="calc-note">Enter full project cost</span>
-        </div>
-        <div class="field price-field">
-          <label>Deposit Due (50%)</label>
-          <input type="text" id="depositAmt" readonly placeholder="$0.00">
-          <span class="calc-note">Due before work begins</span>
-        </div>
-        <div class="field price-field">
-          <label>Balance Due (50%)</label>
-          <input type="text" id="balanceAmt" readonly placeholder="$0.00">
-          <span class="calc-note">Due upon completion</span>
-        </div>
+        <div class="field price-field"><label>Total Contract Price *</label><input type="number" id="totalPrice" placeholder="0.00" min="0" step="0.01" required><span class="calc-note">Enter full project cost</span></div>
+        <div class="field price-field"><label>Deposit Due (50%)</label><input type="text" id="depositAmt" readonly placeholder="$0.00"><span class="calc-note">Due before work begins</span></div>
+        <div class="field price-field"><label>Balance Due (50%)</label><input type="text" id="balanceAmt" readonly placeholder="$0.00"><span class="calc-note">Due upon completion</span></div>
       </div>
       <div class="field-row cols-2">
-        <div class="field">
-          <label>Accepted Payment Methods</label>
-          <select id="paymentMethod">
-            <option value="Cash or Check">Cash or Check</option>
-            <option value="Cash, Check, or Venmo">Cash, Check, or Venmo</option>
-            <option value="Cash, Check, or Credit Card">Cash, Check, or Credit Card</option>
-            <option value="Any Method">Any Method</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Additional Notes on Payment</label>
-          <input type="text" id="paymentNotes" placeholder="e.g. Check payable to Grace & Grit Home Co.">
-        </div>
+        <div class="field"><label>Accepted Payment Methods</label><select id="paymentMethod"><option>Cash or Check</option><option>Cash, Check, or Venmo</option><option>Cash, Check, or Credit Card</option><option>Any Method</option></select></div>
+        <div class="field"><label>Additional Notes on Payment</label><input type="text" id="paymentNotes" placeholder="e.g. Check payable to Grace & Grit Home Co."></div>
       </div>
     </div>
-
-    <!-- TERMS -->
     <div class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Terms &amp; Conditions
-      </div>
-      <div class="contract-terms" id="contractTerms">
+      <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Terms &amp; Conditions</div>
+      <div class="contract-terms">
         <p><strong>1. Scope of Work.</strong> Contractor agrees to perform the work described above in a workmanlike manner using materials of good quality, unless otherwise specified.</p>
         <p><strong>2. Payment.</strong> Client agrees to pay the total contract price according to the schedule above. A 50% deposit is due before work begins; the remaining 50% is due upon satisfactory completion. A late fee of 1.5% per month applies to balances unpaid after 10 days of completion.</p>
         <p><strong>3. Change Orders.</strong> Any changes to the scope of work must be agreed upon in writing and signed by both parties. Additional costs resulting from change orders are due before altered work begins.</p>
         <p><strong>4. Permits &amp; Inspections.</strong> Contractor will obtain all required permits unless otherwise noted in the scope of work. Permit fees are the responsibility of the Client and will be invoiced separately.</p>
         <p><strong>5. Warranty.</strong> Contractor warrants all labor for a period of <strong>90 days</strong> from the date of completion. Manufacturer warranties apply separately to materials and products. Warranty is void if work is altered or repaired by others.</p>
         <p><strong>6. Client Responsibilities.</strong> Client shall provide reasonable access to the work area and remove or protect personal property prior to work commencement. Contractor is not responsible for damage to unsecured items.</p>
-        <p><strong>7. Pre-Existing Conditions.</strong> Contractor is not liable for damage caused by pre-existing conditions discovered during work (e.g., rot, mold, faulty wiring) unless Contractor caused the condition. Contractor will notify Client of any such findings before proceeding.</p>
+        <p><strong>7. Pre-Existing Conditions.</strong> Contractor is not liable for damage caused by pre-existing conditions discovered during work unless Contractor caused the condition. Contractor will notify Client of any such findings before proceeding.</p>
         <p><strong>8. Cancellation.</strong> If Client cancels after work has begun, Client is responsible for the cost of all materials purchased and labor performed to date. The deposit is non-refundable once materials are ordered.</p>
         <p><strong>9. Dispute Resolution.</strong> Any disputes shall first be addressed through good-faith negotiation. If unresolved within 30 days, disputes shall be submitted to binding arbitration in Butler County, Missouri.</p>
         <p><strong>10. Entire Agreement.</strong> This document constitutes the entire agreement between the parties and supersedes all prior communications. This agreement is governed by the laws of the State of Missouri.</p>
       </div>
     </div>
-
-    <!-- SIGNATURES -->
     <div class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-        Signatures
-      </div>
+      <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Signatures</div>
       <p style="font-size:0.83rem;color:var(--text-light);margin-bottom:1.25rem;">By signing below, both parties agree to the terms and conditions of this Work Order Agreement. An electronic signature is legally binding under the E-SIGN Act.</p>
-
       <div class="sig-block">
-
-        <!-- CONTRACTOR -->
         <div class="sig-party">
           <span class="sig-label">Grace &amp; Grit Home Co. (Contractor)</span>
-          <div class="sig-canvas-wrap" style="border-style:solid;">
-            <div class="contractor-sig-line">Grace &amp; Grit Home Co.</div>
-          </div>
+          <div class="sig-canvas-wrap" style="border-style:solid;"><div class="contractor-sig-line">Grace &amp; Grit Home Co.</div></div>
           <input class="sig-name" type="text" value="Grace &amp; Grit Home Co." readonly style="color:var(--text-light);font-style:italic;">
           <input class="sig-date" type="text" id="contractorDate" readonly>
         </div>
-
-        <!-- CLIENT -->
         <div class="sig-party">
           <span class="sig-label">Client Signature *</span>
-          <div class="sig-canvas-wrap" id="sigCanvasWrap">
-            <canvas id="sigCanvas"></canvas>
-            <img class="print-sig-img" id="sigImg" alt="Client signature" style="width:100%;height:140px;object-fit:contain;">
-          </div>
-          <div class="sig-tools">
-            <button type="button" class="btn-sm" id="clearSig">Clear</button>
-            <span style="font-size:0.73rem;color:var(--text-light);align-self:center;">Draw your signature above</span>
-          </div>
+          <div class="sig-canvas-wrap" id="sigCanvasWrap"><canvas id="sigCanvas"></canvas><img class="print-sig-img" id="sigImg" alt="Client signature" style="width:100%;height:140px;object-fit:contain;"></div>
+          <div class="sig-tools"><button type="button" class="btn-sm" id="clearSig">Clear</button><span style="font-size:0.73rem;color:var(--text-light);align-self:center;">Draw your signature above</span></div>
           <input class="sig-name" type="text" id="sigPrintName" placeholder="Print Full Name" required>
           <input class="sig-date" type="text" id="clientDate" readonly>
         </div>
-
       </div>
     </div>
-
     <p class="validation-msg" id="validationMsg">Please fill in all required fields and provide a signature before saving.</p>
-
     <div class="action-row">
       <button type="button" class="btn btn-ghost" onclick="window.print()">Print Only</button>
       <button type="submit" class="btn btn-burg">&#9998; Sign &amp; Save PDF</button>
     </div>
-
   </form>
 </div>
-
 <script>
-// --- Signature Pad Setup ---
-const canvas = document.getElementById('sigCanvas');
-const wrap = document.getElementById('sigCanvasWrap');
-
-function resizeCanvas() {
-  const ratio = Math.max(window.devicePixelRatio || 1, 1);
-  canvas.width = wrap.offsetWidth * ratio;
-  canvas.height = 140 * ratio;
-  canvas.getContext('2d').scale(ratio, ratio);
-}
-
-const signaturePad = new SignaturePad(canvas, {
-  backgroundColor: 'rgba(255,255,255,0)',
-  penColor: '#2c2418',
-  minWidth: 1,
-  maxWidth: 3
-});
-
-window.addEventListener('resize', () => { resizeCanvas(); signaturePad.clear(); });
+const canvas=document.getElementById('sigCanvas');
+const wrap=document.getElementById('sigCanvasWrap');
+function resizeCanvas(){const ratio=Math.max(window.devicePixelRatio||1,1);canvas.width=wrap.offsetWidth*ratio;canvas.height=140*ratio;canvas.getContext('2d').scale(ratio,ratio);}
+const signaturePad=new SignaturePad(canvas,{backgroundColor:'rgba(255,255,255,0)',penColor:'#2c2418',minWidth:1,maxWidth:3});
+window.addEventListener('resize',()=>{resizeCanvas();signaturePad.clear();});
 resizeCanvas();
-
-document.getElementById('clearSig').addEventListener('click', () => signaturePad.clear());
-
-// --- Auto-fill dates ---
-const today = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
-document.getElementById('contractorDate').value = today;
-document.getElementById('clientDate').value = today;
-
-// --- Price calculations ---
-document.getElementById('totalPrice').addEventListener('input', function() {
-  const total = parseFloat(this.value) || 0;
-  const half = (total / 2).toFixed(2);
-  document.getElementById('depositAmt').value = total ? '$' + half : '';
-  document.getElementById('balanceAmt').value = total ? '$' + half : '';
+document.getElementById('clearSig').addEventListener('click',()=>signaturePad.clear());
+const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+document.getElementById('contractorDate').value=today;
+document.getElementById('clientDate').value=today;
+document.getElementById('totalPrice').addEventListener('input',function(){
+  const total=parseFloat(this.value)||0;const half=(total/2).toFixed(2);
+  document.getElementById('depositAmt').value=total?'$'+half:'';
+  document.getElementById('balanceAmt').value=total?'$'+half:'';
 });
-
-// --- Form submission ---
-document.getElementById('contractForm').addEventListener('submit', function(e) {
+document.getElementById('contractForm').addEventListener('submit',function(e){
   e.preventDefault();
-
-  const required = ['clientName','clientPhone','jobAddress','scopeOfWork','startDate','endDate','totalPrice','sigPrintName'];
-  let valid = true;
-
-  required.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el.value.trim()) { el.style.borderColor = 'var(--burg-light)'; valid = false; }
-    else el.style.borderColor = '';
-  });
-
-  if (signaturePad.isEmpty()) {
-    document.getElementById('sigCanvasWrap').style.borderColor = 'var(--burg-light)';
-    valid = false;
-  } else {
-    document.getElementById('sigCanvasWrap').style.borderColor = '';
-  }
-
-  const msg = document.getElementById('validationMsg');
-  if (!valid) { msg.style.display = 'block'; return; }
-  msg.style.display = 'none';
-
-  // Embed signature image for print
-  const sigImg = document.getElementById('sigImg');
-  sigImg.src = signaturePad.toDataURL();
-
-  // Small delay so image loads before print dialog
-  setTimeout(() => window.print(), 150);
+  const required=['clientName','clientPhone','jobAddress','scopeOfWork','startDate','endDate','totalPrice','sigPrintName'];
+  let valid=true;
+  required.forEach(id=>{const el=document.getElementById(id);if(!el.value.trim()){el.style.borderColor='var(--burg-light)';valid=false;}else el.style.borderColor='';});
+  if(signaturePad.isEmpty()){document.getElementById('sigCanvasWrap').style.borderColor='var(--burg-light)';valid=false;}else document.getElementById('sigCanvasWrap').style.borderColor='';
+  const msg=document.getElementById('validationMsg');
+  if(!valid){msg.style.display='block';return;}
+  msg.style.display='none';
+  document.getElementById('sigImg').src=signaturePad.toDataURL();
+  setTimeout(()=>window.print(),150);
 });
 </script>
 </body>
