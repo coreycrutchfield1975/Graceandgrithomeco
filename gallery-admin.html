@@ -16,8 +16,6 @@
   --white:#fff;--border:#d4c4b0;
 }
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
-
-/* PASSWORD GATE */
 #gate{position:fixed;inset:0;background:rgba(44,36,24,0.97);display:flex;align-items:center;justify-content:center;z-index:999;}
 #gate.hidden{display:none;}
 .gate-box{background:var(--cream);border-radius:16px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
@@ -31,8 +29,6 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .btn-enter{width:100%;padding:0.8rem;border-radius:40px;background:var(--burg);color:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;border:none;cursor:pointer;transition:background 0.2s;}
 .btn-enter:hover{background:var(--burg-light);}
 .gate-hint{font-size:0.72rem;color:var(--text-light);margin-top:1rem;}
-
-/* NAV */
 nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;gap:1rem;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
 .nav-logo span{color:var(--white);font-style:italic;}
@@ -41,17 +37,12 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
 .nav-back:hover{color:var(--gold-light);}
 .nav-logout{font-size:0.75rem;color:rgba(255,255,255,0.4);background:none;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:0.25rem 0.75rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;transition:all 0.2s;}
 .nav-logout:hover{color:var(--white);border-color:rgba(255,255,255,0.4);}
-
-/* LAYOUT */
 .dash{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 5rem;}
 .dash-header{margin-bottom:2rem;}
 .dash-header h1{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--burg);}
 .dash-header p{color:var(--text-light);font-size:0.88rem;margin-top:0.3rem;}
 .section-label{font-size:0.72rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;padding-bottom:0.4rem;border-bottom:2px solid var(--cream-dark);}
-
-/* ADD FORM */
 .form-card{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:2.5rem;}
-.form-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--charcoal);margin-bottom:1.25rem;}
 .field{margin-bottom:1rem;}
 .field label{display:block;font-size:0.75rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.35rem;}
 .field input[type=text],.field select,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);background:var(--white);}
@@ -59,8 +50,6 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
 .field textarea{resize:vertical;min-height:70px;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 @media(max-width:540px){.field-row{grid-template-columns:1fr;}}
-
-/* PHOTO UPLOAD */
 .photo-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
 @media(max-width:540px){.photo-row{grid-template-columns:1fr;}}
 .upload-box{border:2px dashed var(--border);border-radius:12px;overflow:hidden;background:var(--cream-dark);transition:border-color 0.2s;}
@@ -72,19 +61,20 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
 .ba-tag{display:inline-block;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:4px;margin:0 0.85rem 0.6rem;}
 .ba-before{background:rgba(122,42,53,0.12);color:var(--burg);}
 .ba-after{background:rgba(106,133,104,0.15);color:#4a6349;}
-
-/* SAVE BUTTON & MSG */
 .save-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
 .btn-save{padding:0.75rem 2rem;border-radius:40px;background:var(--burg);color:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.92rem;border:none;cursor:pointer;transition:background 0.2s;}
-.btn-save:hover{background:var(--burg-light);}
+.btn-save:hover:not(:disabled){background:var(--burg-light);}
+.btn-save:disabled{opacity:0.6;cursor:not-allowed;}
 .save-msg{font-size:0.83rem;font-weight:700;}
 .save-msg.success{color:#4a6349;}
 .save-msg.error{color:var(--burg);}
-
-/* PROJECT LIST */
 .proj-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:center;gap:1rem;padding:1rem;margin-bottom:0.85rem;transition:box-shadow 0.2s;}
 .proj-card:hover{box-shadow:0 4px 18px rgba(44,36,24,0.09);}
-.proj-thumbs{display:flex;gap:4px;flex-shrink:0;}
+.proj-thumbs{display:flex;gap:6px;flex-shrink:0;}
+.proj-thumb-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.proj-thumb-tag{font-size:0.55rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:0.1rem 0.35rem;border-radius:3px;}
+.proj-thumb-tag.before-tag{background:rgba(122,42,53,0.12);color:var(--burg);}
+.proj-thumb-tag.after-tag{background:rgba(106,133,104,0.15);color:#4a6349;}
 .proj-thumbs img,.proj-thumb-ph{width:64px;height:48px;object-fit:cover;border-radius:6px;background:var(--cream-dark);}
 .proj-thumb-ph{display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--text-light);text-align:center;font-weight:600;}
 .proj-info{flex:1;min-width:0;}
@@ -94,19 +84,11 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
 .del-btn{flex-shrink:0;padding:0.35rem 0.85rem;border-radius:20px;border:1.5px solid var(--border);background:none;color:var(--text-light);font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
 .del-btn:hover{border-color:var(--burg);color:var(--burg);}
 .empty-msg{color:var(--text-light);font-size:0.88rem;padding:1rem 0;}
-
-/* VIEW LINK */
-.view-gallery-link{display:inline-block;margin-top:2rem;font-size:0.85rem;font-weight:700;color:var(--burg);text-decoration:none;letter-spacing:0.04em;}
-.view-gallery-link:hover{text-decoration:underline;}
-.storage-bar-wrap{margin-top:0.75rem;margin-bottom:2rem;}
-.storage-label{font-size:0.72rem;color:var(--text-light);margin-bottom:0.3rem;}
-.storage-bar{height:6px;background:var(--cream-dark);border-radius:3px;overflow:hidden;}
-.storage-fill{height:100%;background:var(--burg);border-radius:3px;transition:width 0.4s;}
+.loading-msg{color:var(--text-light);font-size:0.88rem;padding:1rem 0;font-style:italic;}
 </style>
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
 <div id="gate">
   <div class="gate-box">
     <div class="gate-logo">Grace &amp; <span>Grit</span> Home Co.</div>
@@ -119,7 +101,6 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
   </div>
 </div>
 
-<!-- NAV -->
 <nav>
   <a class="nav-logo" href="/admin.html">Grace &amp; <span>Grit</span> Home Co.</a>
   <div class="nav-right">
@@ -129,20 +110,12 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
   </div>
 </nav>
 
-<!-- MAIN -->
 <div class="dash">
   <div class="dash-header">
     <h1>Project Gallery</h1>
     <p>Upload before &amp; after photos for each job. They appear instantly on the public gallery page.</p>
   </div>
 
-  <!-- STORAGE INDICATOR -->
-  <div class="storage-bar-wrap">
-    <div class="storage-label" id="storageLabel">Checking storage...</div>
-    <div class="storage-bar"><div class="storage-fill" id="storageFill" style="width:0%"></div></div>
-  </div>
-
-  <!-- ADD PROJECT FORM -->
   <div class="section-label">Add New Project</div>
   <div class="form-card">
     <div class="field-row">
@@ -164,37 +137,97 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
       <label>Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
       <textarea id="projDesc" placeholder="Brief description of what was done..."></textarea>
     </div>
-
     <div class="photo-row">
       <div class="upload-box">
         <span class="ba-tag ba-before">Before</span>
         <span class="upload-label">Before Photo</span>
-        <input type="file" id="beforeFile" accept="image/*" onchange="handlePhoto(this,'beforePreview','beforeData')">
+        <input type="file" id="beforeFile" accept="image/*" onchange="handlePhoto(this,'beforePreview','before')">
         <div class="photo-preview" id="beforePreview"><span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span></div>
       </div>
       <div class="upload-box">
         <span class="ba-tag ba-after">After</span>
         <span class="upload-label">After Photo</span>
-        <input type="file" id="afterFile" accept="image/*" onchange="handlePhoto(this,'afterPreview','afterData')">
+        <input type="file" id="afterFile" accept="image/*" onchange="handlePhoto(this,'afterPreview','after')">
         <div class="photo-preview" id="afterPreview"><span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span></div>
       </div>
     </div>
-
     <div class="save-row">
-      <button class="btn-save" onclick="addProject()">Save to Gallery</button>
+      <button class="btn-save" id="saveBtn" onclick="addProject()">Save to Gallery</button>
       <span class="save-msg" id="saveMsg"></span>
     </div>
   </div>
 
-  <!-- EXISTING PROJECTS -->
   <div class="section-label">Current Projects (<span id="projCount">0</span>)</div>
-  <div id="projectList"></div>
+  <div id="projectList"><p class="loading-msg">Loading projects...</p></div>
 </div>
 
 <script>
-const STORAGE_KEY = 'gg_gallery_v1';
+const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTg2OTEsImV4cCI6MjA5NDY3NDY5MX0.juN2sGipRnNKDX604Hvj_ELt2CeMnBXmzU9HBfTvR4g';
+const BUCKET = 'gallery-photos';
 const ADMIN_PASSWORD = 'Il@vemyhusband';
 const SESSION_KEY = 'gg_admin_auth';
+const CAT_LABELS = {kitchen:'Kitchen & Bath', interior:'Interior', outdoor:'Outdoor', repair:'Repair'};
+
+// ── Supabase helpers ──
+async function sbFetch(path, opts={}) {
+  const res = await fetch(SUPABASE_URL + path, {
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      ...(opts.headers||{})
+    }
+  });
+  return res;
+}
+
+async function uploadPhoto(file, slot) {
+  // Compress first
+  const blob = await compressImage(file, 900, 0.78);
+  const ext = 'jpg';
+  const filename = `${Date.now()}_${slot}.${ext}`;
+  const res = await sbFetch(`/storage/v1/object/${BUCKET}/${filename}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'image/jpeg', 'x-upsert': 'true' },
+    body: blob
+  });
+  if (!res.ok) throw new Error('Photo upload failed');
+  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
+}
+
+async function insertProject(data) {
+  const res = await sbFetch('/rest/v1/projects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) { const e = await res.text(); throw new Error(e); }
+  return res.json();
+}
+
+async function fetchProjects() {
+  const res = await sbFetch('/rest/v1/projects?order=created_at.desc&select=*');
+  if (!res.ok) throw new Error('Could not load projects');
+  return res.json();
+}
+
+async function deleteProjectFromDB(id, beforeUrl, afterUrl) {
+  // Delete DB row
+  await sbFetch(`/rest/v1/projects?id=eq.${id}`, { method: 'DELETE' });
+  // Delete storage files
+  const files = [beforeUrl, afterUrl].filter(Boolean).map(url => {
+    const parts = url.split(`/${BUCKET}/`);
+    return parts[1] || null;
+  }).filter(Boolean);
+  if (files.length) {
+    await sbFetch(`/storage/v1/object/${BUCKET}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prefixes: files })
+    });
+  }
+}
 
 // ── Password gate ──
 function checkPassword() {
@@ -202,7 +235,6 @@ function checkPassword() {
     sessionStorage.setItem(SESSION_KEY, '1');
     document.getElementById('gate').classList.add('hidden');
     renderProjects();
-    updateStorageBar();
   } else {
     document.getElementById('gateErr').style.display = 'block';
     document.getElementById('pwInput').value = '';
@@ -214,131 +246,135 @@ document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key 
 if (sessionStorage.getItem(SESSION_KEY) === '1') {
   document.getElementById('gate').classList.add('hidden');
   renderProjects();
-  updateStorageBar();
-}
-
-// ── Storage ──
-function loadProjects() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch(e) { return []; }
-}
-function saveProjects(projects) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-}
-function updateStorageBar() {
-  try {
-    const used = new Blob(Object.values(localStorage)).size;
-    const max = 5 * 1024 * 1024;
-    const pct = Math.min(100, Math.round(used / max * 100));
-    document.getElementById('storageFill').style.width = pct + '%';
-    document.getElementById('storageLabel').textContent = `Storage used: ~${Math.round(used/1024)}KB of 5MB`;
-    document.getElementById('storageFill').style.background = pct > 80 ? '#a84050' : 'var(--burg)';
-  } catch(e) {}
 }
 
 // ── Photo compression ──
-const photoData = {};
-function handlePhoto(input, previewId, key) {
+const photoFiles = {};
+function handlePhoto(input, previewId, slot) {
   const file = input.files[0];
   if (!file) return;
-  compressImage(file, 900, 0.78, dataUrl => {
-    photoData[key] = dataUrl;
-    const preview = document.getElementById(previewId);
-    preview.innerHTML = `<img src="${dataUrl}" alt="preview">`;
-  });
-}
-function compressImage(file, maxW, quality, cb) {
+  photoFiles[slot] = file;
   const reader = new FileReader();
   reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      let w = img.width, h = img.height;
-      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      cb(canvas.toDataURL('image/jpeg', quality));
-    };
-    img.src = e.target.result;
+    document.getElementById(previewId).innerHTML = `<img src="${e.target.result}" alt="preview">`;
   };
   reader.readAsDataURL(file);
 }
 
+function compressImage(file, maxW, quality) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(resolve, 'image/jpeg', quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // ── Add project ──
-const CAT_LABELS = {kitchen:'Kitchen & Bath', interior:'Interior', outdoor:'Outdoor', repair:'Repair'};
-function addProject() {
+async function addProject() {
   const title = document.getElementById('projTitle').value.trim();
   const cat   = document.getElementById('projCat').value;
   const desc  = document.getElementById('projDesc').value.trim();
-  const before = photoData['beforeData'] || '';
-  const after  = photoData['afterData']  || '';
 
-  if (!title)              { showMsg('Please enter a project title.', 'error'); return; }
-  if (!before && !after)   { showMsg('Please add at least one photo.', 'error'); return; }
+  if (!title)                              { showMsg('Please enter a project title.', 'error'); return; }
+  if (!photoFiles.before && !photoFiles.after) { showMsg('Please add at least one photo.', 'error'); return; }
 
-  const projects = loadProjects();
-  projects.unshift({ id: Date.now(), title, cat, catLabel: CAT_LABELS[cat] || cat, desc, before, after });
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Uploading...';
 
   try {
-    saveProjects(projects);
+    let beforeUrl = '', afterUrl = '';
+    if (photoFiles.before) { showMsg('Uploading before photo...', ''); beforeUrl = await uploadPhoto(photoFiles.before, 'before'); }
+    if (photoFiles.after)  { showMsg('Uploading after photo...', '');  afterUrl  = await uploadPhoto(photoFiles.after,  'after');  }
+
+    showMsg('Saving project...', '');
+    await insertProject({ title, cat, cat_label: CAT_LABELS[cat]||cat, desc, before_url: beforeUrl, after_url: afterUrl });
+
+    // Reset form
+    document.getElementById('projTitle').value = '';
+    document.getElementById('projDesc').value  = '';
+    document.getElementById('beforeFile').value = '';
+    document.getElementById('afterFile').value  = '';
+    document.getElementById('beforePreview').innerHTML = '<span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span>';
+    document.getElementById('afterPreview').innerHTML  = '<span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span>';
+    delete photoFiles.before;
+    delete photoFiles.after;
+
+    showMsg('Saved! Project is live on the gallery.', 'success');
+    renderProjects();
   } catch(e) {
-    showMsg('Storage full — try deleting old projects or use smaller photos.', 'error');
-    return;
+    showMsg('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save to Gallery';
   }
-
-  // Reset form
-  document.getElementById('projTitle').value = '';
-  document.getElementById('projDesc').value  = '';
-  document.getElementById('beforeFile').value = '';
-  document.getElementById('afterFile').value  = '';
-  document.getElementById('beforePreview').innerHTML = '<span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span>';
-  document.getElementById('afterPreview').innerHTML  = '<span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span>';
-  delete photoData['beforeData'];
-  delete photoData['afterData'];
-
-  showMsg('Saved! Project is live on the gallery.', 'success');
-  renderProjects();
-  updateStorageBar();
 }
 
 function showMsg(msg, type) {
   const el = document.getElementById('saveMsg');
   el.textContent = msg;
-  el.className = 'save-msg ' + type;
-  setTimeout(() => { el.textContent = ''; el.className = 'save-msg'; }, 5000);
+  el.className = 'save-msg' + (type ? ' ' + type : '');
+  if (type === 'success' || type === 'error') {
+    setTimeout(() => { el.textContent = ''; el.className = 'save-msg'; }, 5000);
+  }
 }
 
 // ── Delete project ──
-function deleteProject(id) {
+async function deleteProject(id, beforeUrl, afterUrl) {
   if (!confirm('Remove this project from the gallery?')) return;
-  saveProjects(loadProjects().filter(p => p.id !== id));
-  renderProjects();
-  updateStorageBar();
+  try {
+    await deleteProjectFromDB(id, beforeUrl, afterUrl);
+    renderProjects();
+  } catch(e) {
+    alert('Delete failed: ' + e.message);
+  }
 }
 
 // ── Render project list ──
-function renderProjects() {
-  const projects = loadProjects();
-  document.getElementById('projCount').textContent = projects.length;
+async function renderProjects() {
   const list = document.getElementById('projectList');
-  if (!projects.length) {
-    list.innerHTML = '<p class="empty-msg">No projects yet — add one above and it will show up on the public gallery.</p>';
-    return;
+  list.innerHTML = '<p class="loading-msg">Loading projects...</p>';
+  try {
+    const projects = await fetchProjects();
+    document.getElementById('projCount').textContent = projects.length;
+    if (!projects.length) {
+      list.innerHTML = '<p class="empty-msg">No projects yet — add one above and it will show up on the public gallery.</p>';
+      return;
+    }
+    list.innerHTML = projects.map(p => `
+      <div class="proj-card">
+        <div class="proj-thumbs">
+          <div class="proj-thumb-wrap">
+            <span class="proj-thumb-tag before-tag">Before</span>
+            ${p.before_url ? `<img src="${p.before_url}" alt="Before">` : '<div class="proj-thumb-ph">No before</div>'}
+          </div>
+          <div class="proj-thumb-wrap">
+            <span class="proj-thumb-tag after-tag">After</span>
+            ${p.after_url  ? `<img src="${p.after_url}"  alt="After">`  : '<div class="proj-thumb-ph">No after</div>'}
+          </div>
+        </div>
+        <div class="proj-info">
+          <div class="proj-title">${p.title}</div>
+          <div class="proj-meta">${p.cat_label}</div>
+          <div class="proj-desc">${p.desc || '—'}</div>
+        </div>
+        <button class="del-btn" onclick="deleteProject(${p.id}, '${p.before_url||''}', '${p.after_url||''}')">Delete</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = `<p class="save-msg error">Could not load projects: ${e.message}</p>`;
   }
-  list.innerHTML = projects.map(p => `
-    <div class="proj-card">
-      <div class="proj-thumbs">
-        ${p.before ? `<img src="${p.before}" alt="Before">` : '<div class="proj-thumb-ph">No before</div>'}
-        ${p.after  ? `<img src="${p.after}"  alt="After">`  : '<div class="proj-thumb-ph">No after</div>'}
-      </div>
-      <div class="proj-info">
-        <div class="proj-title">${p.title}</div>
-        <div class="proj-meta">${p.catLabel}</div>
-        <div class="proj-desc">${p.desc || '—'}</div>
-      </div>
-      <button class="del-btn" onclick="deleteProject(${p.id})">Delete</button>
-    </div>
-  `).join('');
 }
 </script>
 </body>

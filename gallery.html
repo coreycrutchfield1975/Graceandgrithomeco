@@ -10,7 +10,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --burg:#7a2a35;--burg-dark:#541c23;--burg-light:#a84050;
-  --sage:#6a8568;--sage-dark:#4a6349;
   --cream:#fdf8f0;--cream-dark:#f0e8d8;
   --gold:#b8894a;--gold-light:#d4a96a;
   --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
@@ -18,8 +17,6 @@
 }
 html{scroll-behavior:smooth;}
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
-
-/* NAV */
 nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);backdrop-filter:blur(8px);box-shadow:0 2px 18px rgba(0,0,0,0.4);}
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.5rem;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.15rem;font-weight:700;text-decoration:none;}
@@ -35,63 +32,45 @@ nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);b
   .nav-links.open{display:flex;}
   .hamburger{display:flex;}
 }
-
-/* PAGE HERO */
 .gallery-hero{padding:8rem 1.5rem 3.5rem;text-align:center;background:linear-gradient(180deg,rgba(44,36,24,0.04) 0%,var(--cream) 100%);}
 .gallery-hero .badge{display:inline-block;background:rgba(184,137,74,0.15);border:1px solid rgba(184,137,74,0.4);color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 1.2rem;border-radius:20px;margin-bottom:1.2rem;}
 .gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);color:var(--charcoal);line-height:1.2;margin-bottom:0.75rem;}
 .gallery-hero h1 em{color:var(--burg);font-style:italic;}
 .gallery-hero p{color:var(--text-light);font-size:0.95rem;max-width:520px;margin:0 auto;}
-
-/* FILTER TABS */
 .filter-bar{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;padding:1rem 1.5rem 2rem;}
 .filter-btn{padding:0.45rem 1.2rem;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;color:var(--text-light);cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;}
 .filter-btn:hover,.filter-btn.active{background:var(--burg);border-color:var(--burg);color:var(--white);}
-
-/* GALLERY GRID */
 .gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem 5rem;}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.75rem;}
 @media(max-width:500px){.gallery-grid{grid-template-columns:1fr;}}
-
-/* PROJECT CARD */
 .project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(44,36,24,0.08);transition:transform 0.22s,box-shadow 0.22s;}
 .project-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(44,36,24,0.14);}
-.project-card[data-cat].hidden{display:none;}
-
-/* BEFORE/AFTER SLIDER */
+/* Slider: after=base layer, before=clipped top layer */
 .slider-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;cursor:col-resize;user-select:none;}
 .slider-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.slider-after{clip-path:inset(0 50% 0 0);}
+.slider-after{z-index:1;}
+.slider-before{z-index:2;clip-path:inset(0 50% 0 0);}
 .slider-divider{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--white);transform:translateX(-50%);z-index:3;pointer-events:none;}
 .slider-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;background:var(--white);border-radius:50%;box-shadow:0 2px 12px rgba(0,0,0,0.25);z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none;}
 .slider-handle svg{width:18px;height:18px;color:var(--burg);}
 .ba-labels{position:absolute;bottom:0.75rem;left:0;right:0;display:flex;justify-content:space-between;padding:0 0.75rem;z-index:5;pointer-events:none;}
 .ba-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;background:rgba(44,36,24,0.65);color:var(--white);padding:0.2rem 0.55rem;border-radius:4px;}
-
-/* PLACEHOLDER (no image) */
 .img-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;background:var(--cream-dark);}
 .img-placeholder svg{width:36px;height:36px;color:var(--border);}
 .img-placeholder span{font-size:0.72rem;color:var(--text-light);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
-
-/* CARD INFO */
 .card-info{padding:1.1rem 1.25rem 1.25rem;}
 .card-tag{display:inline-block;font-size:0.68rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
 .card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--charcoal);margin-bottom:0.3rem;}
 .card-desc{font-size:0.82rem;color:var(--text-light);line-height:1.55;}
-
-/* EMPTY STATE */
 .empty-state{text-align:center;padding:4rem 1rem;color:var(--text-light);}
 .empty-state svg{width:48px;height:48px;color:var(--border);margin-bottom:1rem;}
 .empty-state p{font-size:0.9rem;}
-
-/* CTA STRIP */
 .cta-strip{background:linear-gradient(135deg,var(--burg-dark),var(--burg));padding:3.5rem 1.5rem;text-align:center;}
 .cta-strip h2{font-family:'Playfair Display',serif;color:var(--white);font-size:1.8rem;margin-bottom:0.75rem;}
 .cta-strip h2 em{color:var(--gold-light);font-style:italic;}
 .cta-strip p{color:rgba(255,255,255,0.72);font-size:0.9rem;margin-bottom:1.75rem;}
 .btn-white{display:inline-block;padding:0.85rem 2.2rem;border-radius:40px;background:var(--white);color:var(--burg);font-weight:800;font-size:0.93rem;text-decoration:none;transition:all 0.22s;letter-spacing:0.03em;}
 .btn-white:hover{background:var(--cream-dark);transform:translateY(-2px);}
-
 footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;padding:2rem 1rem;font-size:0.78rem;}
 </style>
 </head>
@@ -119,17 +98,19 @@ footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;
   <p>Real homes. Real results. Browse our before &amp; after transformations and see what we can do for yours.</p>
 </div>
 
-<div class="filter-bar" id="filterBar">
-  <button class="filter-btn active" data-filter="all" onclick="filterGallery(this,'all')">All Projects</button>
-  <button class="filter-btn" data-filter="outdoor" onclick="filterGallery(this,'outdoor')">Outdoor</button>
-  <button class="filter-btn" data-filter="interior" onclick="filterGallery(this,'interior')">Interior</button>
-  <button class="filter-btn" data-filter="kitchen" onclick="filterGallery(this,'kitchen')">Kitchen &amp; Bath</button>
-  <button class="filter-btn" data-filter="repair" onclick="filterGallery(this,'repair')">Repairs</button>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterGallery(this,'all')">All Projects</button>
+  <button class="filter-btn" onclick="filterGallery(this,'outdoor')">Outdoor</button>
+  <button class="filter-btn" onclick="filterGallery(this,'interior')">Interior</button>
+  <button class="filter-btn" onclick="filterGallery(this,'kitchen')">Kitchen &amp; Bath</button>
+  <button class="filter-btn" onclick="filterGallery(this,'repair')">Repairs</button>
 </div>
 
 <div class="gallery-wrap">
   <div class="gallery-grid" id="galleryGrid">
-    <!-- Cards rendered by JS from PROJECTS array below -->
+    <div class="empty-state" style="grid-column:1/-1;">
+      <p>Loading projects...</p>
+    </div>
   </div>
 </div>
 
@@ -144,12 +125,18 @@ footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;
 </footer>
 
 <script>
-// Projects are managed through the admin gallery page and stored in localStorage.
-function loadProjects() {
-  try { return JSON.parse(localStorage.getItem('gg_gallery_v1')) || []; }
-  catch(e) { return []; }
+const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTg2OTEsImV4cCI6MjA5NDY3NDY5MX0.juN2sGipRnNKDX604Hvj_ELt2CeMnBXmzU9HBfTvR4g';
+
+let allProjects = [];
+
+async function loadProjects() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/projects?order=created_at.desc&select=*`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  if (!res.ok) throw new Error('Failed to load');
+  return res.json();
 }
-const PROJECTS = loadProjects();
 
 function placeholder(label) {
   return `<div class="img-placeholder">
@@ -162,19 +149,19 @@ function placeholder(label) {
 }
 
 function renderCard(p) {
-  const hasImages = p.before || p.after;
-  const beforeContent = p.before
-    ? `<img class="slider-img" src="${p.before}" alt="Before" loading="lazy">`
-    : placeholder('Before Photo');
-  const afterContent = p.after
-    ? `<img class="slider-img slider-after" src="${p.after}" alt="After" loading="lazy">`
-    : `<div class="slider-img slider-after" style="display:flex;">${placeholder('After Photo')}</div>`;
+  // after = base layer (fully visible), before = clipped top layer (left side)
+  const afterContent  = p.after_url
+    ? `<img class="slider-img slider-after"  src="${p.after_url}"  alt="After"  loading="lazy">`
+    : `<div class="slider-img slider-after"  style="display:flex;">${placeholder('After Photo')}</div>`;
+  const beforeContent = p.before_url
+    ? `<img class="slider-img slider-before" src="${p.before_url}" alt="Before" loading="lazy">`
+    : `<div class="slider-img slider-before" style="display:flex;">${placeholder('Before Photo')}</div>`;
 
   return `
   <div class="project-card" data-cat="${p.cat}">
     <div class="slider-wrap" data-slider>
-      ${beforeContent}
       ${afterContent}
+      ${beforeContent}
       <div class="slider-divider"></div>
       <div class="slider-handle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -187,16 +174,17 @@ function renderCard(p) {
       </div>
     </div>
     <div class="card-info">
-      <div class="card-tag">${p.catLabel}</div>
+      <div class="card-tag">${p.cat_label}</div>
       <div class="card-title">${p.title}</div>
-      <div class="card-desc">${p.desc}</div>
+      <div class="card-desc">${p.desc || ''}</div>
     </div>
   </div>`;
 }
 
-function renderGallery(filter = 'all') {
+function renderGallery(filter) {
+  filter = filter || 'all';
+  const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.cat === filter);
   const grid = document.getElementById('galleryGrid');
-  const filtered = filter === 'all' ? PROJECTS : PROJECTS.filter(p => p.cat === filter);
   if (!filtered.length) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -217,39 +205,43 @@ function filterGallery(btn, cat) {
   renderGallery(cat);
 }
 
-// ---- Before/After Slider Logic ----
 function initSliders() {
   document.querySelectorAll('[data-slider]').forEach(wrap => {
-    const after = wrap.querySelector('.slider-after');
+    const before  = wrap.querySelector('.slider-before');
     const divider = wrap.querySelector('.slider-divider');
-    const handle = wrap.querySelector('.slider-handle');
-    let dragging = false;
+    const handle  = wrap.querySelector('.slider-handle');
+    let dragging  = false;
 
     function setPos(pct) {
       pct = Math.max(2, Math.min(98, pct));
       divider.style.left = pct + '%';
-      handle.style.left = pct + '%';
-      after.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      handle.style.left  = pct + '%';
+      before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
     }
-
     function getPos(e) {
       const rect = wrap.getBoundingClientRect();
       const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
       return (x / rect.width) * 100;
     }
-
-    wrap.addEventListener('mousedown', e => { dragging = true; setPos(getPos(e)); });
+    wrap.addEventListener('mousedown',  e => { dragging = true; setPos(getPos(e)); });
     wrap.addEventListener('touchstart', e => { dragging = true; setPos(getPos(e)); }, {passive:true});
-    window.addEventListener('mousemove', e => { if (dragging) setPos(getPos(e)); });
-    window.addEventListener('touchmove', e => { if (dragging) setPos(getPos(e)); }, {passive:true});
-    window.addEventListener('mouseup', () => dragging = false);
+    window.addEventListener('mousemove',  e => { if (dragging) setPos(getPos(e)); });
+    window.addEventListener('touchmove',  e => { if (dragging) setPos(getPos(e)); }, {passive:true});
+    window.addEventListener('mouseup',  () => dragging = false);
     window.addEventListener('touchend', () => dragging = false);
-
     setPos(50);
   });
 }
 
-renderGallery();
+// Init
+loadProjects().then(projects => {
+  allProjects = projects;
+  renderGallery('all');
+}).catch(() => {
+  document.getElementById('galleryGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+    <p>Could not load projects. Please try again later.</p>
+  </div>`;
+});
 </script>
 </body>
 </html>
