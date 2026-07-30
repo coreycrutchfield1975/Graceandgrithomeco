@@ -4,24 +4,28 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve all static files from the deployment root
 const rootDir = __dirname;
-console.log('Serving from:', rootDir);
-console.log('Files:', fs.readdirSync(rootDir).slice(0, 20));
 
+// Serve all static files first (HTML, CSS, JS, images, etc.)
 app.use(express.static(rootDir, {
   maxAge: '30d',
-  etag: true
+  etag: true,
+  extensions: ['html']  // serve gallery.html when /gallery is requested
 }));
 
-// Explicit route for images
+// Explicit images route
 app.use('/images', express.static(path.join(rootDir, 'images'), {
   maxAge: '30d',
   etag: true
 }));
 
-// Fallback
-app.get('*', (req, res) => {
+// SPA fallback — only fire if no static file matched
+app.use((req, res, next) => {
+  const filePath = path.join(rootDir, req.path);
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    return res.sendFile(filePath);
+  }
+  // If route doesn't match a file, serve index.html
   res.sendFile(path.join(rootDir, 'index.html'));
 });
 
