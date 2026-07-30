@@ -18,6 +18,8 @@
 }
 html{scroll-behavior:smooth;}
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+
+/* NAV */
 nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);backdrop-filter:blur(8px);box-shadow:0 2px 18px rgba(0,0,0,0.4);}
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.5rem;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.15rem;font-weight:700;text-decoration:none;}
@@ -33,46 +35,43 @@ nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);b
   .nav-links.open{display:flex;}
   .hamburger{display:flex;}
 }
-.gallery-hero{padding:8rem 1.5rem 3.5rem;text-align:center;background:linear-gradient(180deg,rgba(44,36,24,0.04) 0%,var(--cream) 100%);}
-.gallery-hero .badge{display:inline-block;background:rgba(184,137,74,0.15);border:1px solid rgba(184,137,74,0.4);color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 1.2rem;border-radius:20px;margin-bottom:1.2rem;}
-.gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);color:var(--charcoal);line-height:1.2;margin-bottom:0.75rem;}
-.gallery-hero h1 em{color:var(--burg);font-style:italic;}
-.gallery-hero p{color:var(--text-light);font-size:0.95rem;max-width:520px;margin:0 auto;}
-.filter-bar{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;padding:1rem 1.5rem 2rem;}
-.filter-btn{padding:0.45rem 1.2rem;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;color:var(--text-light);cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;}
-.filter-btn:hover,.filter-btn.active{background:var(--burg);border-color:var(--burg);color:var(--white);}
-.gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem 5rem;}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.75rem;}
-@media(max-width:500px){.gallery-grid{grid-template-columns:1fr;}}
-.project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(44,36,24,0.08);transition:transform 0.22s,box-shadow 0.22s;}
-.project-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(44,36,24,0.14);}
-/* Slider: after=base layer, before=clipped top layer */
-.slider-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;cursor:col-resize;user-select:none;}
-.slider-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.slider-after{z-index:1;}
-.slider-before{z-index:2;clip-path:inset(0 50% 0 0);}
-.slider-divider{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--white);transform:translateX(-50%);z-index:3;pointer-events:none;}
-.slider-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;background:var(--white);border-radius:50%;box-shadow:0 2px 12px rgba(0,0,0,0.25);z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-.slider-handle svg{width:18px;height:18px;color:var(--burg);}
-.ba-labels{position:absolute;bottom:0.75rem;left:0;right:0;display:flex;justify-content:space-between;padding:0 0.75rem;z-index:5;pointer-events:none;}
-.ba-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;background:rgba(44,36,24,0.65);color:var(--white);padding:0.2rem 0.55rem;border-radius:4px;}
-.img-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;background:var(--cream-dark);}
-.img-placeholder svg{width:36px;height:36px;color:var(--border);}
-.img-placeholder span{font-size:0.72rem;color:var(--text-light);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
-.card-info{padding:1.1rem 1.25rem 1.25rem;}
-.card-tag{display:inline-block;font-size:0.68rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
-.card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--charcoal);margin-bottom:0.3rem;}
-.card-desc{font-size:0.82rem;color:var(--text-light);line-height:1.55;}
-.empty-state{text-align:center;padding:4rem 1rem;color:var(--text-light);}
-.empty-state svg{width:48px;height:48px;color:var(--border);margin-bottom:1rem;}
-.empty-state p{font-size:0.9rem;}
-.cta-strip{background:linear-gradient(135deg,var(--burg-dark),var(--burg));padding:3.5rem 1.5rem;text-align:center;}
-.cta-strip h2{font-family:'Playfair Display',serif;color:var(--white);font-size:1.8rem;margin-bottom:0.75rem;}
+
+/* GALLERY HERO */
+.gallery-hero{text-align:center;padding:8rem 1.5rem 3rem;background:linear-gradient(180deg,var(--charcoal) 0%,var(--burg-dark) 60%,var(--cream) 100%);}
+.badge{display:inline-block;background:rgba(184,137,74,0.2);border:1px solid rgba(184,137,74,0.55);color:var(--gold-light);font-size:0.73rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.4rem 1.3rem;border-radius:20px;margin-bottom:1.5rem;}
+.gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);color:var(--white);line-height:1.15;margin-bottom:1rem;}
+.gallery-hero h1 em{color:var(--gold-light);font-style:italic;}
+.gallery-hero p{color:rgba(255,255,255,0.7);font-size:1.05rem;max-width:500px;margin:0 auto;}
+
+/* FILTER */
+.filter-bar{display:flex;justify-content:center;gap:0.5rem;padding:1.5rem;flex-wrap:wrap;}
+.filter-btn{background:var(--white);border:1px solid var(--border);color:var(--text);padding:0.5rem 1.2rem;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.filter-btn:hover,.filter-btn.active{background:var(--burg);color:var(--white);border-color:var(--burg);}
+
+/* GALLERY GRID */
+.gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.5rem 3rem;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
+.project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;}
+.project-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
+.project-card img{width:100%;height:250px;object-fit:cover;display:block;}
+.card-info{padding:1rem 1.2rem;}
+.card-tag{display:inline-block;background:var(--cream-dark);color:var(--burg);font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.7rem;border-radius:10px;margin-bottom:0.5rem;}
+.card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;}
+.card-desc{font-size:0.85rem;color:var(--text-light);line-height:1.4;}
+
+/* CTA */
+.cta-strip{text-align:center;padding:3rem 1.5rem;background:var(--charcoal);color:var(--white);}
+.cta-strip h2{font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:0.5rem;}
 .cta-strip h2 em{color:var(--gold-light);font-style:italic;}
-.cta-strip p{color:rgba(255,255,255,0.72);font-size:0.9rem;margin-bottom:1.75rem;}
-.btn-white{display:inline-block;padding:0.85rem 2.2rem;border-radius:40px;background:var(--white);color:var(--burg);font-weight:800;font-size:0.93rem;text-decoration:none;transition:all 0.22s;letter-spacing:0.03em;}
-.btn-white:hover{background:var(--cream-dark);transform:translateY(-2px);}
-footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;padding:2rem 1rem;font-size:0.78rem;}
+.cta-strip p{color:rgba(255,255,255,0.6);margin-bottom:1.5rem;}
+.btn-white{display:inline-block;background:var(--white);color:var(--charcoal);padding:0.8rem 2rem;border-radius:30px;font-weight:700;text-decoration:none;transition:background 0.2s;}
+.btn-white:hover{background:var(--gold-light);}
+
+footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light);background:var(--cream-dark);}
+
+@media(max-width:600px){
+  .gallery-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
@@ -96,153 +95,60 @@ footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;
 <div class="gallery-hero">
   <div class="badge">Project Gallery</div>
   <h1>Built with <em>Grace.</em><br>Done with Grit.</h1>
-  <p>Real homes. Real results. Browse our before &amp; after transformations and see what we can do for yours.</p>
+  <p>Real homes. Real results. Browse our before & after transformations.</p>
 </div>
 
 <div class="filter-bar">
   <button class="filter-btn active" onclick="filterGallery(this,'all')">All Projects</button>
   <button class="filter-btn" onclick="filterGallery(this,'outdoor')">Outdoor</button>
   <button class="filter-btn" onclick="filterGallery(this,'interior')">Interior</button>
-  <button class="filter-btn" onclick="filterGallery(this,'kitchen')">Kitchen &amp; Bath</button>
   <button class="filter-btn" onclick="filterGallery(this,'repair')">Repairs</button>
 </div>
 
 <div class="gallery-wrap">
-  <div class="gallery-grid" id="galleryGrid">
-    <div class="empty-state" style="grid-column:1/-1;">
-      <p>Loading projects...</p>
-    </div>
-  </div>
+  <div class="gallery-grid" id="galleryGrid"></div>
 </div>
 
 <div class="cta-strip">
   <h2>Ready to transform<br><em>your home?</em></h2>
-  <p>Let's talk about what Grace &amp; Grit can do for you.</p>
+  <p>Let's talk about what Grace & Grit can do for you.</p>
   <a href="/#schedule" class="btn-white">Get a Free Estimate</a>
 </div>
 
 <footer>
-  &copy; 2025 Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; All Rights Reserved
+  &copy; 2025 Grace & Grit Home Co. &bull; Poplar Bluff, MO &bull; All Rights Reserved
 </footer>
 
 <script>
-const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTg2OTEsImV4cCI6MjA5NDY3NDY5MX0.juN2sGipRnNKDX604Hvj_ELt2CeMnBXmzU9HBfTvR4g';
-
-let allProjects = [];
-
-async function loadProjects() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/projects?order=created_at.desc&select=*`, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-  });
-  if (!res.ok) throw new Error('Failed to load');
-  return res.json();
-}
-
-function placeholder(label) {
-  return `<div class="img-placeholder">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-      <polyline points="21 15 16 10 5 21"/>
-    </svg>
-    <span>${label}</span>
-  </div>`;
-}
-
-function renderCard(p) {
-  // after = base layer (fully visible), before = clipped top layer (left side)
-  const afterContent  = p.after_url
-    ? `<img class="slider-img slider-after"  src="${p.after_url}"  alt="After"  loading="lazy">`
-    : `<div class="slider-img slider-after"  style="display:flex;">${placeholder('After Photo')}</div>`;
-  const beforeContent = p.before_url
-    ? `<img class="slider-img slider-before" src="${p.before_url}" alt="Before" loading="lazy">`
-    : `<div class="slider-img slider-before" style="display:flex;">${placeholder('Before Photo')}</div>`;
-
-  return `
-  <div class="project-card" data-cat="${p.cat}">
-    <div class="slider-wrap" data-slider>
-      ${afterContent}
-      ${beforeContent}
-      <div class="slider-divider"></div>
-      <div class="slider-handle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="15 18 9 12 15 6"/><polyline points="9 18 15 12 9 6" transform="translate(6,0)"/>
-        </svg>
-      </div>
-      <div class="ba-labels">
-        <span class="ba-label">Before</span>
-        <span class="ba-label">After</span>
-      </div>
-    </div>
-    <div class="card-info">
-      <div class="card-tag">${p.cat_label}</div>
-      <div class="card-title">${p.title}</div>
-      <div class="card-desc">${p.desc || ''}</div>
-    </div>
-  </div>`;
-}
+// Static gallery — images stored in /images/
+var allProjects = [
+  {cat:'outdoor',cat_label:'Outdoor',title:'Pasture Clearing & Fence Line',desc:'Overgrown pasture restored — brush cleared, fence line exposed, ready for livestock.',img:'/images/work1.jpg'},
+  {cat:'interior',cat_label:'Interior',title:'Living Room Refresh',desc:'Fresh paint, trim restored, and furniture staging — a complete room transformation.',img:'/images/work2.jpg'},
+  {cat:'repair',cat_label:'Repair',title:'Deck & Porch Repair',desc:'Rotted boards replaced, railing reinforced, and a fresh power wash.',img:'/images/work3.jpg'},
+  {cat:'outdoor',cat_label:'Outdoor',title:'Driveway Grading & Gravel',desc:'Potholes filled, surface graded, and fresh gravel spread for a smooth approach.',img:'/images/work4.jpg'}
+];
 
 function renderGallery(filter) {
   filter = filter || 'all';
-  const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.cat === filter);
-  const grid = document.getElementById('galleryGrid');
+  var filtered = filter === 'all' ? allProjects : allProjects.filter(function(p){return p.cat === filter;});
+  var grid = document.getElementById('galleryGrid');
   if (!filtered.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <path d="M9 9l6 6M15 9l-6 6"/>
-      </svg>
-      <p>No projects in this category yet. Check back soon!</p>
-    </div>`;
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light)"><p style="font-size:1.1rem">No projects in this category yet. Check back soon!</p></div>';
   } else {
-    grid.innerHTML = filtered.map(renderCard).join('');
+    grid.innerHTML = filtered.map(function(p){
+      return '<div class="project-card" data-cat="'+p.cat+'"><img src="'+p.img+'" alt="'+p.title+'" loading="lazy"><div class="card-info"><div class="card-tag">'+p.cat_label+'</div><div class="card-title">'+p.title+'</div><div class="card-desc">'+p.desc+'</div></div></div>';
+    }).join('');
   }
-  initSliders();
 }
 
 function filterGallery(btn, cat) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   renderGallery(cat);
 }
 
-function initSliders() {
-  document.querySelectorAll('[data-slider]').forEach(wrap => {
-    const before  = wrap.querySelector('.slider-before');
-    const divider = wrap.querySelector('.slider-divider');
-    const handle  = wrap.querySelector('.slider-handle');
-    let dragging  = false;
-
-    function setPos(pct) {
-      pct = Math.max(2, Math.min(98, pct));
-      divider.style.left = pct + '%';
-      handle.style.left  = pct + '%';
-      before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-    }
-    function getPos(e) {
-      const rect = wrap.getBoundingClientRect();
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      return (x / rect.width) * 100;
-    }
-    wrap.addEventListener('mousedown',  e => { dragging = true; setPos(getPos(e)); });
-    wrap.addEventListener('touchstart', e => { dragging = true; setPos(getPos(e)); }, {passive:true});
-    window.addEventListener('mousemove',  e => { if (dragging) setPos(getPos(e)); });
-    window.addEventListener('touchmove',  e => { if (dragging) setPos(getPos(e)); }, {passive:true});
-    window.addEventListener('mouseup',  () => dragging = false);
-    window.addEventListener('touchend', () => dragging = false);
-    setPos(50);
-  });
-}
-
-// Init
-loadProjects().then(projects => {
-  allProjects = projects;
-  renderGallery('all');
-}).catch(() => {
-  document.getElementById('galleryGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
-    <p>Could not load projects. Please try again later.</p>
-  </div>`;
-});
+renderGallery('all');
 </script>
+
 </body>
 </html>
