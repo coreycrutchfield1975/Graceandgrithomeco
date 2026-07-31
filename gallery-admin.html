@@ -163,74 +163,59 @@ nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-item
 </div>
 
 <script>
-const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTg2OTEsImV4cCI6MjA5NDY3NDY5MX0.juN2sGipRnNKDX604Hvj_ELt2CeMnBXmzU9HBfTvR4g';
-const BUCKET = 'gallery-photos';
+const STORAGE_KEY = 'gg_gallery_projects';
 const ADMIN_PASSWORD = 'Il@vemyhusband';
 const SESSION_KEY = 'gg_admin_auth';
 const CAT_LABELS = {kitchen:'Kitchen & Bath', interior:'Interior', outdoor:'Outdoor', repair:'Repair'};
 
-// ── Supabase helpers ──
-async function sbFetch(path, opts={}) {
-  const res = await fetch(SUPABASE_URL + path, {
-    ...opts,
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      ...(opts.headers||{})
-    }
-  });
-  return res;
+// ── Local storage helpers ──
+function loadProjects() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e) { return []; }
+}
+function saveProjects(projects) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
 }
 
-async function uploadPhoto(file, slot) {
-  // Compress first
-  const blob = await compressImage(file, 900, 0.78);
-  const ext = 'jpg';
-  const filename = `${Date.now()}_${slot}.${ext}`;
-  const res = await sbFetch(`/storage/v1/object/${BUCKET}/${filename}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'image/jpeg', 'x-upsert': 'true' },
-    body: blob
+let photoFiles = {};
+
+async function readPhotoAsDataURL(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > 900) { h = Math.round(h * 900 / w); w = 900; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.78));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   });
-  if (!res.ok) throw new Error('Photo upload failed');
-  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
 }
+
+function fetchProjects() { return loadProjects(); }
 
 async function insertProject(data) {
-  const res = await sbFetch('/rest/v1/projects', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) { const e = await res.text(); throw new Error(e); }
-  return res.json();
+  data.id = Date.now();
+  const projects = loadProjects();
+  projects.unshift(data);
+  saveProjects(projects);
+  return data;
 }
 
-async function fetchProjects() {
-  const res = await sbFetch('/rest/v1/projects?order=created_at.desc&select=*');
-  if (!res.ok) throw new Error('Could not load projects');
-  return res.json();
-}
+async function fetchProjects() { return loadProjects(); }
 
 async function deleteProjectFromDB(id, beforeUrl, afterUrl) {
-  // Delete DB row
-  await sbFetch(`/rest/v1/projects?id=eq.${id}`, { method: 'DELETE' });
-  // Delete storage files
-  const files = [beforeUrl, afterUrl].filter(Boolean).map(url => {
-    const parts = url.split(`/${BUCKET}/`);
-    return parts[1] || null;
-  }).filter(Boolean);
-  if (files.length) {
-    await sbFetch(`/storage/v1/object/${BUCKET}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prefixes: files })
-    });
-  }
+  const projects = loadProjects();
+  saveProjects(projects.filter(p => p.id !== id));
 }
 
-// ── Password gate ──
+function previewPhoto(input, slot, previewId) {
 function checkPassword() {
   if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
     sessionStorage.setItem(SESSION_KEY, '1');
@@ -296,8 +281,8 @@ async function addProject() {
 
   try {
     let beforeUrl = '', afterUrl = '';
-    if (photoFiles.before) { showMsg('Uploading before photo...', ''); beforeUrl = await uploadPhoto(photoFiles.before, 'before'); }
-    if (photoFiles.after)  { showMsg('Uploading after photo...', '');  afterUrl  = await uploadPhoto(photoFiles.after,  'after');  }
+    if (photoFiles.before) { showMsg('Processing before photo...', ''); beforeUrl = await readPhotoAsDataURL(photoFiles.before); }
+    if (photoFiles.after)  { showMsg('Processing after photo...', '');  afterUrl  = await readPhotoAsDataURL(photoFiles.after);  }
 
     showMsg('Saving project...', '');
     await insertProject({ title, cat, cat_label: CAT_LABELS[cat]||cat, desc, before_url: beforeUrl, after_url: afterUrl });

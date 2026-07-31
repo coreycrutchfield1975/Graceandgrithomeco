@@ -120,23 +120,33 @@ footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light)
 </footer>
 
 <script>
-// Static gallery — images stored in /images/
-var allProjects = [
-  {cat:'outdoor',cat_label:'Outdoor',title:'Pasture Clearing & Fence Line',desc:'Overgrown pasture restored — brush cleared, fence line exposed, ready for livestock.',img:'/images/work1.jpg'},
-  {cat:'interior',cat_label:'Interior',title:'Living Room Refresh',desc:'Fresh paint, trim restored, and furniture staging — a complete room transformation.',img:'/images/work2.jpg'},
-  {cat:'repair',cat_label:'Repair',title:'Deck & Porch Repair',desc:'Rotted boards replaced, railing reinforced, and a fresh power wash.',img:'/images/work3.jpg'},
-  {cat:'outdoor',cat_label:'Outdoor',title:'Driveway Grading & Gravel',desc:'Potholes filled, surface graded, and fresh gravel spread for a smooth approach.',img:'/images/work4.jpg'}
+// Gallery loads from localStorage (managed via /gallery-admin.html)
+var DEFAULT_PROJECTS = [
+  {id:1,cat:'outdoor',cat_label:'Outdoor',title:'Pasture Clearing & Fence Line',desc:'Overgrown pasture restored — brush cleared, fence line exposed, ready for livestock.',img:'/images/work1.jpg'},
+  {id:2,cat:'interior',cat_label:'Interior',title:'Living Room Refresh',desc:'Fresh paint, trim restored, and furniture staging — a complete room transformation.',img:'/images/work2.jpg'},
+  {id:3,cat:'repair',cat_label:'Repair',title:'Deck & Porch Repair',desc:'Rotted boards replaced, railing reinforced, and a fresh power wash.',img:'/images/work3.jpg'},
+  {id:4,cat:'outdoor',cat_label:'Outdoor',title:'Driveway Grading & Gravel',desc:'Potholes filled, surface graded, and fresh gravel spread for a smooth approach.',img:'/images/work4.jpg'}
 ];
+
+function loadGallery() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('gg_gallery_projects'));
+    if (saved && saved.length) return saved;
+  } catch(e) {}
+  return DEFAULT_PROJECTS;
+}
 
 function renderGallery(filter) {
   filter = filter || 'all';
-  var filtered = filter === 'all' ? allProjects : allProjects.filter(function(p){return p.cat === filter;});
+  var projects = loadGallery();
+  var filtered = filter === 'all' ? projects : projects.filter(function(p){return p.cat === filter;});
   var grid = document.getElementById('galleryGrid');
   if (!filtered.length) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light)"><p style="font-size:1.1rem">No projects in this category yet. Check back soon!</p></div>';
   } else {
     grid.innerHTML = filtered.map(function(p){
-      return '<div class="project-card" data-cat="'+p.cat+'"><img src="'+p.img+'" alt="'+p.title+'" loading="lazy"><div class="card-info"><div class="card-tag">'+p.cat_label+'</div><div class="card-title">'+p.title+'</div><div class="card-desc">'+p.desc+'</div></div></div>';
+      var img = p.before_url || p.after_url || p.img || '';
+      return '<div class="project-card" data-cat="'+p.cat+'"><img src="'+img+'" alt="'+p.title+'" loading="lazy"><div class="card-info"><div class="card-tag">'+(p.cat_label||p.cat)+'</div><div class="card-title">'+p.title+'</div><div class="card-desc">'+(p.desc||'')+'</div></div></div>';
     }).join('');
   }
 }
