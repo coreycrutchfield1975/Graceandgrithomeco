@@ -177,7 +177,7 @@ const SESSION_KEY = 'gg_admin_auth';
 function checkPassword() {
   const val = document.getElementById('pwInput').value;
   if (val === ADMIN_PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, '1');
+    localStorage.setItem(SESSION_KEY, '1');
     document.getElementById('gate').classList.add('hidden');
   } else {
     document.getElementById('gateErr').style.display = 'block';
@@ -187,7 +187,7 @@ function checkPassword() {
 }
 
 function logout() {
-  sessionStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(SESSION_KEY);
   window.location.href = '/';
 }
 
@@ -197,7 +197,7 @@ document.getElementById('pwInput').addEventListener('keydown', e => {
 });
 
 // Check session on load
-if (sessionStorage.getItem(SESSION_KEY) === '1') {
+if (localStorage.getItem(SESSION_KEY) === '1') {
   document.getElementById('gate').classList.add('hidden');
 }
 </script>

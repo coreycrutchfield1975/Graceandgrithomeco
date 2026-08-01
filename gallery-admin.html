@@ -177,7 +177,6 @@ function saveProjects(projects) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
 }
 
-let photoFiles = {};
 
 async function readPhotoAsDataURL(file) {
   return new Promise(resolve => {
@@ -198,8 +197,6 @@ async function readPhotoAsDataURL(file) {
   });
 }
 
-function fetchProjects() { return loadProjects(); }
-
 async function insertProject(data) {
   data.id = Date.now();
   const projects = loadProjects();
@@ -215,10 +212,9 @@ async function deleteProjectFromDB(id, beforeUrl, afterUrl) {
   saveProjects(projects.filter(p => p.id !== id));
 }
 
-function previewPhoto(input, slot, previewId) {
 function checkPassword() {
   if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, '1');
+    localStorage.setItem(SESSION_KEY, '1');
     document.getElementById('gate').classList.add('hidden');
     renderProjects();
   } else {
@@ -227,9 +223,9 @@ function checkPassword() {
     document.getElementById('pwInput').focus();
   }
 }
-function logout() { sessionStorage.removeItem(SESSION_KEY); window.location.href = '/'; }
+function logout() { localStorage.removeItem(SESSION_KEY); window.location.href = '/'; }
 document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
-if (sessionStorage.getItem(SESSION_KEY) === '1') {
+if (localStorage.getItem(SESSION_KEY) === '1') {
   document.getElementById('gate').classList.add('hidden');
   renderProjects();
 }
