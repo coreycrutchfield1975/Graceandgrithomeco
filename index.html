@@ -353,6 +353,7 @@ footer{background:var(--charcoal);border-top:1px solid rgba(255,255,255,0.07);co
         <form id="sf" onsubmit="doSubmit(event)">
           <input type="hidden" name="_subject" value="New Service Request — Grace &amp; Grit Home Co.">
           <input type="hidden" name="contact_method" id="contactMethod" value="Call / Text">
+          <input type="hidden" name="submitted_at" id="submittedAt" value="">
           <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Jane Smith" required></div>
           <div class="row2">
             <div class="fg"><label>Phone Number</label><input type="tel" name="phone" placeholder="573-000-0000" required></div>
@@ -447,6 +448,10 @@ function pick(btn){
 }
 async function doSubmit(e){
   e.preventDefault();
+  // Set submission timestamp in Central Time before sending
+  var now = new Date();
+  var ct = now.toLocaleString('en-US', {timeZone:'America/Chicago', year:'numeric', month:'long', day:'numeric', hour:'numeric', minute:'2-digit', hour12:true});
+  document.getElementById('submittedAt').value = ct + ' CT';
   const btn=document.getElementById('subBtn');
   btn.disabled=true;
   btn.textContent='⏳ Sending…';
