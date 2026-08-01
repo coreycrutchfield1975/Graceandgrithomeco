@@ -19,7 +19,6 @@
 html{scroll-behavior:smooth;}
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
 
-/* NAV */
 nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);backdrop-filter:blur(8px);box-shadow:0 2px 18px rgba(0,0,0,0.4);}
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.5rem;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.15rem;font-weight:700;text-decoration:none;}
@@ -36,30 +35,74 @@ nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);b
   .hamburger{display:flex;}
 }
 
-/* GALLERY HERO */
 .gallery-hero{text-align:center;padding:8rem 1.5rem 3rem;background:linear-gradient(180deg,var(--charcoal) 0%,var(--burg-dark) 60%,var(--cream) 100%);}
 .badge{display:inline-block;background:rgba(184,137,74,0.2);border:1px solid rgba(184,137,74,0.55);color:var(--gold-light);font-size:0.73rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.4rem 1.3rem;border-radius:20px;margin-bottom:1.5rem;}
 .gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);color:var(--white);line-height:1.15;margin-bottom:1rem;}
 .gallery-hero h1 em{color:var(--gold-light);font-style:italic;}
 .gallery-hero p{color:rgba(255,255,255,0.7);font-size:1.05rem;max-width:500px;margin:0 auto;}
 
-/* FILTER */
 .filter-bar{display:flex;justify-content:center;gap:0.5rem;padding:1.5rem;flex-wrap:wrap;}
 .filter-btn{background:var(--white);border:1px solid var(--border);color:var(--text);padding:0.5rem 1.2rem;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
 .filter-btn:hover,.filter-btn.active{background:var(--burg);color:var(--white);border-color:var(--burg);}
 
-/* GALLERY GRID */
 .gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.5rem 3rem;}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
+
 .project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;}
 .project-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
-.project-card img{width:100%;height:250px;object-fit:cover;display:block;}
+
+/* BEFORE/AFTER SLIDER */
+.ba-slider-wrap{position:relative;width:100%;height:280px;overflow:hidden;cursor:pointer;}
+.ba-slider-wrap img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none;}
+.ba-after{clip-path:inset(0 0 0 var(--clip,50%));z-index:1;}
+.ba-slider-line{position:absolute;top:0;bottom:0;left:var(--clip,50%);width:3px;background:var(--white);z-index:2;pointer-events:none;box-shadow:0 0 8px rgba(0,0,0,0.3);}
+.ba-handle{position:absolute;top:50%;left:var(--clip,50%);transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:var(--white);z-index:3;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;}
+.ba-handle::before{content:'';display:block;width:2px;height:18px;background:var(--burg);margin:0 3px;}
+.ba-handle::after{content:'';display:block;width:2px;height:18px;background:var(--burg);}
+.ba-handle-inner{display:flex;gap:5px;align-items:center;}
+.ba-handle-arrow{font-size:1rem;color:var(--burg);line-height:1;}
+
+.ba-labels{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:space-between;padding:0 12px;z-index:3;pointer-events:none;}
+.ba-label{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:4px;color:var(--white);background:rgba(0,0,0,0.55);}
+
+.ba-single{position:relative;width:100%;height:280px;overflow:hidden;}
+.ba-single img{width:100%;height:100%;object-fit:cover;display:block;}
+.ba-single-label{position:absolute;bottom:10px;left:12px;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:4px;color:var(--white);background:rgba(0,0,0,0.55);}
+
+/* SLIDE HINT */
+.ba-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--white);font-size:0.75rem;font-weight:700;z-index:2;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);opacity:0;transition:opacity 0.4s;}
+.ba-slider-wrap:hover .ba-hint,.ba-slider-wrap.touched .ba-hint{opacity:1;}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+.lightbox.hidden{display:none;}
+.lb-slider{position:relative;width:90vw;max-width:900px;height:70vh;overflow:hidden;border-radius:12px;touch-action:none;}
+.lb-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;}
+.lb-after{clip-path:inset(0 0 0 var(--clip,50%));z-index:1;}
+.lb-slider-line{position:absolute;top:0;bottom:0;left:var(--clip,50%);width:3px;background:var(--white);z-index:2;pointer-events:none;box-shadow:0 0 10px rgba(0,0,0,0.4);}
+.lb-handle{position:absolute;top:50%;left:var(--clip,50%);transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:var(--white);z-index:3;pointer-events:none;box-shadow:0 2px 14px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;}
+.lb-handle-inner{display:flex;gap:6px;align-items:center;}
+.lb-handle-arrow{font-size:1.2rem;color:var(--burg);line-height:1;}
+.lb-info{text-align:center;color:var(--white);padding:0 1rem;}
+.lb-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold-light);}
+.lb-meta{font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:0.25rem;}
+.lb-close{position:absolute;top:1.5rem;right:1.5rem;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:var(--white);font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;z-index:1001;}
+.lb-close:hover{background:rgba(255,255,255,0.3);}
+
+/* SWIPE PILL for mobile */
+.ba-swipe-pill{display:none;position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;background:rgba(0,0,0,0.5);color:var(--white);font-size:0.65rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:12px;letter-spacing:0.06em;opacity:0;transition:opacity 0.4s;}
+@media(hover:none) and (pointer:coarse){
+  .ba-swipe-pill{display:block;}
+  .ba-slider-wrap.touched .ba-swipe-pill{opacity:1;}
+}
+
 .card-info{padding:1rem 1.2rem;}
 .card-tag{display:inline-block;background:var(--cream-dark);color:var(--burg);font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.7rem;border-radius:10px;margin-bottom:0.5rem;}
 .card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;}
 .card-desc{font-size:0.85rem;color:var(--text-light);line-height:1.4;}
+.card-view{font-size:0.75rem;font-weight:700;color:var(--burg);margin-top:0.6rem;cursor:pointer;display:inline-flex;align-items:center;gap:0.3rem;transition:color 0.2s;}
+.card-view:hover{color:var(--burg-light);}
 
-/* CTA */
 .cta-strip{text-align:center;padding:3rem 1.5rem;background:var(--charcoal);color:var(--white);}
 .cta-strip h2{font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:0.5rem;}
 .cta-strip h2 em{color:var(--gold-light);font-style:italic;}
@@ -71,6 +114,9 @@ footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light)
 
 @media(max-width:600px){
   .gallery-grid{grid-template-columns:1fr;}
+  .ba-slider-wrap{height:240px;}
+  .ba-single{height:240px;}
+  .lb-slider{width:96vw;height:50vh;}
 }
 </style>
 </head>
@@ -95,7 +141,7 @@ footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light)
 <div class="gallery-hero">
   <div class="badge">Project Gallery</div>
   <h1>Built with <em>Grace.</em><br>Done with Grit.</h1>
-  <p>Real homes. Real results. Browse our before & after transformations.</p>
+  <p>Real homes. Real results. Browse our before &amp; after transformations — drag the slider to compare.</p>
 </div>
 
 <div class="filter-bar">
@@ -111,16 +157,38 @@ footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light)
 
 <div class="cta-strip">
   <h2>Ready to transform<br><em>your home?</em></h2>
-  <p>Let's talk about what Grace & Grit can do for you.</p>
+  <p>Let's talk about what Grace &amp; Grit can do for you.</p>
   <a href="/#schedule" class="btn-white">Get a Free Estimate</a>
 </div>
 
 <footer>
-  &copy; 2025 Grace & Grit Home Co. &bull; Poplar Bluff, MO &bull; All Rights Reserved
+  &copy; 2025 Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; All Rights Reserved
 </footer>
 
+<!-- Lightbox -->
+<div class="lightbox hidden" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox()">&times;</button>
+  <div class="lb-slider" id="lbSlider"
+       onmousedown="lbDragStart(event)" ontouchstart="lbDragStart(event)"
+       onmousemove="lbDragMove(event)" ontouchmove="lbDragMove(event)"
+       onmouseup="lbDragEnd()" ontouchend="lbDragEnd()">
+    <img id="lbBefore" src="" alt="Before">
+    <img id="lbAfter" class="lb-after" src="" alt="After">
+    <div class="lb-slider-line" id="lbLine"></div>
+    <div class="lb-handle" id="lbHandle">
+      <div class="lb-handle-inner">
+        <span class="lb-handle-arrow">&larr;</span>
+        <span class="lb-handle-arrow">&rarr;</span>
+      </div>
+    </div>
+  </div>
+  <div class="lb-info">
+    <div class="lb-title" id="lbTitle"></div>
+    <div class="lb-meta" id="lbMeta"></div>
+  </div>
+</div>
+
 <script>
-// Gallery loads from localStorage (managed via /gallery-admin.html)
 var DEFAULT_PROJECTS = [
   {id:1,cat:'outdoor',cat_label:'Outdoor',title:'Pasture Clearing & Fence Line',desc:'Overgrown pasture restored — brush cleared, fence line exposed, ready for livestock.',img:'/images/work1.jpg'},
   {id:2,cat:'interior',cat_label:'Interior',title:'Living Room Refresh',desc:'Fresh paint, trim restored, and furniture staging — a complete room transformation.',img:'/images/work2.jpg'},
@@ -136,18 +204,135 @@ function loadGallery() {
   return DEFAULT_PROJECTS;
 }
 
+// ── Card-level slider ──
+var cardSliders = {};
+
+function initCardSlider(card, project) {
+  var hasBefore = !!project.before_url;
+  var hasAfter  = !!project.after_url;
+  var sliderWrap = card.querySelector('.ba-slider-wrap');
+  if (!sliderWrap) return;
+
+  // Only attach slider if we have BOTH images
+  if (!hasBefore || !hasAfter) return;
+
+  var clip = 50; // percent
+  var dragging = false;
+
+  function updateClip() {
+    sliderWrap.style.setProperty('--clip', clip + '%');
+  }
+
+  function getX(e) {
+    return e.touches ? e.touches[0].clientX : e.clientX;
+  }
+
+  function onStart(e) {
+    dragging = true;
+    sliderWrap.classList.add('touched');
+    e.preventDefault();
+  }
+
+  function onMove(e) {
+    if (!dragging) return;
+    var rect = sliderWrap.getBoundingClientRect();
+    var x = getX(e);
+    clip = Math.max(3, Math.min(97, ((x - rect.left) / rect.width) * 100));
+    updateClip();
+  }
+
+  function onEnd() {
+    dragging = false;
+    sliderWrap.classList.remove('touched');
+  }
+
+  sliderWrap.addEventListener('mousedown', onStart);
+  sliderWrap.addEventListener('touchstart', onStart, {passive: false});
+  window.addEventListener('mousemove', function(e){if(dragging){onMove(e);}});
+  window.addEventListener('touchmove', function(e){if(dragging){onMove(e);}}, {passive: false});
+  window.addEventListener('mouseup', onEnd);
+  window.addEventListener('touchend', onEnd);
+
+  // Click to open lightbox
+  sliderWrap.addEventListener('click', function(e) {
+    if (Math.abs(clip - (cardSliders._lastClip || 50)) < 0.5) {
+      openLightbox(project);
+    }
+  });
+
+  cardSliders._lastClip = clip;
+
+  // Store drag end to detect click vs drag
+  var startX = 0;
+  sliderWrap.addEventListener('mousedown', function(e){startX = getX(e);});
+  sliderWrap.addEventListener('touchstart', function(e){startX = getX(e);});
+  window.addEventListener('mouseup', function(e){
+    if (Math.abs(getX(e) - startX) < 3) cardSliders._lastClip = clip;
+  });
+  window.addEventListener('touchend', function(e){
+    if (Math.abs(getX(e) - startX) < 3) cardSliders._lastClip = clip;
+  });
+}
+
 function renderGallery(filter) {
   filter = filter || 'all';
   var projects = loadGallery();
   var filtered = filter === 'all' ? projects : projects.filter(function(p){return p.cat === filter;});
   var grid = document.getElementById('galleryGrid');
+
   if (!filtered.length) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light)"><p style="font-size:1.1rem">No projects in this category yet. Check back soon!</p></div>';
   } else {
-    grid.innerHTML = filtered.map(function(p){
-      var img = p.before_url || p.after_url || p.img || '';
-      return '<div class="project-card" data-cat="'+p.cat+'"><img src="'+img+'" alt="'+p.title+'" loading="lazy"><div class="card-info"><div class="card-tag">'+(p.cat_label||p.cat)+'</div><div class="card-title">'+p.title+'</div><div class="card-desc">'+(p.desc||'')+'</div></div></div>';
+    grid.innerHTML = filtered.map(function(p, idx){
+      var hasBefore = !!p.before_url;
+      var hasAfter  = !!p.after_url;
+      var uniqueId = 'ba-' + idx + '-' + (p.id || Date.now());
+
+      if (hasBefore && hasAfter) {
+        // BEFORE/AFTER SLIDER card
+        return '<div class="project-card" data-cat="'+p.cat+'">' +
+          '<div class="ba-slider-wrap" style="--clip:50%" data-id="'+p.id+'">' +
+            '<img src="'+p.before_url+'" alt="Before: '+p.title+'" loading="lazy">' +
+            '<img class="ba-after" src="'+p.after_url+'" alt="After: '+p.title+'" loading="lazy">' +
+            '<div class="ba-slider-line"></div>' +
+            '<div class="ba-handle"><div class="ba-handle-inner"><span class="ba-handle-arrow">&larr;</span><span class="ba-handle-arrow">&rarr;</span></div></div>' +
+            '<div class="ba-labels"><span class="ba-label">Before</span><span class="ba-label">After</span></div>' +
+            '<div class="ba-swipe-pill">← Swipe to compare →</div>' +
+          '</div>' +
+          '<div class="card-info">' +
+            '<div class="card-tag">'+(p.cat_label||p.cat)+'</div>' +
+            '<div class="card-title">'+p.title+'</div>' +
+            '<div class="card-desc">'+(p.desc||'')+'</div>' +
+            '<div class="card-view" onclick="event.stopPropagation();openLightbox(window._projectsById['+p.id+'])">🔍 View full size</div>' +
+          '</div>' +
+        '</div>';
+      } else {
+        // Single-image card
+        var img = p.after_url || p.before_url || p.img || '';
+        var label = p.after_url ? 'After' : (p.before_url ? 'Before' : '');
+        return '<div class="project-card" data-cat="'+p.cat+'">' +
+          '<div class="ba-single">' +
+            '<img src="'+img+'" alt="'+p.title+'" loading="lazy">' +
+            (label ? '<div class="ba-single-label">'+label+'</div>' : '') +
+          '</div>' +
+          '<div class="card-info">' +
+            '<div class="card-tag">'+(p.cat_label||p.cat)+'</div>' +
+            '<div class="card-title">'+p.title+'</div>' +
+            '<div class="card-desc">'+(p.desc||'')+'</div>' +
+          '</div>' +
+        '</div>';
+      }
     }).join('');
+
+    // Build lookup and init sliders
+    window._projectsById = {};
+    projects.forEach(function(p){ window._projectsById[p.id] = p; });
+
+    var cards = grid.querySelectorAll('.project-card');
+    cards.forEach(function(card, i){
+      var proj = filtered[i];
+      if (proj) initCardSlider(card, proj);
+    });
   }
 }
 
@@ -156,6 +341,77 @@ function filterGallery(btn, cat) {
   btn.classList.add('active');
   renderGallery(cat);
 }
+
+// ── LIGHTBOX ──
+var lbDragging = false;
+var lbClip = 50;
+
+function openLightbox(project) {
+  if (!project) return;
+  var hasBefore = !!project.before_url;
+  var hasAfter  = !!project.after_url;
+
+  document.getElementById('lbTitle').textContent = project.title;
+  document.getElementById('lbMeta').textContent = (project.cat_label||project.cat) + ' — ' + (project.desc||'');
+
+  if (hasBefore && hasAfter) {
+    document.getElementById('lbBefore').src = project.before_url;
+    document.getElementById('lbAfter').src = project.after_url;
+    document.getElementById('lbAfter').style.display = '';
+    document.getElementById('lbLine').style.display = '';
+    document.getElementById('lbHandle').style.display = '';
+    lbClip = 50;
+    updateLbClip();
+  } else {
+    var img = project.after_url || project.before_url || project.img || '';
+    document.getElementById('lbBefore').src = img;
+    document.getElementById('lbAfter').style.display = 'none';
+    document.getElementById('lbLine').style.display = 'none';
+    document.getElementById('lbHandle').style.display = 'none';
+  }
+
+  document.getElementById('lightbox').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateLbClip() {
+  var slider = document.getElementById('lbSlider');
+  slider.style.setProperty('--clip', lbClip + '%');
+}
+
+function closeLightbox(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('lightbox').classList.add('hidden');
+  document.body.style.overflow = '';
+  lbDragging = false;
+}
+
+function getLbX(e) {
+  return e.touches ? e.touches[0].clientX : e.clientX;
+}
+
+function lbDragStart(e) {
+  lbDragging = true;
+  e.preventDefault();
+}
+
+function lbDragMove(e) {
+  if (!lbDragging) return;
+  var slider = document.getElementById('lbSlider');
+  var rect = slider.getBoundingClientRect();
+  var x = getLbX(e);
+  lbClip = Math.max(3, Math.min(97, ((x - rect.left) / rect.width) * 100));
+  updateLbClip();
+}
+
+function lbDragEnd() {
+  lbDragging = false;
+}
+
+// Keyboard close
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
 
 renderGallery('all');
 </script>
