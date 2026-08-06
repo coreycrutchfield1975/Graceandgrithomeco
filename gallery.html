@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Our Work | Grace & Grit Home Co.</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -18,7 +17,6 @@
 }
 html{scroll-behavior:smooth;}
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
-
 nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);backdrop-filter:blur(8px);box-shadow:0 2px 18px rgba(0,0,0,0.4);}
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.5rem;}
 .nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.15rem;font-weight:700;text-decoration:none;}
@@ -34,90 +32,46 @@ nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);b
   .nav-links.open{display:flex;}
   .hamburger{display:flex;}
 }
-
-.gallery-hero{text-align:center;padding:8rem 1.5rem 3rem;background:linear-gradient(180deg,var(--charcoal) 0%,var(--burg-dark) 60%,var(--cream) 100%);}
-.badge{display:inline-block;background:rgba(184,137,74,0.2);border:1px solid rgba(184,137,74,0.55);color:var(--gold-light);font-size:0.73rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.4rem 1.3rem;border-radius:20px;margin-bottom:1.5rem;}
-.gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);color:var(--white);line-height:1.15;margin-bottom:1rem;}
-.gallery-hero h1 em{color:var(--gold-light);font-style:italic;}
-.gallery-hero p{color:rgba(255,255,255,0.7);font-size:1.05rem;max-width:500px;margin:0 auto;}
-
-.filter-bar{display:flex;justify-content:center;gap:0.5rem;padding:1.5rem;flex-wrap:wrap;}
-.filter-btn{background:var(--white);border:1px solid var(--border);color:var(--text);padding:0.5rem 1.2rem;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
-.filter-btn:hover,.filter-btn.active{background:var(--burg);color:var(--white);border-color:var(--burg);}
-
-.gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.5rem 3rem;}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
-
-.project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;}
-.project-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
-
-/* BEFORE/AFTER SLIDER */
-.ba-slider-wrap{position:relative;width:100%;height:280px;overflow:hidden;cursor:pointer;}
-.ba-slider-wrap img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none;}
-.ba-after{clip-path:inset(0 0 0 var(--clip,50%));z-index:1;}
-.ba-slider-line{position:absolute;top:0;bottom:0;left:var(--clip,50%);width:3px;background:var(--white);z-index:2;pointer-events:none;box-shadow:0 0 8px rgba(0,0,0,0.3);}
-.ba-handle{position:absolute;top:50%;left:var(--clip,50%);transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:var(--white);z-index:3;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;}
-.ba-handle::before{content:'';display:block;width:2px;height:18px;background:var(--burg);margin:0 3px;}
-.ba-handle::after{content:'';display:block;width:2px;height:18px;background:var(--burg);}
-.ba-handle-inner{display:flex;gap:5px;align-items:center;}
-.ba-handle-arrow{font-size:1rem;color:var(--burg);line-height:1;}
-
-.ba-labels{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:space-between;padding:0 12px;z-index:3;pointer-events:none;}
-.ba-label{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:4px;color:var(--white);background:rgba(0,0,0,0.55);}
-
-.ba-single{position:relative;width:100%;height:280px;overflow:hidden;}
-.ba-single img{width:100%;height:100%;object-fit:cover;display:block;}
-.ba-single-label{position:absolute;bottom:10px;left:12px;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:4px;color:var(--white);background:rgba(0,0,0,0.55);}
-
-/* SLIDE HINT */
-.ba-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--white);font-size:0.75rem;font-weight:700;z-index:2;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);opacity:0;transition:opacity 0.4s;}
-.ba-slider-wrap:hover .ba-hint,.ba-slider-wrap.touched .ba-hint{opacity:1;}
-
-/* LIGHTBOX */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
-.lightbox.hidden{display:none;}
-.lb-slider{position:relative;width:90vw;max-width:900px;height:70vh;overflow:hidden;border-radius:12px;touch-action:none;}
-.lb-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;}
-.lb-after{clip-path:inset(0 0 0 var(--clip,50%));z-index:1;}
-.lb-slider-line{position:absolute;top:0;bottom:0;left:var(--clip,50%);width:3px;background:var(--white);z-index:2;pointer-events:none;box-shadow:0 0 10px rgba(0,0,0,0.4);}
-.lb-handle{position:absolute;top:50%;left:var(--clip,50%);transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:var(--white);z-index:3;pointer-events:none;box-shadow:0 2px 14px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;}
-.lb-handle-inner{display:flex;gap:6px;align-items:center;}
-.lb-handle-arrow{font-size:1.2rem;color:var(--burg);line-height:1;}
-.lb-info{text-align:center;color:var(--white);padding:0 1rem;}
-.lb-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold-light);}
-.lb-meta{font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:0.25rem;}
-.lb-close{position:absolute;top:1.5rem;right:1.5rem;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:var(--white);font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;z-index:1001;}
-.lb-close:hover{background:rgba(255,255,255,0.3);}
-
-/* SWIPE PILL for mobile */
-.ba-swipe-pill{display:none;position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;background:rgba(0,0,0,0.5);color:var(--white);font-size:0.65rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:12px;letter-spacing:0.06em;opacity:0;transition:opacity 0.4s;}
-@media(hover:none) and (pointer:coarse){
-  .ba-swipe-pill{display:block;}
-  .ba-slider-wrap.touched .ba-swipe-pill{opacity:1;}
-}
-
-.card-info{padding:1rem 1.2rem;}
-.card-tag{display:inline-block;background:var(--cream-dark);color:var(--burg);font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.7rem;border-radius:10px;margin-bottom:0.5rem;}
-.card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;}
-.card-desc{font-size:0.85rem;color:var(--text-light);line-height:1.4;}
-.card-view{font-size:0.75rem;font-weight:700;color:var(--burg);margin-top:0.6rem;cursor:pointer;display:inline-flex;align-items:center;gap:0.3rem;transition:color 0.2s;}
-.card-view:hover{color:var(--burg-light);}
-
-.cta-strip{text-align:center;padding:3rem 1.5rem;background:var(--charcoal);color:var(--white);}
-.cta-strip h2{font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:0.5rem;}
+.gallery-hero{padding:8rem 1.5rem 3.5rem;text-align:center;background:linear-gradient(180deg,rgba(44,36,24,0.04) 0%,var(--cream) 100%);}
+.gallery-hero .badge{display:inline-block;background:rgba(184,137,74,0.15);border:1px solid rgba(184,137,74,0.4);color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 1.2rem;border-radius:20px;margin-bottom:1.2rem;}
+.gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);color:var(--charcoal);line-height:1.2;margin-bottom:0.75rem;}
+.gallery-hero h1 em{color:var(--burg);font-style:italic;}
+.gallery-hero p{color:var(--text-light);font-size:0.95rem;max-width:520px;margin:0 auto;}
+.filter-bar{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;padding:1rem 1.5rem 2rem;}
+.filter-btn{padding:0.45rem 1.2rem;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;color:var(--text-light);cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;}
+.filter-btn:hover,.filter-btn.active{background:var(--burg);border-color:var(--burg);color:var(--white);}
+.gallery-wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem 5rem;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.75rem;}
+@media(max-width:500px){.gallery-grid{grid-template-columns:1fr;}}
+.project-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(44,36,24,0.08);transition:transform 0.22s,box-shadow 0.22s;}
+.project-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(44,36,24,0.14);}
+/* Slider: after = base layer, before = clipped top layer */
+.slider-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;cursor:col-resize;user-select:none;touch-action:pan-y;}
+.slider-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;}
+.slider-after{z-index:1;}
+.slider-before{z-index:2;clip-path:inset(0 50% 0 0);}
+.slider-divider{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--white);transform:translateX(-50%);z-index:3;pointer-events:none;box-shadow:0 0 6px rgba(0,0,0,0.25);}
+.slider-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;background:var(--white);border-radius:50%;box-shadow:0 2px 12px rgba(0,0,0,0.25);z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.slider-handle svg{width:18px;height:18px;color:var(--burg);}
+.ba-labels{position:absolute;bottom:0.75rem;left:0;right:0;display:flex;justify-content:space-between;padding:0 0.75rem;z-index:5;pointer-events:none;}
+.ba-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;background:rgba(44,36,24,0.65);color:var(--white);padding:0.2rem 0.55rem;border-radius:4px;}
+.img-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;background:var(--cream-dark);}
+.img-placeholder svg{width:36px;height:36px;color:var(--border);}
+.img-placeholder span{font-size:0.72rem;color:var(--text-light);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.card-info{padding:1.1rem 1.25rem 1.25rem;}
+.card-tag{display:inline-block;font-size:0.68rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--charcoal);margin-bottom:0.3rem;}
+.card-desc{font-size:0.82rem;color:var(--text-light);line-height:1.55;}
+.empty-state{text-align:center;padding:4rem 1rem;color:var(--text-light);}
+.empty-state svg{width:48px;height:48px;color:var(--border);margin-bottom:1rem;}
+.empty-state p{font-size:0.9rem;}
+.cta-strip{background:linear-gradient(135deg,var(--burg-dark),var(--burg));padding:3.5rem 1.5rem;text-align:center;}
+.cta-strip h2{font-family:'Playfair Display',serif;color:var(--white);font-size:1.8rem;margin-bottom:0.75rem;}
 .cta-strip h2 em{color:var(--gold-light);font-style:italic;}
-.cta-strip p{color:rgba(255,255,255,0.6);margin-bottom:1.5rem;}
-.btn-white{display:inline-block;background:var(--white);color:var(--charcoal);padding:0.8rem 2rem;border-radius:30px;font-weight:700;text-decoration:none;transition:background 0.2s;}
-.btn-white:hover{background:var(--gold-light);}
-
-footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light);background:var(--cream-dark);}
-
-@media(max-width:600px){
-  .gallery-grid{grid-template-columns:1fr;}
-  .ba-slider-wrap{height:240px;}
-  .ba-single{height:240px;}
-  .lb-slider{width:96vw;height:50vh;}
-}
+.cta-strip p{color:rgba(255,255,255,0.72);font-size:0.9rem;margin-bottom:1.75rem;}
+.btn-white{display:inline-block;padding:0.85rem 2.2rem;border-radius:40px;background:var(--white);color:var(--burg);font-weight:800;font-size:0.93rem;text-decoration:none;transition:all 0.22s;letter-spacing:0.03em;}
+.btn-white:hover{background:var(--cream-dark);transform:translateY(-2px);}
+footer{background:var(--charcoal);color:rgba(255,255,255,0.5);text-align:center;padding:2rem 1rem;font-size:0.78rem;}
 </style>
 </head>
 <body>
@@ -141,18 +95,23 @@ footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light)
 <div class="gallery-hero">
   <div class="badge">Project Gallery</div>
   <h1>Built with <em>Grace.</em><br>Done with Grit.</h1>
-  <p>Real homes. Real results. Browse our before &amp; after transformations — drag the slider to compare.</p>
+  <p>Real homes. Real results. Browse our before &amp; after transformations and see what we can do for yours.</p>
 </div>
 
 <div class="filter-bar">
   <button class="filter-btn active" onclick="filterGallery(this,'all')">All Projects</button>
   <button class="filter-btn" onclick="filterGallery(this,'outdoor')">Outdoor</button>
   <button class="filter-btn" onclick="filterGallery(this,'interior')">Interior</button>
+  <button class="filter-btn" onclick="filterGallery(this,'kitchen')">Kitchen &amp; Bath</button>
   <button class="filter-btn" onclick="filterGallery(this,'repair')">Repairs</button>
 </div>
 
 <div class="gallery-wrap">
-  <div class="gallery-grid" id="galleryGrid"></div>
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="empty-state" style="grid-column:1/-1;">
+      <p>Loading projects...</p>
+    </div>
+  </div>
 </div>
 
 <div class="cta-strip">
@@ -165,256 +124,124 @@ footer{text-align:center;padding:1.5rem;font-size:0.8rem;color:var(--text-light)
   &copy; 2025 Grace &amp; Grit Home Co. &bull; Poplar Bluff, MO &bull; All Rights Reserved
 </footer>
 
-<!-- Lightbox -->
-<div class="lightbox hidden" id="lightbox" onclick="closeLightbox(event)">
-  <button class="lb-close" onclick="closeLightbox()">&times;</button>
-  <div class="lb-slider" id="lbSlider"
-       onmousedown="lbDragStart(event)" ontouchstart="lbDragStart(event)"
-       onmousemove="lbDragMove(event)" ontouchmove="lbDragMove(event)"
-       onmouseup="lbDragEnd()" ontouchend="lbDragEnd()">
-    <img id="lbBefore" src="" alt="Before">
-    <img id="lbAfter" class="lb-after" src="" alt="After">
-    <div class="lb-slider-line" id="lbLine"></div>
-    <div class="lb-handle" id="lbHandle">
-      <div class="lb-handle-inner">
-        <span class="lb-handle-arrow">&larr;</span>
-        <span class="lb-handle-arrow">&rarr;</span>
-      </div>
-    </div>
-  </div>
-  <div class="lb-info">
-    <div class="lb-title" id="lbTitle"></div>
-    <div class="lb-meta" id="lbMeta"></div>
-  </div>
-</div>
-
 <script>
-var DEFAULT_PROJECTS = [
-  {id:1,cat:'outdoor',cat_label:'Outdoor',title:'Pasture Clearing & Fence Line',desc:'Overgrown pasture restored — brush cleared, fence line exposed, ready for livestock.',img:'/images/work1.jpg'},
-  {id:2,cat:'interior',cat_label:'Interior',title:'Living Room Refresh',desc:'Fresh paint, trim restored, and furniture staging — a complete room transformation.',img:'/images/work2.jpg'},
-  {id:3,cat:'repair',cat_label:'Repair',title:'Deck & Porch Repair',desc:'Rotted boards replaced, railing reinforced, and a fresh power wash.',img:'/images/work3.jpg'},
-  {id:4,cat:'outdoor',cat_label:'Outdoor',title:'Driveway Grading & Gravel',desc:'Potholes filled, surface graded, and fresh gravel spread for a smooth approach.',img:'/images/work4.jpg'}
-];
+const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTg2OTEsImV4cCI6MjA5NDY3NDY5MX0.juN2sGipRnNKDX604Hvj_ELt2CeMnBXmzU9HBfTvR4g';
 
-function loadGallery() {
-  try {
-    var saved = JSON.parse(localStorage.getItem('gg_gallery_projects'));
-    if (saved && saved.length) return saved;
-  } catch(e) {}
-  return DEFAULT_PROJECTS;
+let allProjects = [];
+
+async function loadProjects() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/projects?order=created_at.desc&select=*`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  if (!res.ok) throw new Error('Failed to load');
+  return res.json();
 }
 
-// ── Card-level slider ──
-var cardSliders = {};
+function placeholder(label) {
+  return `<div class="img-placeholder">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+      <polyline points="21 15 16 10 5 21"/>
+    </svg>
+    <span>${label}</span>
+  </div>`;
+}
 
-function initCardSlider(card, project) {
-  var hasBefore = !!project.before_url;
-  var hasAfter  = !!project.after_url;
-  var sliderWrap = card.querySelector('.ba-slider-wrap');
-  if (!sliderWrap) return;
+function renderCard(p) {
+  // after = base layer (fully visible), before = clipped top layer (left side)
+  const afterContent  = p.after_url
+    ? `<img class="slider-img slider-after"  src="${p.after_url}"  alt="After"  loading="lazy">`
+    : `<div class="slider-img slider-after"  style="display:flex;">${placeholder('After Photo')}</div>`;
+  const beforeContent = p.before_url
+    ? `<img class="slider-img slider-before" src="${p.before_url}" alt="Before" loading="lazy">`
+    : `<div class="slider-img slider-before" style="display:flex;">${placeholder('Before Photo')}</div>`;
 
-  // Only attach slider if we have BOTH images
-  if (!hasBefore || !hasAfter) return;
-
-  var clip = 50; // percent
-  var dragging = false;
-
-  function updateClip() {
-    sliderWrap.style.setProperty('--clip', clip + '%');
-  }
-
-  function getX(e) {
-    return e.touches ? e.touches[0].clientX : e.clientX;
-  }
-
-  function onStart(e) {
-    dragging = true;
-    sliderWrap.classList.add('touched');
-    e.preventDefault();
-  }
-
-  function onMove(e) {
-    if (!dragging) return;
-    var rect = sliderWrap.getBoundingClientRect();
-    var x = getX(e);
-    clip = Math.max(3, Math.min(97, ((x - rect.left) / rect.width) * 100));
-    updateClip();
-  }
-
-  function onEnd() {
-    dragging = false;
-    sliderWrap.classList.remove('touched');
-  }
-
-  sliderWrap.addEventListener('mousedown', onStart);
-  sliderWrap.addEventListener('touchstart', onStart, {passive: false});
-  window.addEventListener('mousemove', function(e){if(dragging){onMove(e);}});
-  window.addEventListener('touchmove', function(e){if(dragging){onMove(e);}}, {passive: false});
-  window.addEventListener('mouseup', onEnd);
-  window.addEventListener('touchend', onEnd);
-
-  // Click to open lightbox
-  sliderWrap.addEventListener('click', function(e) {
-    if (Math.abs(clip - (cardSliders._lastClip || 50)) < 0.5) {
-      openLightbox(project);
-    }
-  });
-
-  cardSliders._lastClip = clip;
-
-  // Store drag end to detect click vs drag
-  var startX = 0;
-  sliderWrap.addEventListener('mousedown', function(e){startX = getX(e);});
-  sliderWrap.addEventListener('touchstart', function(e){startX = getX(e);});
-  window.addEventListener('mouseup', function(e){
-    if (Math.abs(getX(e) - startX) < 3) cardSliders._lastClip = clip;
-  });
-  window.addEventListener('touchend', function(e){
-    if (Math.abs(getX(e) - startX) < 3) cardSliders._lastClip = clip;
-  });
+  return `
+  <div class="project-card" data-cat="${p.cat}">
+    <div class="slider-wrap" data-slider>
+      ${afterContent}
+      ${beforeContent}
+      <div class="slider-divider"></div>
+      <div class="slider-handle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/><polyline points="9 18 15 12 9 6" transform="translate(6,0)"/>
+        </svg>
+      </div>
+      <div class="ba-labels">
+        <span class="ba-label">Before</span>
+        <span class="ba-label">After</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-tag">${p.cat_label || p.cat}</div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-desc">${p.desc || ''}</div>
+    </div>
+  </div>`;
 }
 
 function renderGallery(filter) {
   filter = filter || 'all';
-  var projects = loadGallery();
-  var filtered = filter === 'all' ? projects : projects.filter(function(p){return p.cat === filter;});
-  var grid = document.getElementById('galleryGrid');
-
+  const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.cat === filter);
+  const grid = document.getElementById('galleryGrid');
   if (!filtered.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light)"><p style="font-size:1.1rem">No projects in this category yet. Check back soon!</p></div>';
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <path d="M9 9l6 6M15 9l-6 6"/>
+      </svg>
+      <p>No projects in this category yet. Check back soon!</p>
+    </div>`;
   } else {
-    grid.innerHTML = filtered.map(function(p, idx){
-      var hasBefore = !!p.before_url;
-      var hasAfter  = !!p.after_url;
-      var uniqueId = 'ba-' + idx + '-' + (p.id || Date.now());
-
-      if (hasBefore && hasAfter) {
-        // BEFORE/AFTER SLIDER card
-        return '<div class="project-card" data-cat="'+p.cat+'">' +
-          '<div class="ba-slider-wrap" style="--clip:50%" data-id="'+p.id+'">' +
-            '<img src="'+p.before_url+'" alt="Before: '+p.title+'" loading="lazy">' +
-            '<img class="ba-after" src="'+p.after_url+'" alt="After: '+p.title+'" loading="lazy">' +
-            '<div class="ba-slider-line"></div>' +
-            '<div class="ba-handle"><div class="ba-handle-inner"><span class="ba-handle-arrow">&larr;</span><span class="ba-handle-arrow">&rarr;</span></div></div>' +
-            '<div class="ba-labels"><span class="ba-label">Before</span><span class="ba-label">After</span></div>' +
-            '<div class="ba-swipe-pill">← Swipe to compare →</div>' +
-          '</div>' +
-          '<div class="card-info">' +
-            '<div class="card-tag">'+(p.cat_label||p.cat)+'</div>' +
-            '<div class="card-title">'+p.title+'</div>' +
-            '<div class="card-desc">'+(p.desc||'')+'</div>' +
-            '<div class="card-view" onclick="event.stopPropagation();openLightbox(window._projectsById['+p.id+'])">🔍 View full size</div>' +
-          '</div>' +
-        '</div>';
-      } else {
-        // Single-image card
-        var img = p.after_url || p.before_url || p.img || '';
-        var label = p.after_url ? 'After' : (p.before_url ? 'Before' : '');
-        return '<div class="project-card" data-cat="'+p.cat+'">' +
-          '<div class="ba-single">' +
-            '<img src="'+img+'" alt="'+p.title+'" loading="lazy">' +
-            (label ? '<div class="ba-single-label">'+label+'</div>' : '') +
-          '</div>' +
-          '<div class="card-info">' +
-            '<div class="card-tag">'+(p.cat_label||p.cat)+'</div>' +
-            '<div class="card-title">'+p.title+'</div>' +
-            '<div class="card-desc">'+(p.desc||'')+'</div>' +
-          '</div>' +
-        '</div>';
-      }
-    }).join('');
-
-    // Build lookup and init sliders
-    window._projectsById = {};
-    projects.forEach(function(p){ window._projectsById[p.id] = p; });
-
-    var cards = grid.querySelectorAll('.project-card');
-    cards.forEach(function(card, i){
-      var proj = filtered[i];
-      if (proj) initCardSlider(card, proj);
-    });
+    grid.innerHTML = filtered.map(renderCard).join('');
   }
+  initSliders();
 }
 
 function filterGallery(btn, cat) {
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderGallery(cat);
 }
 
-// ── LIGHTBOX ──
-var lbDragging = false;
-var lbClip = 50;
+function initSliders() {
+  document.querySelectorAll('[data-slider]').forEach(wrap => {
+    const before  = wrap.querySelector('.slider-before');
+    const divider = wrap.querySelector('.slider-divider');
+    const handle  = wrap.querySelector('.slider-handle');
+    let dragging  = false;
 
-function openLightbox(project) {
-  if (!project) return;
-  var hasBefore = !!project.before_url;
-  var hasAfter  = !!project.after_url;
-
-  document.getElementById('lbTitle').textContent = project.title;
-  document.getElementById('lbMeta').textContent = (project.cat_label||project.cat) + ' — ' + (project.desc||'');
-
-  if (hasBefore && hasAfter) {
-    document.getElementById('lbBefore').src = project.before_url;
-    document.getElementById('lbAfter').src = project.after_url;
-    document.getElementById('lbAfter').style.display = '';
-    document.getElementById('lbLine').style.display = '';
-    document.getElementById('lbHandle').style.display = '';
-    lbClip = 50;
-    updateLbClip();
-  } else {
-    var img = project.after_url || project.before_url || project.img || '';
-    document.getElementById('lbBefore').src = img;
-    document.getElementById('lbAfter').style.display = 'none';
-    document.getElementById('lbLine').style.display = 'none';
-    document.getElementById('lbHandle').style.display = 'none';
-  }
-
-  document.getElementById('lightbox').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
+    function setPos(pct) {
+      pct = Math.max(2, Math.min(98, pct));
+      divider.style.left = pct + '%';
+      handle.style.left  = pct + '%';
+      before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+    }
+    function getPos(e) {
+      const rect = wrap.getBoundingClientRect();
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      return (x / rect.width) * 100;
+    }
+    wrap.addEventListener('mousedown',  e => { dragging = true; setPos(getPos(e)); });
+    wrap.addEventListener('touchstart', e => { dragging = true; setPos(getPos(e)); }, {passive:true});
+    window.addEventListener('mousemove',  e => { if (dragging) setPos(getPos(e)); });
+    window.addEventListener('touchmove',  e => { if (dragging) setPos(getPos(e)); }, {passive:true});
+    window.addEventListener('mouseup',  () => dragging = false);
+    window.addEventListener('touchend', () => dragging = false);
+    setPos(50);
+  });
 }
 
-function updateLbClip() {
-  var slider = document.getElementById('lbSlider');
-  slider.style.setProperty('--clip', lbClip + '%');
-}
-
-function closeLightbox(e) {
-  if (e && e.target !== e.currentTarget) return;
-  document.getElementById('lightbox').classList.add('hidden');
-  document.body.style.overflow = '';
-  lbDragging = false;
-}
-
-function getLbX(e) {
-  return e.touches ? e.touches[0].clientX : e.clientX;
-}
-
-function lbDragStart(e) {
-  lbDragging = true;
-  e.preventDefault();
-}
-
-function lbDragMove(e) {
-  if (!lbDragging) return;
-  var slider = document.getElementById('lbSlider');
-  var rect = slider.getBoundingClientRect();
-  var x = getLbX(e);
-  lbClip = Math.max(3, Math.min(97, ((x - rect.left) / rect.width) * 100));
-  updateLbClip();
-}
-
-function lbDragEnd() {
-  lbDragging = false;
-}
-
-// Keyboard close
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeLightbox();
+// Init
+loadProjects().then(projects => {
+  allProjects = projects;
+  renderGallery('all');
+}).catch(() => {
+  document.getElementById('galleryGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+    <p>Could not load projects. Please try again later.</p>
+  </div>`;
 });
-
-renderGallery('all');
 </script>
-
 </body>
 </html>

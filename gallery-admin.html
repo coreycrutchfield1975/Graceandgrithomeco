@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Manage Gallery | Grace & Grit Home Co.</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<title>Gallery Admin | Grace & Grit Home Co.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -14,207 +13,223 @@
   --cream:#fdf8f0;--cream-dark:#f0e8d8;
   --gold:#b8894a;--gold-light:#d4a96a;
   --charcoal:#2c2418;--text:#3d2e1e;--text-light:#6b5a46;
-  --white:#fff;--border:#d4c4b0;
+  --white:#fff;--border:#d4c4b0;--red:#c0392b;--green:#27ae60;
 }
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
-#gate{position:fixed;inset:0;background:rgba(44,36,24,0.97);display:flex;align-items:center;justify-content:center;z-index:999;}
-#gate.hidden{display:none;}
-.gate-box{background:var(--cream);border-radius:16px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-.gate-logo{font-family:'Playfair Display',serif;color:var(--burg);font-size:1.3rem;font-weight:700;margin-bottom:0.25rem;}
-.gate-logo span{font-style:italic;}
-.gate-sub{font-size:0.78rem;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.75rem;}
-.gate-box label{display:block;font-size:0.75rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem;text-align:left;}
-.gate-box input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'Nunito',sans-serif;font-size:1rem;color:var(--text);background:var(--white);margin-bottom:1rem;letter-spacing:0.1em;}
-.gate-box input:focus{outline:none;border-color:var(--burg);}
-.gate-err{color:var(--burg);font-size:0.8rem;font-weight:700;margin-bottom:0.75rem;display:none;}
-.btn-enter{width:100%;padding:0.8rem;border-radius:40px;background:var(--burg);color:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;border:none;cursor:pointer;transition:background 0.2s;}
-.btn-enter:hover{background:var(--burg-light);}
-.gate-hint{font-size:0.72rem;color:var(--text-light);margin-top:1rem;}
-nav{background:rgba(44,36,24,0.97);padding:0.7rem 1.5rem;display:flex;align-items:center;gap:1rem;}
-.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.1rem;font-weight:700;text-decoration:none;}
+nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(44,36,24,0.97);backdrop-filter:blur(8px);box-shadow:0 2px 18px rgba(0,0,0,0.4);}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.5rem;}
+.nav-logo{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:1.15rem;font-weight:700;text-decoration:none;}
 .nav-logo span{color:var(--white);font-style:italic;}
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:1rem;}
-.nav-back{color:rgba(255,255,255,0.6);font-size:0.8rem;text-decoration:none;font-weight:600;letter-spacing:0.05em;}
-.nav-back:hover{color:var(--gold-light);}
-.nav-logout{font-size:0.75rem;color:rgba(255,255,255,0.4);background:none;border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:0.25rem 0.75rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;transition:all 0.2s;}
-.nav-logout:hover{color:var(--white);border-color:rgba(255,255,255,0.4);}
-.dash{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 5rem;}
-.dash-header{margin-bottom:2rem;}
-.dash-header h1{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--burg);}
-.dash-header p{color:var(--text-light);font-size:0.88rem;margin-top:0.3rem;}
-.section-label{font-size:0.72rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;padding-bottom:0.4rem;border-bottom:2px solid var(--cream-dark);}
-.form-card{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:2.5rem;}
-.field{margin-bottom:1rem;}
-.field label{display:block;font-size:0.75rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.35rem;}
-.field input[type=text],.field select,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);background:var(--white);}
-.field input[type=text]:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--burg);}
-.field textarea{resize:vertical;min-height:70px;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-@media(max-width:540px){.field-row{grid-template-columns:1fr;}}
-.photo-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
-@media(max-width:540px){.photo-row{grid-template-columns:1fr;}}
-.upload-box{border:2px dashed var(--border);border-radius:12px;overflow:hidden;background:var(--cream-dark);transition:border-color 0.2s;}
-.upload-box:hover{border-color:var(--burg);}
+.nav-links{display:flex;gap:1.4rem;list-style:none;}
+.nav-links a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.82rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-light);}
+@media(max-width:760px){.nav-links{display:none;}}
+.admin-wrap{max-width:1100px;margin:0 auto;padding:6.5rem 1.25rem 4rem;}
+.admin-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:0.75rem;}
+.admin-head h1{font-family:'Playfair Display',serif;color:var(--charcoal);font-size:1.7rem;}
+.admin-head h1 em{color:var(--burg);font-style:italic;}
+.logout-btn{background:transparent;border:1.5px solid var(--border);color:var(--text-light);font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;padding:0.4rem 1rem;border-radius:20px;cursor:pointer;}
+.logout-btn:hover{border-color:var(--burg);color:var(--burg);}
+.add-card,.list-card{background:var(--white);border-radius:16px;box-shadow:0 4px 24px rgba(44,36,24,0.08);padding:1.75rem;margin-bottom:2rem;}
+.section-label{font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;}
+.form-row{margin-bottom:1rem;}
+.form-row label{display:block;font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:0.35rem;}
+.form-row input[type=text],.form-row select,.form-row textarea{
+  width:100%;padding:0.65rem 0.85rem;border:1.5px solid var(--border);border-radius:10px;
+  font-family:'Nunito',sans-serif;font-size:0.9rem;color:var(--text);background:var(--cream);outline:none;
+}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--gold);}
+.form-row textarea{resize:vertical;min-height:70px;}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:560px){.upload-grid{grid-template-columns:1fr;}}
+.upload-box{border:2px dashed var(--border);border-radius:12px;overflow:hidden;background:var(--cream-dark);}
 .upload-label{display:block;font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);padding:0.6rem 0.85rem 0;}
 .upload-box input[type=file]{display:block;width:100%;padding:0.5rem 0.85rem;font-size:0.82rem;font-family:'Nunito',sans-serif;color:var(--text-light);cursor:pointer;border:none;background:none;}
-.photo-preview{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:0.78rem;overflow:hidden;}
-.photo-preview img{width:100%;height:100%;object-fit:cover;display:block;}
-.ba-tag{display:inline-block;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:4px;margin:0 0.85rem 0.6rem;}
-.ba-before{background:rgba(122,42,53,0.12);color:var(--burg);}
-.ba-after{background:rgba(106,133,104,0.15);color:#4a6349;}
-.save-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
-.btn-save{padding:0.75rem 2rem;border-radius:40px;background:var(--burg);color:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.92rem;border:none;cursor:pointer;transition:background 0.2s;}
-.btn-save:hover:not(:disabled){background:var(--burg-light);}
-.btn-save:disabled{opacity:0.6;cursor:not-allowed;}
-.save-msg{font-size:0.83rem;font-weight:700;}
-.save-msg.success{color:#4a6349;}
-.save-msg.error{color:var(--burg);}
-.proj-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:center;gap:1rem;padding:1rem;margin-bottom:0.85rem;transition:box-shadow 0.2s;}
-.proj-card:hover{box-shadow:0 4px 18px rgba(44,36,24,0.09);}
-.proj-thumbs{display:flex;gap:6px;flex-shrink:0;}
-.proj-thumb-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
-.proj-thumb-tag{font-size:0.55rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:0.1rem 0.35rem;border-radius:3px;}
-.proj-thumb-tag.before-tag{background:rgba(122,42,53,0.12);color:var(--burg);}
-.proj-thumb-tag.after-tag{background:rgba(106,133,104,0.15);color:#4a6349;}
-.proj-thumbs img,.proj-thumb-ph{width:64px;height:48px;object-fit:cover;border-radius:6px;background:var(--cream-dark);}
-.proj-thumb-ph{display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--text-light);text-align:center;font-weight:600;}
+.preview{min-height:130px;display:flex;align-items:center;justify-content:center;background:var(--cream-dark);color:var(--text-light);font-size:0.75rem;text-align:center;}
+.preview img{width:100%;max-height:190px;object-fit:cover;display:block;}
+.save-btn{width:100%;background:var(--burg);color:var(--white);border:none;border-radius:12px;padding:0.9rem;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;letter-spacing:0.04em;cursor:pointer;transition:all 0.2s;}
+.save-btn:hover{background:var(--burg-dark);}
+.save-btn:disabled{opacity:0.6;cursor:wait;}
+.save-msg{margin-top:0.9rem;font-size:0.85rem;font-weight:700;color:var(--text-light);}
+.save-msg.success{color:var(--green);}
+.save-msg.error{color:var(--red);}
+#projectList .loading-msg{color:var(--text-light);font-size:0.9rem;}
+#projectList .empty-msg{color:var(--text-light);font-size:0.9rem;}
+.proj-card{display:flex;gap:1rem;align-items:center;border:1.5px solid var(--border);border-radius:12px;padding:0.85rem;margin-bottom:0.75rem;background:var(--cream);}
+.proj-thumbs{display:flex;gap:0.5rem;flex-shrink:0;}
+.proj-thumb-wrap{position:relative;width:70px;height:52px;border-radius:8px;overflow:hidden;background:var(--cream-dark);}
+.proj-thumb-wrap img{width:100%;height:100%;object-fit:cover;}
+.proj-thumb-tag{position:absolute;bottom:2px;left:2px;font-size:0.5rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;background:rgba(44,36,24,0.7);color:var(--white);padding:1px 4px;border-radius:3px;}
 .proj-info{flex:1;min-width:0;}
-.proj-title{font-family:'Playfair Display',serif;font-size:0.98rem;color:var(--charcoal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.proj-meta{font-size:0.75rem;color:var(--text-light);margin-top:0.15rem;}
-.proj-desc{font-size:0.78rem;color:var(--text-light);margin-top:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.del-btn{flex-shrink:0;padding:0.35rem 0.85rem;border-radius:20px;border:1.5px solid var(--border);background:none;color:var(--text-light);font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
-.del-btn:hover{border-color:var(--burg);color:var(--burg);}
-.empty-msg{color:var(--text-light);font-size:0.88rem;padding:1rem 0;}
-.loading-msg{color:var(--text-light);font-size:0.88rem;padding:1rem 0;font-style:italic;}
+.proj-info .p-title{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--charcoal);}
+.proj-info .p-meta{font-size:0.72rem;color:var(--text-light);margin-top:0.15rem;}
+.del-btn{background:transparent;border:1.5px solid var(--red);color:var(--red);font-family:'Nunito',sans-serif;font-size:0.72rem;font-weight:700;padding:0.35rem 0.8rem;border-radius:8px;cursor:pointer;flex-shrink:0;}
+.del-btn:hover{background:var(--red);color:var(--white);}
+/* Password gate */
+#gate{position:fixed;inset:0;background:var(--charcoal);display:flex;align-items:center;justify-content:center;z-index:200;padding:1.5rem;}
+#gate.hidden{display:none;}
+.gate-box{background:var(--white);border-radius:16px;padding:2.25rem;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.gate-box h2{font-family:'Playfair Display',serif;color:var(--charcoal);margin-bottom:0.4rem;}
+.gate-box p{font-size:0.82rem;color:var(--text-light);margin-bottom:1.4rem;}
+.gate-box input{width:100%;padding:0.7rem 0.9rem;border:1.5px solid var(--border);border-radius:10px;font-size:0.95rem;text-align:center;outline:none;margin-bottom:0.9rem;font-family:'Nunito',sans-serif;}
+.gate-box input:focus{border-color:var(--gold);}
+.gate-box button{width:100%;background:var(--burg);color:var(--white);border:none;border-radius:10px;padding:0.75rem;font-weight:800;font-size:0.9rem;cursor:pointer;font-family:'Nunito',sans-serif;}
+.gate-box button:hover{background:var(--burg-dark);}
+#gateErr{color:var(--red);font-size:0.8rem;margin-top:0.6rem;display:none;}
 </style>
 </head>
 <body>
 
-<div id="gate">
-  <div class="gate-box">
-    <div class="gate-logo">Grace &amp; <span>Grit</span> Home Co.</div>
-    <div class="gate-sub">Gallery Management</div>
-    <label for="pwInput">Password</label>
-    <input type="password" id="pwInput" placeholder="Enter password" autocomplete="current-password">
-    <div class="gate-err" id="gateErr">Incorrect password. Try again.</div>
-    <button class="btn-enter" onclick="checkPassword()">Enter</button>
-    <p class="gate-hint">Contact the site owner if you need access.</p>
-  </div>
-</div>
-
 <nav>
-  <a class="nav-logo" href="/admin.html">Grace &amp; <span>Grit</span> Home Co.</a>
-  <div class="nav-right">
-    <a class="nav-back" href="/admin.html">&#8592; Admin Home</a>
-    <a class="nav-back" href="/gallery.html" target="_blank">View Public Gallery &#8599;</a>
-    <button class="nav-logout" onclick="logout()">Log Out</button>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><span>Grace &amp;</span> Grit Home Co.</a>
+    <ul class="nav-links">
+      <li><a href="/gallery.html">View Gallery</a></li>
+    </ul>
   </div>
 </nav>
 
-<div class="dash">
-  <div class="dash-header">
-    <h1>Project Gallery</h1>
-    <p>Upload before &amp; after photos for each job. They appear instantly on the public gallery page.</p>
+<!-- Password gate -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>Gallery Admin</h2>
+    <p>Enter the admin password to manage projects.</p>
+    <input type="password" id="pwInput" placeholder="Password" autocomplete="off">
+    <button onclick="checkPassword()">Unlock</button>
+    <div id="gateErr">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<div class="admin-wrap" id="adminPanel">
+  <div class="admin-head">
+    <h1>Gallery <em>Admin</em></h1>
+    <button class="logout-btn" onclick="logout()">Log out</button>
   </div>
 
-  <div class="section-label">Add New Project</div>
-  <div class="form-card">
-    <div class="field-row">
-      <div class="field">
-        <label>Project Title</label>
-        <input type="text" id="projTitle" placeholder="e.g. Kitchen Deep Clean">
-      </div>
-      <div class="field">
-        <label>Category</label>
-        <select id="projCat">
-          <option value="kitchen">Kitchen &amp; Bath</option>
-          <option value="interior">Interior</option>
-          <option value="outdoor">Outdoor</option>
-          <option value="repair">Repair</option>
-        </select>
-      </div>
-    </div>
-    <div class="field">
-      <label>Description <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
-      <textarea id="projDesc" placeholder="Brief description of what was done..."></textarea>
-    </div>
-    <div class="photo-row">
-      <div class="upload-box">
-        <span class="ba-tag ba-before">Before</span>
+  <div class="add-card">
+    <div class="section-label">Add New Project</div>
+    <div class="upload-grid">
+      <div>
         <span class="upload-label">Before Photo</span>
-        <input type="file" id="beforeFile" accept="image/*" onchange="handlePhoto(this,'beforePreview','before')">
-        <div class="photo-preview" id="beforePreview"><span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span></div>
+        <div class="upload-box">
+          <input type="file" id="beforeFile" accept="image/*" onchange="handlePhoto(this,'beforePreview','before')">
+        </div>
+        <div class="preview" id="beforePreview"><span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span></div>
       </div>
-      <div class="upload-box">
-        <span class="ba-tag ba-after">After</span>
+      <div>
         <span class="upload-label">After Photo</span>
-        <input type="file" id="afterFile" accept="image/*" onchange="handlePhoto(this,'afterPreview','after')">
-        <div class="photo-preview" id="afterPreview"><span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span></div>
+        <div class="upload-box">
+          <input type="file" id="afterFile" accept="image/*" onchange="handlePhoto(this,'afterPreview','after')">
+        </div>
+        <div class="preview" id="afterPreview"><span style="padding:1rem;text-align:center;font-size:0.75rem;">Tap to choose photo</span></div>
       </div>
     </div>
-    <div class="save-row">
-      <button class="btn-save" id="saveBtn" onclick="addProject()">Save to Gallery</button>
-      <span class="save-msg" id="saveMsg"></span>
+    <div class="form-row">
+      <label>Project Title</label>
+      <input type="text" id="projTitle" placeholder="e.g. Living Room Refresh">
     </div>
+    <div class="form-row">
+      <label>Category</label>
+      <select id="projCat">
+        <option value="outdoor">Outdoor</option>
+        <option value="interior">Interior</option>
+        <option value="kitchen">Kitchen &amp; Bath</option>
+        <option value="repair">Repairs</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Description</label>
+      <textarea id="projDesc" placeholder="What did you do? (short)"></textarea>
+    </div>
+    <button class="save-btn" id="saveBtn" onclick="addProject()">Save to Gallery</button>
+    <div class="save-msg" id="saveMsg"></div>
   </div>
 
-  <div class="section-label">Current Projects (<span id="projCount">0</span>)</div>
-  <div id="projectList"><p class="loading-msg">Loading projects...</p></div>
+  <div class="list-card">
+    <div class="section-label">Current Projects (<span id="projCount">0</span>)</div>
+    <div id="projectList"><p class="loading-msg">Loading projects...</p></div>
+  </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'gg_gallery_projects';
-const ADMIN_PASSWORD = 'Il@vemyhusband';
-const SESSION_KEY = 'gg_admin_auth';
+// ── Supabase config ──
+const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTA5ODY5MSwiZXhwIjoyMDk0Njc0NjkxfQ.WoqkZDQPlOh305SkhqVi0EgK1BsyBi0rItzoh50I9og';
+const BUCKET = 'gallery-photos';
 const CAT_LABELS = {kitchen:'Kitchen & Bath', interior:'Interior', outdoor:'Outdoor', repair:'Repair'};
 
-// ── Local storage helpers ──
-function loadProjects() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch(e) { return []; }
-}
-function saveProjects(projects) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-}
+// Admin password — stored as SHA-256 hash (not plaintext)
+// To change: replace this hash with SHA-256 of the new password
+const ADMIN_PW_HASH = '9907dc0e7867712bf24f1b3ef2d0f9d7c2690854f6ea10dd35f0ff64e4d761d2';
+const SESSION_KEY = 'gg_admin_auth';
 
-
-async function readPhotoAsDataURL(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        let w = img.width, h = img.height;
-        if (w > 900) { h = Math.round(h * 900 / w); w = 900; }
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', 0.78));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+// ── Supabase helpers (service role key bypasses RLS for writes) ──
+async function sbFetch(path, opts={}) {
+  const res = await fetch(SUPABASE_URL + path, {
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      ...(opts.headers||{})
+    }
   });
+  return res;
+}
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function uploadPhoto(file, slot) {
+  const blob = await compressImage(file, 900, 0.78);
+  const filename = `${Date.now()}_${slot}.jpg`;
+  const res = await sbFetch(`/storage/v1/object/${BUCKET}/${filename}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'image/jpeg', 'x-upsert': 'true' },
+    body: blob
+  });
+  if (!res.ok) throw new Error('Photo upload failed (' + res.status + ')');
+  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
 }
 
 async function insertProject(data) {
-  data.id = Date.now();
-  const projects = loadProjects();
-  projects.unshift(data);
-  saveProjects(projects);
-  return data;
+  const res = await sbFetch('/rest/v1/projects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) { const e = await res.text(); throw new Error(e); }
+  return res.json();
 }
 
-async function fetchProjects() { return loadProjects(); }
+async function fetchProjects() {
+  const res = await sbFetch('/rest/v1/projects?order=created_at.desc&select=*');
+  if (!res.ok) throw new Error('Could not load projects');
+  return res.json();
+}
 
 async function deleteProjectFromDB(id, beforeUrl, afterUrl) {
-  const projects = loadProjects();
-  saveProjects(projects.filter(p => p.id !== id));
+  await sbFetch(`/rest/v1/projects?id=eq.${id}`, { method: 'DELETE' });
+  const files = [beforeUrl, afterUrl].filter(Boolean).map(url => {
+    const parts = url.split(`/${BUCKET}/`);
+    return parts[1] || null;
+  }).filter(Boolean);
+  if (files.length) {
+    await sbFetch(`/storage/v1/object/${BUCKET}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prefixes: files })
+    });
+  }
 }
 
-function checkPassword() {
-  if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
-    localStorage.setItem(SESSION_KEY, '1');
+// ── Password gate ──
+async function checkPassword() {
+  const input = document.getElementById('pwInput').value;
+  const hash = await sha256(input);
+  if (hash === ADMIN_PW_HASH) {
+    sessionStorage.setItem(SESSION_KEY, '1');
     document.getElementById('gate').classList.add('hidden');
     renderProjects();
   } else {
@@ -223,9 +238,9 @@ function checkPassword() {
     document.getElementById('pwInput').focus();
   }
 }
-function logout() { localStorage.removeItem(SESSION_KEY); window.location.href = '/'; }
+function logout() { sessionStorage.removeItem(SESSION_KEY); window.location.href = '/'; }
 document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
-if (localStorage.getItem(SESSION_KEY) === '1') {
+if (sessionStorage.getItem(SESSION_KEY) === '1') {
   document.getElementById('gate').classList.add('hidden');
   renderProjects();
 }
@@ -268,7 +283,7 @@ async function addProject() {
   const cat   = document.getElementById('projCat').value;
   const desc  = document.getElementById('projDesc').value.trim();
 
-  if (!title)                              { showMsg('Please enter a project title.', 'error'); return; }
+  if (!title) { showMsg('Please enter a project title.', 'error'); return; }
   if (!photoFiles.before && !photoFiles.after) { showMsg('Please add at least one photo.', 'error'); return; }
 
   const btn = document.getElementById('saveBtn');
@@ -277,13 +292,12 @@ async function addProject() {
 
   try {
     let beforeUrl = '', afterUrl = '';
-    if (photoFiles.before) { showMsg('Processing before photo...', ''); beforeUrl = await readPhotoAsDataURL(photoFiles.before); }
-    if (photoFiles.after)  { showMsg('Processing after photo...', '');  afterUrl  = await readPhotoAsDataURL(photoFiles.after);  }
+    if (photoFiles.before) { showMsg('Uploading before photo...', ''); beforeUrl = await uploadPhoto(photoFiles.before, 'before'); }
+    if (photoFiles.after)  { showMsg('Uploading after photo...', '');  afterUrl  = await uploadPhoto(photoFiles.after,  'after');  }
 
     showMsg('Saving project...', '');
     await insertProject({ title, cat, cat_label: CAT_LABELS[cat]||cat, desc, before_url: beforeUrl, after_url: afterUrl });
 
-    // Reset form
     document.getElementById('projTitle').value = '';
     document.getElementById('projDesc').value  = '';
     document.getElementById('beforeFile').value = '';
@@ -339,23 +353,22 @@ async function renderProjects() {
         <div class="proj-thumbs">
           <div class="proj-thumb-wrap">
             <span class="proj-thumb-tag before-tag">Before</span>
-            ${p.before_url ? `<img src="${p.before_url}" alt="Before">` : '<div class="proj-thumb-ph">No before</div>'}
+            ${p.before_url ? `<img src="${p.before_url}" alt="before">` : ''}
           </div>
           <div class="proj-thumb-wrap">
             <span class="proj-thumb-tag after-tag">After</span>
-            ${p.after_url  ? `<img src="${p.after_url}"  alt="After">`  : '<div class="proj-thumb-ph">No after</div>'}
+            ${p.after_url ? `<img src="${p.after_url}" alt="after">` : ''}
           </div>
         </div>
         <div class="proj-info">
-          <div class="proj-title">${p.title}</div>
-          <div class="proj-meta">${p.cat_label}</div>
-          <div class="proj-desc">${p.desc || '—'}</div>
+          <div class="p-title">${p.title}</div>
+          <div class="p-meta">${p.cat_label || p.cat}${p.desc ? ' — ' + p.desc : ''}</div>
         </div>
-        <button class="del-btn" onclick="deleteProject(${p.id}, '${p.before_url||''}', '${p.after_url||''}')">Delete</button>
+        <button class="del-btn" onclick="deleteProject('${p.id}','${p.before_url||''}','${p.after_url||''}')">Delete</button>
       </div>
     `).join('');
   } catch(e) {
-    list.innerHTML = `<p class="save-msg error">Could not load projects: ${e.message}</p>`;
+    list.innerHTML = '<p class="empty-msg">Could not load projects: ' + e.message + '</p>';
   }
 }
 </script>
