@@ -128,5 +128,35 @@
     "before_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1779326322729_before.jpg",
     "after_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1779326323475_after.jpg",
     "cat": "interior"
+  },
+  {
+    "id": 16,
+    "created_at": "2026-08-07T11:26:15.12875+00:00",
+    "title": "Living Room Wall",
+    "cat_label": "Interior",
+    "desc": "A fresh coat of paint transformed these living room walls, creating a clean, inviting space with a beautiful updated look. 🎨✨",
+    "before_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1786101971566_before.jpg",
+    "after_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1786101972219_after.jpg",
+    "cat": "interior"
+  },
+  {
+    "id": 17,
+    "created_at": "2026-08-07T11:26:59.783762+00:00",
+    "title": "Bathroom Repaint",
+    "cat_label": "Kitchen & Bath",
+    "desc": "A fresh coat of paint gave these bathroom walls a clean, updated look and helped brighten the entire space. 🎨✨",
+    "before_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1786102016309_before.jpg",
+    "after_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1786102016880_after.jpg",
+    "cat": "kitchen"
+  },
+  {
+    "id": 18,
+    "created_at": "2026-08-07T11:29:08.001133+00:00",
+    "title": "Bedroom repaint",
+    "cat_label": "Interior",
+    "desc": "From damaged to like new—this bedroom received the repairs and fresh finish it needed to shine again.",
+    "before_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1786102144300_before.jpg",
+    "after_url": "https://ljznxojddfnfwnedhxzu.supabase.co/storage/v1/object/public/gallery-photos/1786102144901_after.jpg",
+    "cat": "interior"
   }
 ]
