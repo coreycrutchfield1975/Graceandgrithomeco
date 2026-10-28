@@ -32,7 +32,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .land::after { content: ""; position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(180deg, rgba(20, 30, 18, .55) 0, rgba(20, 30, 18, .15) 38%, rgba(20, 30, 18, 0) 55%, rgba(20, 30, 18, .35) 100%); }
 .land-words { text-align: center; padding: clamp(56px, 12vh, 120px) 20px 40px; max-width: 760px; color: #fff; }
-.land h1 { font: 700 clamp(3rem, 8vw, 5.6rem)/1 var(--slab); margin: 0; letter-spacing: .01em; text-shadow: 0 3px 24px rgba(20, 30, 18, .55); }
+.land h1 { font: 700 clamp(3rem, 8vw, 5.6rem)/1 var(--slab); margin: 0; letter-spacing: .01em; text-wrap: balance; text-shadow: 0 3px 24px rgba(20, 30, 18, .55); }
 .land-sub { font-size: clamp(1.05rem, 2.2vw, 1.3rem); margin: 14px 0 26px; text-shadow: 0 2px 12px rgba(20, 30, 18, .7); font-weight: 500; }
 .land-open { font: 700 1.15rem var(--ui); border: 0; border-radius: 999px; padding: 15px 30px; background: var(--gold); color: #2a1d05; cursor: pointer;
   box-shadow: 0 10px 30px rgba(20, 30, 18, .45); }

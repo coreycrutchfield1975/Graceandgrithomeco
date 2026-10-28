@@ -31,7 +31,7 @@ function blank() {
   return {
     version: 1, savedAt: null,
     settings: {
-      farmName: 'Herd Book',
+      farmName: "Michelle’s Herd Book",
       owners: [{id: 'o1', name: 'My herd'}, {id: 'o2', name: "Step-dad's herd"}],
       gestation: 283, mileRate: 0.70, saleBarn: 'Farmington Regional Stockyards'
     },
@@ -44,7 +44,7 @@ function blank() {
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && s.version === 1) { const b = blank(); return {...b, ...s, settings: {...b.settings, ...s.settings}, beef: {...b.beef, ...s.beef}, bid: {...b.bid, ...s.bid}}; }
+    if (s && s.version === 1) { const b = blank(); if (s.settings && s.settings.farmName === 'Herd Book') s.settings.farmName = b.settings.farmName; return {...b, ...s, settings: {...b.settings, ...s.settings}, beef: {...b.beef, ...s.beef}, bid: {...b.bid, ...s.bid}}; }
   } catch (e) { /* fall through to a fresh book */ }
   return blank();
 }
@@ -491,7 +491,7 @@ function renderOwnerSwitch() {
   $('ownerSwitch').innerHTML = opts.map(([v, l]) => `<button type="button" role="radio" aria-checked="${v === ownerFilter}" data-owner="${v}">${esc(l)}</button>`).join('');
 }
 function render() {
-  $('bookTitle').textContent = S.settings.farmName || 'Herd Book';
+  $('bookTitle').textContent = S.settings.farmName || "Michelle’s Herd Book";
   renderOwnerSwitch(); renderTabs();
   const v = VIEWS[tab]();
   $('view').innerHTML = v;
@@ -952,7 +952,7 @@ function exportXlsx() {
     ws['!cols'] = cols.map(([h]) => ({wch: Math.max(10, Math.min(40, h.length + 4))}));
     XLSX.utils.book_append_sheet(wb, ws, name);
   });
-  XLSX.writeFile(wb, (S.settings.farmName || 'Herd Book').replace(/[^\w\- ]+/g, '') + ' ' + today() + '.xlsx');
+  XLSX.writeFile(wb, (S.settings.farmName || "Michelle’s Herd Book").replace(/[^\w\- ]+/g, '') + ' ' + today() + '.xlsx');
   toast('Excel file downloaded');
 }
 function download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
@@ -1031,8 +1031,8 @@ function renderGlance() {
   if (due) items.push(due + ' due in the next 30 days');
   const h = holds().length; if (h) items.push(h + ' in withdrawal');
   $('landGlance').innerHTML = items.map(t => `<li>${esc(t)}</li>`).join('');
-  $('landTitle').textContent = S.settings.farmName || 'Herd Book';
-  document.title = S.settings.farmName || 'Herd Book';
+  $('landTitle').textContent = S.settings.farmName || "Michelle’s Herd Book";
+  document.title = S.settings.farmName || "Michelle’s Herd Book";
 }
 
 /* ------------------------------------------------------------ events */
@@ -1080,7 +1080,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (t.classList.contains('search') && t.type === 'search') { searches[t.id] = t.value; const pos = t.selectionStart; render(); const n = $(t.id); if (n) { n.focus(); n.setSelectionRange(pos, pos); } return; }
     if (t.dataset.bid) { S.bid[t.dataset.bid] = t.value; save(true); calcBid(); return; }
     if (t.dataset.beef) { S.beef[t.dataset.beef] = t.type === 'checkbox' ? t.checked : t.value; save(true); calcBeef(); return; }
-    if (t.dataset.set) { const k = t.dataset.set; S.settings[k] = (k === 'gestation' || k === 'mileRate') ? (num(t.value) ?? t.value) : t.value; save(true); $('bookTitle').textContent = S.settings.farmName || 'Herd Book'; return; }
+    if (t.dataset.set) { const k = t.dataset.set; S.settings[k] = (k === 'gestation' || k === 'mileRate') ? (num(t.value) ?? t.value) : t.value; save(true); $('bookTitle').textContent = S.settings.farmName || "Michelle’s Herd Book"; return; }
     if (t.dataset.ownerName) { const o = owners().find(x => x.id === t.dataset.ownerName); if (o) { o.name = t.value; save(true); renderOwnerSwitch(); } }
   });
   view.addEventListener('change', e => {
