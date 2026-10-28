@@ -1,9 +1,32 @@
 {
   "version": 2,
   "builds": [
-    { "src": "**/*", "use": "@vercel/static" }
+    {
+      "src": "**/*",
+      "use": "@vercel/static"
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/$1" }
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "herdbook.graceandgrithomeco.com"
+        }
+      ],
+      "dest": "/herdbook/$1"
+    },
+    {
+      "src": "/herdbook",
+      "status": 308,
+      "headers": {
+        "Location": "/herdbook/"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
