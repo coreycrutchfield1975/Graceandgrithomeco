@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#24391f">
+<meta name="robots" content="noindex">
+<title>Michelle’s Herd Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="pasture-1672.webp" imagesrcset="pasture-900.webp 900w, pasture-1672.webp 1672w" imagesizes="100vw">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<!-- Landing -->
+<main class="land">
+  <img class="land-art" src="pasture-1672.webp" srcset="pasture-900.webp 900w, pasture-1672.webp 1672w" sizes="100vw"
+       alt="Cattle and horses grazing a green pasture at sunrise, with three crosses on the hill">
+  <div class="land-words">
+    <h1 id="landTitle">Michelle’s Herd Book</h1>
+    <p class="land-sub" id="landSub">Every cow, calf, sale and dollar, in one place.</p>
+    <button type="button" class="land-open" id="openBook">Open the herd book</button>
+    <ul class="land-glance" id="landGlance" aria-label="At a glance"></ul>
+  </div>
+</main>
+
+<!-- The book -->
+<dialog id="book" class="book" aria-labelledby="bookTitle">
+  <header class="book-top">
+    <h2 id="bookTitle">Michelle’s Herd Book</h2>
+    <div class="owner-switch" role="radiogroup" aria-label="Whose cattle" id="ownerSwitch"></div>
+    <button type="button" class="icon-btn" id="closeBook" aria-label="Close the herd book">&times;</button>
+  </header>
+  <nav class="tabs" aria-label="Sections" id="tabs"></nav>
+  <div class="book-body" id="view" tabindex="-1"></div>
+  <footer class="book-foot" id="saveLine">Saved on this device.</footer>
+
+  <!-- Entry drawer -->
+  <section class="drawer" id="drawer" hidden aria-labelledby="drawerTitle">
+    <form id="drawerForm" novalidate>
+      <header class="drawer-top">
+        <h3 id="drawerTitle">Add</h3>
+        <button type="button" class="icon-btn dark" id="drawerClose" aria-label="Close without saving">&times;</button>
+      </header>
+      <div class="drawer-body" id="drawerBody"></div>
+      <footer class="drawer-foot">
+        <button type="button" class="btn ghost danger" id="drawerDelete" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" id="drawerCancel">Cancel</button>
+        <button type="submit" class="btn" id="drawerSave">Save</button>
+      </footer>
+    </form>
+  </section>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
