@@ -694,7 +694,6 @@ const VIEWS = {
       const days = bought.length && sold.length ? daysFrom(bought.map(b => b.date).sort()[0], sold.map(x => x.date).sort().slice(-1)[0]) : null;
       return {id: l, lot: l, headB, headS, cost, inc, profit: inc - cost, days, open: headS < headB};
     }).sort((a, b) => a.lot.localeCompare(b.lot));
-    const missing = SAMPLE_TICKETS.filter(t => !S.sales.some(x => x.ticket === t.ticket)).length;
     return `
       <h3 class="sec">Bought &amp; sold</h3>
       <p class="lede">Enter each sale like the barn ticket: every animal or lot on its own line, and the barn’s charges (commission, insurance, yardage and the rest) once for the whole ticket.</p>
@@ -704,7 +703,6 @@ const VIEWS = {
         ${searchBox('mSearch', 'Search tag, ticket, what, where')}
         <select class="search" id="saleYear" aria-label="Year of sales">${['All'].concat(years).map(y => `<option${y === year ? ' selected' : ''}>${y}</option>`).join('')}</select>
       </div>
-      ${missing ? `<p class="note" style="margin:-4px 0 14px"><button type="button" class="btn ghost small" id="addSampleTickets">Add the ${missing === 3 ? '3 Farmington tickets' : missing + ' remaining Farmington ticket' + (missing === 1 ? '' : 's')} from Feb 4, Mar 25 and Oct 3, 2026</button></p>` : ''}
       ${T.length ? `<div class="cards">
         <div class="stat"><div class="k">Head sold</div><div class="v">${whole(sum(T, saleHead))}</div><div class="s">${year === 'All' ? 'all years' : year}</div></div>
         <div class="stat"><div class="k">Gross sales</div><div class="v">${money(sum(T, saleGross), false)}</div><div class="s">before barn charges</div></div>
@@ -1007,30 +1005,6 @@ function saveWeek() {
 
 /* ------------------------------------------------------------ sale tickets */
 const DESC_OPTIONS = ['Steer feeder', 'Heifer feeder', 'Steer calf', 'Heifer calf', 'Bull calf', 'Cow', 'Bred cow', 'Cow-calf pair', 'Heifer', 'Bull'];
-// Michelle's three 2026 Farmington tickets, so the book starts with what she has on paper
-const SAMPLE_TICKETS = [
-  {ticket: '66574', date: '2026-02-04', what: 'Feeder steers', commission: 396.39, insurance: 59.03, yardage: 10, beefCouncil: 5, vetInspection: 1.25, vet: '', checkAmount: 11724.83, lines: [
-    {tag: '', head: 1, desc: 'Steer feeder (BLK)', weight: 595, price: 455, comments: ''},
-    {tag: '', head: 2, desc: 'Steer feeder (BLK)', weight: 925, price: 555, comments: ''},
-    {tag: '', head: 1, desc: 'Steer feeder (BLK)', weight: 455, price: 545, comments: ''},
-    {tag: '', head: 1, desc: 'Steer feeder (BWF)', weight: 305, price: 615, comments: 'Fancy'}]},
-  {ticket: '67608', date: '2026-03-25', what: 'Cull cows', commission: 115.74, insurance: 17.24, yardage: 4, beefCouncil: 2, vetInspection: 0.5, vet: 18, checkAmount: 3403.77, lines: [
-    {tag: '5297', head: 1, desc: 'Cow (BLK)', weight: 1100, price: 175, comments: ''},
-    {tag: '5299', head: 1, desc: 'Cow (BLK)', weight: 935, price: 175, comments: ''}]},
-  {ticket: '70686', date: '2026-10-03', what: 'Other', commission: 118.19, insurance: 17.60, yardage: 4, beefCouncil: 2, vetInspection: 0.5, vet: 13.5, checkAmount: 3480.71, lines: [
-    {tag: '8839', head: 1, desc: 'Heifer (BLK)', weight: 660, price: 322, comments: ''},
-    {tag: '8840', head: 1, desc: 'Cow (RWF)', weight: 1190, price: 127, comments: 'Open'}]}
-];
-function addSampleTickets() {
-  let n = 0;
-  SAMPLE_TICKETS.forEach(t => {
-    if (S.sales.some(x => x.ticket === t.ticket)) return;
-    S.sales.push({...t, id: uid(), owner: owners()[0].id, place: 'Farmington Regional Stockyards', lot: '', otherFees: '', trucking: '', notes: '',
-      lines: t.lines.map(l => ({...l, id: uid(), per: 'cwt', animalId: ''}))});
-    n++;
-  });
-  save(); render(); toast('Added ' + n + ' ticket' + (n === 1 ? '' : 's'));
-}
 function ticketCard(x) {
   const L = saleLines(x), g = saleGross(x), w = saleWeight(x), net = saleNet(x);
   const allCwt = L.length && L.every(l => l.per !== 'head');
@@ -1314,7 +1288,6 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (id === 'restoreJson') restoreJson();
     else if (id === 'pickFolder') chooseFolder();
     else if (id === 'importXlsx') importXlsx();
-    else if (id === 'addSampleTickets') addSampleTickets();
     else if (id === 'imp-go') runImport();
     else if (id === 'addOwner') { S.settings.owners.push({id: 'o' + uid().slice(0, 6), name: 'Herd ' + (owners().length + 1)}); save(); render(); }
   });
