@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2e2118">
+<meta name="robots" content="noindex, nofollow">
+<title>The Family Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<main class="land">
+  <section class="land-text">
+    <h1 id="landTitle">The Family Ledger</h1>
+    <p class="land-sub">Bills, balances, rent and the plan to cut back, kept the way your Statement of Financial Condition keeps them.</p>
+    <dl class="glance" id="glance" aria-live="polite"></dl>
+    <nav class="spines" aria-label="Open a part of the ledger">
+      <button type="button" class="spine sp-schedule" data-open="schedule"><span class="sp-t">Pay Schedule</span><span class="sp-m">First and last of the month, ticked off as you pay</span></button>
+      <button type="button" class="spine sp-monthly" data-open="monthly"><span class="sp-t">Monthly Expenses &amp; Net Worth</span><span class="sp-m">Bills, loans, what things are worth</span></button>
+      <button type="button" class="spine sp-rent" data-open="rent"><span class="sp-t" id="spRent">Family Rent</span><span class="sp-m">What’s owed each month and what’s been paid</span></button>
+      <button type="button" class="spine sp-cuts" data-open="cuts"><span class="sp-t">Cut Expenses</span><span class="sp-m">The leaner budget, side income and changes to make</span></button>
+      <button type="button" class="spine sp-data" data-open="data"><span class="sp-t">Import, Export &amp; Backups</span><span class="sp-m">Bring in the Excel file, save it back out, print</span></button>
+    </nav>
+    <p class="privacy">Everything stays in this browser on this device. Nothing is sent anywhere.</p>
+  </section>
+  <figure class="land-art">
+    <img src="desk-1254.webp" srcset="desk-900.webp 900w, desk-1254.webp 1254w" sizes="(max-width: 900px) 100vw, 50vw"
+         alt="A desk at sunrise with a budget notebook, a calculator, a coffee mug, ledger books labeled Income, Expenses and Budgets, and a cross on the hill outside the window">
+  </figure>
+</main>
+
+<dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+  <header class="sheet-top">
+    <div class="sheet-heading">
+      <h2 id="sheetTitle">Ledger</h2>
+      <p id="sheetFrom"></p>
+    </div>
+    <div class="sheet-tools" id="sheetTools"></div>
+    <button type="button" class="btn ghost on-dark" id="printSheet">Print</button>
+    <button type="button" class="icon-btn" id="closeSheet" aria-label="Close">&times;</button>
+  </header>
+  <div class="sheet-body" id="sheetBody" tabindex="-1"></div>
+  <footer class="sheet-foot" id="saveLine">Saved on this device.</footer>
+</dialog>
+
+<div id="printArea" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

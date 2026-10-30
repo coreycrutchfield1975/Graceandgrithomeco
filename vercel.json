@@ -18,10 +18,27 @@
       "dest": "/herdbook/$1"
     },
     {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "ledger.graceandgrithomeco.com"
+        }
+      ],
+      "dest": "/ledger/$1"
+    },
+    {
       "src": "/herdbook",
       "status": 308,
       "headers": {
         "Location": "/herdbook/"
+      }
+    },
+    {
+      "src": "/ledger",
+      "status": 308,
+      "headers": {
+        "Location": "/ledger/"
       }
     },
     {
