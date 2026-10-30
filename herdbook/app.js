@@ -171,6 +171,8 @@ function lineAmount(l) {
   const w = num(l.weight); return w == null ? 0 : r2(w / 100 * p);
 }
 const saleLines = s => s.lines || [];
+// which cow a sold animal came out of: the herd list knows for raised calves, otherwise the ticket line says
+const damOf = l => (l.animalId && (animal(l.animalId) || {}).damId) || l.damId || '';
 const saleGross = s => r2(sum(saleLines(s), lineAmount));
 const saleHead = s => sum(saleLines(s), l => num(l.head));
 const saleWeight = s => sum(saleLines(s), l => num(l.weight));
@@ -533,7 +535,7 @@ const showOwnerCol = () => ownerFilter === 'all' && owners().length > 1;
 
 /* ------------------------------------------------------------ views */
 const TABS = [
-  ['overview', 'Overview'], ['herd', 'Herd'], ['calving', 'Breeding & calving'], ['money', 'Bought & sold'],
+  ['overview', 'Overview'], ['herd', 'Herd'], ['calving', 'Breeding & calving'], ['cows', 'Cow profit'], ['money', 'Bought & sold'],
   ['expenses', 'Expenses'], ['health', 'Health & medicine'], ['market', 'Market'], ['direct', 'Sell direct'], ['settings', 'Settings & data']];
 
 function renderTabs() {
@@ -667,6 +669,73 @@ const VIEWS = {
       ${table(C, ccols, {key: 'calvings', empty: 'No calvings recorded yet.'})}
       <h4 class="sec" style="font-size:1.1rem;margin:22px 0 8px">Bred / exposed and due dates</h4>
       ${table(B, bcols, {key: 'breedings', empty: 'No breedings recorded yet. Use “Bull turned in with…” to record a whole group at once.'})}`;
+  },
+
+  cows() {
+    const since = searches.cowSince || 'All';
+    const sort = searches.cowSort || 'avgNet';
+    // every calf sold on a ticket, with its share of that ticket's barn charges
+    const sold = [];
+    S.sales.forEach(x => {
+      const g = saleGross(x), ded = saleDeductions(x);
+      saleLines(x).forEach(l => {
+        const dam = damOf(l); if (!dam) return;
+        const amt = lineAmount(l), share = g ? ded * amt / g : 0, head = num(l.head) || 1;
+        sold.push({sale: x, line: l, dam, head, amt, net: r2(amt - share), weight: num(l.weight), cwt: l.per !== 'head' ? num(l.price) : null});
+      });
+    });
+    const yearOK = d => since === 'All' || (d || '') >= since;
+    const born = S.animals.filter(a => a.damId);
+    const cows = S.animals.filter(a => (a.type === 'Cow' || a.type === 'Heifer') && inFilter(a));
+    const rows = cows.map(c => {
+      const mine = sold.filter(s => s.dam === c.id && yearOK(s.sale.date));
+      const calves = born.filter(a => a.damId === c.id && yearOK(a.birthDate)), calvings = calvingsOf(c.id).filter(cv => yearOK(cv.date));
+      const head = sum(mine, s => s.head), gross = r2(sum(mine, s => s.amt)), net = r2(sum(mine, s => s.net));
+      const wtHead = sum(mine.filter(s => s.weight), s => s.head), wt = sum(mine, s => s.weight || 0);
+      const cwtRows = mine.filter(s => s.cwt != null && s.weight);
+      const avgCwt = cwtRows.length ? sum(cwtRows, s => s.amt) / sum(cwtRows, s => s.weight) * 100 : null;
+      const bornN = Math.max(calvings.length, calves.length);
+      const lost = calvings.filter(cv => cv.calfStatus && cv.calfStatus !== 'Alive').length + calves.filter(a => a.status === 'Died').length;
+      const onHand = calves.filter(a => a.status === 'Active').length;
+      return {c, mine, head, gross, net, avgNet: head ? net / head : null, avgWt: wtHead ? wt / wtHead : null, avgCwt, born: bornN, lost, onHand};
+    }).filter(r => r.head || r.born);
+    const key = {avgNet: r => r.avgNet ?? -1, total: r => r.net, avgCwt: r => r.avgCwt ?? -1, avgWt: r => r.avgWt ?? -1, calves: r => r.head}[sort];
+    rows.sort((a, b) => key(b) - key(a) || a.c.tag.localeCompare(b.c.tag, undefined, {numeric: true}));
+    const ranked = rows.filter(r => r.head), herdAvg = ranked.length ? sum(ranked, r => r.net) / sum(ranked, r => r.head) : null;
+    const best = ranked.length ? ranked.slice().sort((a, b) => b.avgNet - a.avgNet)[0] : null;
+    const years = [...new Set(S.sales.map(x => yearOf(x.date)).concat(S.calvings.map(c => yearOf(c.date))).filter(Boolean))].sort().reverse();
+    const open = searches.cowOpen;
+    const detail = r => `<tr class="cow-detail"><td colspan="9"><div class="cow-calves">
+      ${r.mine.length ? `<table class="rows mini"><thead><tr><th>Sold</th><th>Calf</th><th class="num">Head</th><th class="num">Weight</th><th class="num">Price</th><th class="num">Gross</th><th class="num">After barn charges</th></tr></thead><tbody>
+        ${r.mine.slice().sort((a, b) => a.sale.date < b.sale.date ? 1 : -1).map(s => `<tr><td>${esc(fmtDate(s.sale.date))}${s.sale.ticket ? `<br><small>Ticket ${esc(s.sale.ticket)}</small>` : ''}</td><td>${esc([s.line.tag, s.line.desc].filter(Boolean).join(' · ') || '—')}${s.line.comments ? ` <span class="pill warn">${esc(s.line.comments)}</span>` : ''}</td><td class="num">${whole(s.head)}</td><td class="num">${s.weight ? whole(s.weight) + ' lb' : ''}</td><td class="num">${s.line.price !== '' && s.line.price != null ? money(num(s.line.price)) + (s.line.per === 'head' ? '/hd' : '/cwt') : ''}</td><td class="num">${money(s.amt)}</td><td class="num"><b>${money(s.net)}</b></td></tr>`).join('')}
+      </tbody></table>` : '<p class="empty">None of her calves sold yet' + (since !== 'All' ? ' since ' + since : '') + '.</p>'}
+      </div></td></tr>`;
+    return `
+      <h3 class="sec">Cow profit</h3>
+      <p class="lede">What each cow’s calves brought at the sale barn, after the barn’s charges, so you can see which cows raise the calves that sell best. A sold calf counts toward a cow when it’s linked to her: raised calves from the herd list link on their own, and on older tickets pick her in “Out of which cow”.</p>
+      <div class="toolbar">
+        <label class="inline-sel">Since <select class="search" id="cowSince" aria-label="Since year">${['All'].concat(years).map(y => `<option${y === since ? ' selected' : ''}>${y}</option>`).join('')}</select></label>
+        <label class="inline-sel">Rank by <select class="search" id="cowSort" aria-label="Rank cows by">${[['avgNet', 'Check per calf'], ['total', 'Total from her calves'], ['avgCwt', 'Price per cwt'], ['avgWt', 'Sale weight'], ['calves', 'Calves sold']].map(([v, l]) => `<option value="${v}"${v === sort ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+      </div>
+      ${ranked.length ? `<div class="cards">
+        <div class="stat"><div class="k">Best cow</div><div class="v">${esc(best.c.tag)}</div><div class="s">${money(best.avgNet, false)} a calf after charges</div></div>
+        <div class="stat"><div class="k">Herd average</div><div class="v">${money(herdAvg, false)}</div><div class="s">per calf sold, after charges</div></div>
+        <div class="stat"><div class="k">Calves counted</div><div class="v">${whole(sum(ranked, r => r.head))}</div><div class="s">from ${ranked.length} cow${ranked.length === 1 ? '' : 's'}</div></div>
+      </div>` : ''}
+      ${rows.length ? `<div class="table-wrap"><table class="rows cow-table"><thead><tr><th>Cow</th>${showOwnerCol() ? '<th class="hide-sm">Whose</th>' : ''}<th class="num">Calves born</th><th class="num">Sold</th><th class="num hide-sm">Avg sale wt</th><th class="num hide-sm">Avg $/cwt</th><th class="num">Check per calf</th><th class="num hide-sm">vs. herd</th><th class="num">Total</th></tr></thead><tbody>
+        ${rows.map((r, i) => { const diff = r.avgNet != null && herdAvg != null ? r.avgNet - herdAvg : null; return `<tr class="clickable${open === r.c.id ? ' open' : ''}" data-cow="${r.c.id}" tabindex="0" aria-expanded="${open === r.c.id}">
+          <td><span class="rank">${r.head ? ranked.indexOf(r) + 1 : ''}</span><span class="tag">${esc(r.c.tag)}</span>${r.c.status !== 'Active' ? ` <span class="pill">${esc(r.c.status)}</span>` : ''}${r.c.breed || r.c.markings ? `<br><small>${esc([r.c.breed, r.c.markings].filter(Boolean).join(' · '))}</small>` : ''}</td>
+          ${showOwnerCol() ? `<td class="hide-sm">${esc(ownerName(r.c.owner))}</td>` : ''}
+          <td class="num">${r.born || ''}${r.lost ? `<br><small>${r.lost} lost</small>` : ''}${r.onHand ? `<br><small>${r.onHand} on hand</small>` : ''}</td>
+          <td class="num">${whole(r.head) || ''}</td>
+          <td class="num hide-sm">${r.avgWt ? whole(r.avgWt) + ' lb' : ''}</td>
+          <td class="num hide-sm">${r.avgCwt != null ? money(r.avgCwt) : ''}</td>
+          <td class="num"><b>${r.avgNet != null ? money(r.avgNet) : ''}</b></td>
+          <td class="num hide-sm">${diff == null ? '' : `<span class="${diff >= 0 ? 'up' : 'down'}">${diff >= 0 ? '+' : '−'}${money(Math.abs(diff), false)}</span>`}</td>
+          <td class="num">${r.net ? money(r.net, false) : ''}</td></tr>${open === r.c.id ? detail(r) : ''}`; }).join('')}
+      </tbody></table></div>
+      <p class="note">Click a cow to see each of her calves that sold. Feed and other costs aren’t split by cow, so this compares what each cow’s calves bring in.</p>`
+      : `<div class="panel"><p class="empty">No cows with calves yet. Record calvings on Breeding &amp; calving, and link sold calves to their mothers on sale tickets.</p></div>`}`;
   },
 
   money() {
@@ -1035,6 +1104,7 @@ function ticketCard(x) {
 function ticketLineHtml(l, n) {
   const id = l.id || uid(), f = k => `tl-${k}-${id}`;
   const animals = S.animals.filter(a => a.status === 'Active' || a.id === l.animalId).sort((a, b) => a.tag.localeCompare(b.tag, undefined, {numeric: true}));
+  const mothers = S.animals.filter(a => a.type === 'Cow' || a.type === 'Heifer' || a.id === damOf(l)).sort((a, b) => a.tag.localeCompare(b.tag, undefined, {numeric: true}));
   return `<fieldset class="tline" data-id="${id}">
     <legend>Animal or lot <span class="ln">${n}</span></legend>
     <button type="button" class="btn ghost small danger tl-remove" aria-label="Remove line ${n}">Remove</button>
@@ -1048,6 +1118,7 @@ function ticketLineHtml(l, n) {
       <div class="field amt"><span class="label">Amount</span><output data-l="amount">${money(lineAmount(l))}</output></div>
       <div class="field wide2"><label for="${f('animalId')}">From the herd list (optional)</label><select id="${f('animalId')}" data-l="animalId"><option value="">—</option>${animals.map(a => `<option value="${a.id}"${a.id === l.animalId ? ' selected' : ''}>${esc(a.tag + ' · ' + a.type + (owners().length > 1 ? ' · ' + ownerName(a.owner) : ''))}</option>`).join('')}</select></div>
       <div class="field wide2"><label for="${f('comments')}">Comments</label><input id="${f('comments')}" data-l="comments" value="${esc(l.comments || '')}" placeholder="e.g. Fancy, Open"></div>
+      <div class="field wide2"><label for="${f('damId')}">Out of which cow (optional)</label><select id="${f('damId')}" data-l="damId"><option value="">—</option>${mothers.map(a => `<option value="${a.id}"${a.id === damOf(l) ? ' selected' : ''}>${esc(a.tag + (a.status !== 'Active' ? ' (' + a.status.toLowerCase() + ')' : '') + (owners().length > 1 ? ' · ' + ownerName(a.owner) : ''))}</option>`).join('')}</select><span class="hint">Fills in by itself for a calf from the herd list. Used by the Cow profit tab.</span></div>
     </div>
   </fieldset>`;
 }
@@ -1079,7 +1150,11 @@ function openTicket(rec) {
   const body = $('drawerBody');
   body.oninput = e => {
     const sel = e.target.closest('[data-l="animalId"]');
-    if (sel && sel.value) { const t = sel.closest('.tline').querySelector('[data-l="tag"]'); if (!t.value) t.value = tagOf(sel.value); }
+    if (sel && sel.value) {
+      const fs = sel.closest('.tline'), t = fs.querySelector('[data-l="tag"]'), a = animal(sel.value), d = fs.querySelector('[data-l="damId"]');
+      if (!t.value) t.value = tagOf(sel.value);
+      if (a && a.damId && d && !d.value) d.value = a.damId;
+    }
     updateTicket();
   };
   body.onchange = body.oninput;
@@ -1108,7 +1183,7 @@ function readTicket() {
   const v = id => $(id).value.trim();
   const lines = [...document.querySelectorAll('#tk-lines .tline')].map(fs => {
     const q = k => fs.querySelector(`[data-l="${k}"]`).value.trim();
-    return {id: fs.dataset.id, head: numOr(q('head')), tag: q('tag'), desc: q('desc'), weight: numOr(q('weight')), price: numOr(q('price')), per: q('per'), animalId: q('animalId'), comments: q('comments')};
+    return {id: fs.dataset.id, head: numOr(q('head')), tag: q('tag'), desc: q('desc'), weight: numOr(q('weight')), price: numOr(q('price')), per: q('per'), animalId: q('animalId'), comments: q('comments'), damId: q('damId')};
   });
   const r = {date: v('tk-date'), owner: v('tk-owner'), place: v('tk-place'), ticket: v('tk-ticket'), what: v('tk-what'), lot: v('tk-lot'), lines, checkAmount: numOr(v('tk-check')), notes: v('tk-notes')};
   DEDS.forEach(([k]) => { r[k] = numOr(v('tk-' + k)); });
@@ -1150,7 +1225,7 @@ const SHEETS = [
   ['Bought', 'purchases', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Where', r => r.place || ''], ['Group', r => r.lot || ''], ['What', r => r.what || ''], ['Head', r => num(r.head)], ['Total weight', r => num(r.totalWeight)], ['$/cwt', r => num(r.pricePerCwt)], ['$/head', r => num(r.pricePerHead)], ['Fees', r => num(r.fees)], ['Trucking', r => num(r.trucking)], ['Total cost', r => +purchaseCost(r).toFixed(2)], ['Notes', r => r.notes || '']]],
   ['Sale tickets', 'sales', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Where', r => r.place || ''], ['Ticket', r => r.ticket || ''], ['Group', r => r.lot || ''], ['What', r => r.what || ''], ['Head', r => saleHead(r)], ['Total weight', r => saleWeight(r)], ['Gross', r => saleGross(r)]]
     .concat(DEDS.map(([k, l]) => [l, r => num(r[k])])).concat([['Total charges', r => saleDeductions(r)], ['Check', r => saleNet(r)], ['Notes', r => r.notes || '']])],
-  ['Sold animals', 'saleLines', [['Date', r => r.sale.date], ['Herd', r => ownerName(r.sale.owner)], ['Ticket', r => r.sale.ticket || ''], ['Tag', r => r.tag || ''], ['Head', r => num(r.head)], ['Description', r => r.desc || ''], ['Comments', r => r.comments || ''], ['Weight', r => num(r.weight)], ['Avg weight', r => num(r.head) && num(r.weight) ? Math.floor(num(r.weight) / num(r.head)) : ''], ['Price', r => num(r.price)], ['Per', r => r.per === 'head' ? 'head' : 'cwt'], ['Amount', r => lineAmount(r)]]],
+  ['Sold animals', 'saleLines', [['Date', r => r.sale.date], ['Herd', r => ownerName(r.sale.owner)], ['Ticket', r => r.sale.ticket || ''], ['Tag', r => r.tag || ''], ['Out of', r => damOf(r) ? tagOf(damOf(r)) : ''], ['Head', r => num(r.head)], ['Description', r => r.desc || ''], ['Comments', r => r.comments || ''], ['Weight', r => num(r.weight)], ['Avg weight', r => num(r.head) && num(r.weight) ? Math.floor(num(r.weight) / num(r.head)) : ''], ['Price', r => num(r.price)], ['Per', r => r.per === 'head' ? 'head' : 'cwt'], ['Amount', r => lineAmount(r)]]],
   ['Expenses', 'expenses', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Kind', r => r.category], ['What', r => r.item || ''], ['Quantity', r => num(r.qty)], ['Unit', r => r.unit || ''], ['Miles', r => num(r.miles)], ['Cost', r => +expenseCost(r).toFixed(2)], ['Group', r => r.lot || ''], ['Notes', r => r.notes || '']]],
   ['Treatments', 'treatments', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Animals', r => r.herdWide ? 'Whole herd' : (r.animalIds || []).map(tagOf).join(', ')], ['Medicine', r => r.product], ['Dose', r => r.dose || ''], ['Given', r => r.route || ''], ['Withdrawal days', r => num(r.withdrawalDays)], ['Clear to sell', r => clearDate(r)], ['Why', r => r.reason || ''], ['Given by', r => r.givenBy || ''], ['Notes', r => r.notes || '']]],
   ['Medicine cabinet', 'medicines', [['Medicine', r => r.name], ['Kind', r => r.kind || ''], ['Herd', r => ownerName(r.owner)], ['Withdrawal days', r => num(r.withdrawalDays)], ['Expires', r => r.expires || ''], ['On hand', r => num(r.onHand)], ['Unit', r => r.unit || ''], ['Cost', r => num(r.cost)], ['Bought', r => r.boughtDate || ''], ['Lot / serial', r => r.lotNo || ''], ['Notes', r => r.notes || '']]],
@@ -1278,6 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const view = $('view');
   view.addEventListener('click', e => {
     const add = e.target.closest('[data-add]'); if (add) { if (add.dataset.add === 'sales') openTicket(); else openForm(add.dataset.add); return; }
+    const cw = e.target.closest('tr[data-cow]'); if (cw) { searches.cowOpen = searches.cowOpen === cw.dataset.cow ? '' : cw.dataset.cow; render(); const n = document.querySelector(`tr[data-cow="${cw.dataset.cow}"]`); if (n) n.focus(); return; }
     const tk = e.target.closest('[data-ticket]'); if (tk) { const rec = S.sales.find(r => r.id === tk.dataset.ticket); if (rec) openTicket(rec); return; }
     const row = e.target.closest('tr[data-col]'); if (row) { const key = row.dataset.col, rec = S[key].find(r => r.id === row.dataset.id); if (rec) openForm(key, rec); return; }
     const id = e.target.id;
@@ -1291,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (id === 'imp-go') runImport();
     else if (id === 'addOwner') { S.settings.owners.push({id: 'o' + uid().slice(0, 6), name: 'Herd ' + (owners().length + 1)}); save(); render(); }
   });
-  view.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr[data-col]')) { e.preventDefault(); e.target.click(); } });
+  view.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr[data-col], tr[data-cow]')) { e.preventDefault(); e.target.click(); } });
   view.addEventListener('input', e => {
     const t = e.target;
     if (t.classList.contains('search') && t.type === 'search') { searches[t.id] = t.value; const pos = t.selectionStart; render(); const n = $(t.id); if (n) { n.focus(); n.setSelectionRange(pos, pos); } return; }
@@ -1303,7 +1379,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   view.addEventListener('change', e => {
     const t = e.target;
-    if (t.id === 'herdStatus' || t.id === 'expYear' || t.id === 'saleYear') { searches[t.id] = t.value; render(); }
+    if (t.id === 'herdStatus' || t.id === 'expYear' || t.id === 'saleYear' || t.id === 'cowSince' || t.id === 'cowSort') { searches[t.id] = t.value; render(); }
     else if (t.id === 'mktClass') { searches.mktClass = t.value; drawChart(); }
     else if (t.id === 'imp-sheet') showImport(t.value);
     else if (t.dataset.beef && t.type === 'checkbox') { S.beef[t.dataset.beef] = t.checked; save(true); calcBeef(); }
