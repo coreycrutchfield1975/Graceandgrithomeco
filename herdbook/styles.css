@@ -137,6 +137,30 @@ table.rows .tag { font: 700 1rem var(--slab); color: var(--pasture); }
 .inline-check { display: flex; gap: 8px; align-items: center; font-weight: 600; }
 .inline-check input { width: 20px; height: 20px; min-height: 0; }
 
+/* sale tickets */
+.drawer.wide { width: min(820px, 100%); }
+.tline { position: relative; border: 1.5px solid var(--line); border-radius: 12px; padding: 4px 14px 14px; margin: 14px 0 0; background: #fbfbf8; }
+.tline legend { font: 700 1rem var(--slab); color: var(--pasture); padding: 0 6px; }
+.tline .tl-remove { position: absolute; top: -6px; right: 10px; }
+.tgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 12px; }
+.tgrid .wide2 { grid-column: span 2; }
+.tgrid .field { margin-top: 10px; }
+.tgrid output { display: flex; align-items: center; min-height: 44px; font: 700 1.1rem var(--slab); color: var(--pasture); }
+.deds-box { background: var(--card); }
+.ticket { margin-bottom: 14px; }
+.ticket-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.ticket-head h4 { flex-wrap: wrap; }
+.table-wrap.flat { border: 0; border-radius: 0; margin: 0 -18px; }
+.ticket-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 28px; margin-top: 12px; }
+.ticket-foot dl { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(170px, 1fr)); gap: 4px 28px; flex: 1; max-width: 460px; }
+.ticket-foot dl div { display: flex; justify-content: space-between; gap: 12px; font-size: .92rem; }
+.ticket-foot dt { color: var(--muted); }
+.ticket-foot dd { margin: 0; font-variant-numeric: tabular-nums; }
+.ticket-foot .totals { grid-template-columns: auto; min-width: 210px; flex: 0 1 240px; align-content: start; }
+.ticket-foot .totals .check { font-weight: 700; font-size: 1.05rem; border-top: 1.5px solid var(--line); padding-top: 4px; }
+.ticket-foot .totals .check dt { color: var(--ink); }
+.warnline { margin: 10px 0 0; padding: 8px 12px; border-radius: 8px; background: var(--gold-soft); color: #7a4f05; font-weight: 600; font-size: .92rem; }
+
 /* calculators */
 .calc { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 18px; align-items: start; }
 .calc .panel > h4 + .field { margin-top: 4px; }
@@ -165,6 +189,10 @@ table.rows .tag { font: 700 1rem var(--slab); color: var(--pasture); }
   .calc { grid-template-columns: 1fr; }
   .compare { grid-template-columns: 1fr; }
   .row2 { grid-template-columns: 1fr; }
+  .tgrid { grid-template-columns: 1fr 1fr; }
+  .tgrid .field:first-child { grid-column: auto; }
+  .ticket-foot .totals { min-width: 0; width: 100%; flex-basis: 100%; }
+  .ticket-foot dl { grid-template-columns: 1fr; max-width: none; }
   .grid2 { grid-template-columns: 1fr; }
   .search { min-width: 0; flex: 1; }
   .hide-sm { display: none; }
