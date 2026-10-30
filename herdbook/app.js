@@ -569,13 +569,10 @@ const VIEWS = {
     const cows = count('Cow');
     const due = A.filter(a => a.type === 'Cow' || a.type === 'Heifer').map(a => ({a, b: currentBreeding(a.id)})).filter(x => x.b)
       .map(x => ({...x, due: dueDate(x.b), days: daysFrom(today(), dueDate(x.b))})).filter(x => x.days != null && x.days <= 75 && x.days >= -30).sort((p, q) => p.days - q.days);
-    // calves born alive this year: every live calving, plus calves added straight to the herd list
-    // with this year's birth date that have no calving record of their own
+    // this year's calvings: born alive = all but "Died at birth"; still alive = those still marked Alive
     const calves = S.calvings.filter(c => yearOf(c.date) === y && inFilter(c));
-    const fromCalvings = calves.filter(c => c.calfStatus !== 'Died at birth');  // a calf that died later was still born alive
-    const extra = S.animals.filter(a => a.type === 'Calf' && yearOf(a.birthDate) === y && inFilter(a) &&
-      !S.calvings.some(c => c.cowId && c.cowId === a.damId && c.date === a.birthDate));
-    const alive = fromCalvings.length + extra.length;
+    const alive = calves.filter(c => c.calfStatus !== 'Died at birth').length;
+    const stillAlive = calves.filter(c => c.calfStatus === 'Alive').length;
     const hold = holds().filter(inFilter);
     const meds = S.medicines.filter(m => m.expires && inFilter(m)).map(m => ({m, d: daysFrom(today(), m.expires)})).filter(x => x.d <= 60).sort((p, q) => p.d - q.d);
     const open = A.filter(a => (a.type === 'Cow' || a.type === 'Heifer')).filter(a => { const b = S.breedings.filter(x => x.cowId === a.id).sort((p, q) => p.date < q.date ? 1 : -1)[0]; return b && b.pregCheck === 'Open' && (!lastCalving(a.id) || b.date > lastCalving(a.id).date); });
@@ -587,7 +584,7 @@ const VIEWS = {
       <p class="lede">${empty ? 'Start by adding the cows on the <b>Herd</b> tab, or bring in an existing Excel list from <b>Settings &amp; data</b>. Everything is saved on this device as you go.' : `${ownerFilter === 'all' ? 'All herds' : esc(ownerName(ownerFilter))} · ${new Date().getFullYear()} so far.`}</p>
       <div class="cards">
         <div class="stat"><div class="k">Cows</div><div class="v">${cows}</div><div class="s">${count('Heifer')} heifer${count('Heifer') === 1 ? '' : 's'} · ${count('Bull')} bull${count('Bull') === 1 ? '' : 's'}</div></div>
-        <div class="stat"><div class="k">Calves on the ground</div><div class="v">${count('Calf')}</div><div class="s">${alive} born alive this year</div></div>
+        <div class="stat"><div class="k">Calves on the ground</div><div class="v">${count('Calf')}</div><div class="s">${alive} born alive this year · ${stillAlive} still alive</div></div>
         <div class="stat"><div class="k">Due in the next 75 days</div><div class="v">${due.filter(x => x.days >= 0).length}</div><div class="s">${due.filter(x => x.days < 0).length} past due date</div></div>
         <div class="stat"><div class="k">Money in this year</div><div class="v">${money(inc, false)}</div><div class="s">sales, after fees</div></div>
         <div class="stat"><div class="k">Money out this year</div><div class="v">${money(out, false)}</div><div class="s">cattle bought + expenses</div></div>
