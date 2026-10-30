@@ -33,18 +33,43 @@ function blank() {
     settings: {
       farmName: "Michelle’s Herd Book",
       owners: [{id: 'o1', name: 'My herd'}, {id: 'o2', name: "Step-dad's herd"}],
-      gestation: 283, mileRate: 0.70, saleBarn: 'Farmington Regional Stockyards'
+      gestation: 283, mileRate: 0.70, saleBarn: 'Farmington Regional Stockyards',
+      // what Farmington took out on every 2026 ticket; editable in Settings
+      barnRates: {commissionPct: 3.25, insurancePct: 0.484, yardagePerHead: 2, beefCouncilPerHead: 1, vetInspectionPerHead: 0.25, vetPerCow: 9, vetPerHeifer: 4.5}
     },
     animals: [], breedings: [], calvings: [], purchases: [], sales: [], expenses: [], treatments: [], medicines: [], market: [],
+    expPresets: [
+      {id: 'p1', name: 'Cow feed', category: 'Feed & grain', unit: 'bags', cost: ''},
+      {id: 'p2', name: 'Hay', category: 'Hay', unit: 'bales', cost: ''},
+      {id: 'p3', name: 'Mineral', category: 'Mineral & salt', unit: 'bags', cost: ''},
+      {id: 'p4', name: 'Fuel to the sale barn', category: 'Travel / fuel', unit: '', cost: ''},
+      {id: 'p5', name: 'Vet call', category: 'Vet', unit: '', cost: ''}
+    ],
     beef: {live: 1200, hangPct: 60, yieldPct: 62, price: 4.00, killFee: 100, cutWrap: 1.00, customerPaysProcessing: true,
            finishDays: 0, feedPerDay: 0, otherCost: 0, barnPrice: 0, barnCommissionPct: 3, barnTrucking: 0},
     bid: {buyWt: 500, sellWt: 650, sellPrice: 0, days: 60, feedPerDay: 1.5, trucking: 15, commissionPct: 3, deathPct: 1, target: 50}
   };
 }
+// fills in anything a saved book is missing and brings old records up to date
+function normalize(s) {
+  const b = blank();
+  if (s.settings && s.settings.farmName === 'Herd Book') s.settings.farmName = b.settings.farmName;
+  const out = {...b, ...s, settings: {...b.settings, ...s.settings}, beef: {...b.beef, ...s.beef}, bid: {...b.bid, ...s.bid}};
+  out.settings.barnRates = {...b.settings.barnRates, ...(out.settings.barnRates || {})};
+  // a sale used to be one line with a lump of fees; now it is a ticket with a line per animal or lot
+  out.sales.forEach(x => {
+    if (Array.isArray(x.lines)) return;
+    const cwt = num(x.pricePerCwt), hd = num(x.pricePerHead);
+    x.lines = [{id: uid(), head: x.head, tag: (x.animalIds || []).map(id => (out.animals.find(a => a.id === id) || {}).tag || '').filter(Boolean).join(', '), desc: x.what || '', weight: x.totalWeight, price: cwt != null ? cwt : hd, per: cwt != null ? 'cwt' : 'head', animalId: '', comments: ''}];
+    x.otherFees = x.fees || '';
+    ['head', 'totalWeight', 'pricePerCwt', 'pricePerHead', 'fees'].forEach(k => delete x[k]);
+  });
+  return out;
+}
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && s.version === 1) { const b = blank(); if (s.settings && s.settings.farmName === 'Herd Book') s.settings.farmName = b.settings.farmName; return {...b, ...s, settings: {...b.settings, ...s.settings}, beef: {...b.beef, ...s.beef}, bid: {...b.bid, ...s.bid}}; }
+    if (s && s.version === 1) return normalize(s);
   } catch (e) { /* fall through to a fresh book */ }
   return blank();
 }
@@ -136,11 +161,33 @@ function purchaseCost(p) {
   const base = w != null && c != null ? w / 100 * c : (h != null && n != null ? h * n : 0);
   return base + (num(p.fees) || 0) + (num(p.trucking) || 0);
 }
-function saleGross(s) {
-  const w = num(s.totalWeight), c = num(s.pricePerCwt), h = num(s.pricePerHead), n = num(s.head);
-  return w != null && c != null ? w / 100 * c : (h != null && n != null ? h * n : 0);
+// a sale is a sale-barn ticket: a line per animal or lot, and the barn's charges for the whole ticket
+const DEDS = [['commission', 'Commission'], ['insurance', 'Insurance'], ['yardage', 'Yardage'], ['beefCouncil', 'Beef council'],
+  ['vetInspection', 'Vet inspection'], ['vet', 'Vet'], ['otherFees', 'Other fees'], ['trucking', 'Trucking']];
+const r2 = n => Math.round(n * 100) / 100;
+function lineAmount(l) {
+  const p = num(l.price); if (p == null) return 0;
+  if (l.per === 'head') return r2(p * (num(l.head) || 1));
+  const w = num(l.weight); return w == null ? 0 : r2(w / 100 * p);
 }
-const saleNet = s => saleGross(s) - (num(s.fees) || 0) - (num(s.trucking) || 0);
+const saleLines = s => s.lines || [];
+const saleGross = s => r2(sum(saleLines(s), lineAmount));
+const saleHead = s => sum(saleLines(s), l => num(l.head));
+const saleWeight = s => sum(saleLines(s), l => num(l.weight));
+const saleDeductions = s => r2(sum(DEDS, ([k]) => num(s[k])));
+const saleNet = s => r2(saleGross(s) - saleDeductions(s));
+const isCowLine = l => /\bcows?\b/i.test(l.desc || '') && !/heifer|hfr/i.test(l.desc || '');
+const isHeiferLine = l => /heifer|hfr/i.test(l.desc || '');
+// the barn's usual charges for a ticket, from the rates in Settings
+function barnCharges(lines) {
+  const R = S.settings.barnRates, g = sum(lines, lineAmount), head = sum(lines, l => num(l.head));
+  return {
+    commission: r2(g * (num(R.commissionPct) || 0) / 100), insurance: r2(g * (num(R.insurancePct) || 0) / 100),
+    yardage: r2(head * (num(R.yardagePerHead) || 0)), beefCouncil: r2(head * (num(R.beefCouncilPerHead) || 0)),
+    vetInspection: r2(head * (num(R.vetInspectionPerHead) || 0)),
+    vet: r2(sum(lines.filter(isCowLine), l => num(l.head)) * (num(R.vetPerCow) || 0) + sum(lines.filter(isHeiferLine), l => num(l.head)) * (num(R.vetPerHeifer) || 0))
+  };
+}
 function expenseCost(e) { const c = num(e.cost); if (c != null) return c; const m = num(e.miles); return m != null ? m * (Number(S.settings.mileRate) || 0) : 0; }
 
 /* ------------------------------------------------------------ choices */
@@ -236,34 +283,10 @@ const COLS = {
     ],
     computed: r => { const t = purchaseCost(r), h = num(r.head), w = num(r.totalWeight); return t ? 'Total cost ' + money(t) + (h ? ' · ' + money(t / h) + ' a head' : '') + (h && w ? ' · avg ' + whole(w / h) + ' lb' : '') : ''; }
   },
-  sales: {
-    one: 'sale', title: 'Sold',
-    fields: [
-      {k: 'date', label: 'Date', type: 'date', required: true, def: today, half: true},
-      {k: 'owner', label: 'Whose', type: 'owner', required: true, half: true},
-      {k: 'place', label: 'Where', type: 'text', def: () => S.settings.saleBarn},
-      {k: 'what', label: 'What', type: 'select', options: ['Calves', 'Feeder steers', 'Feeder heifers', 'Cull cows', 'Bred cows', 'Cow-calf pairs', 'Bull', 'Beef sold direct', 'Other'], def: 'Calves'},
-      {k: 'lot', label: 'Group name', type: 'text', hint: 'Same name as when bought, for traded cattle.'},
-      {k: 'animalIds', label: 'Which animals (optional — they will be marked sold)', type: 'animals'},
-      {k: 'head', label: 'Head', type: 'number', required: true, half: true},
-      {k: 'totalWeight', label: 'Total weight (lb)', type: 'number', half: true},
-      {k: 'pricePerCwt', label: 'Price ($/cwt)', type: 'money', half: true},
-      {k: 'pricePerHead', label: 'or price per head ($)', type: 'money', half: true},
-      {k: 'fees', label: 'Commission & fees ($)', type: 'money', half: true},
-      {k: 'trucking', label: 'Trucking ($)', type: 'money', half: true},
-      {k: 'notes', label: 'Notes', type: 'textarea'}
-    ],
-    computed: r => {
-      const g = saleGross(r); let t = g ? 'Gross ' + money(g) + ' · net ' + money(saleNet(r)) + (num(r.head) ? ' · ' + money(saleNet(r) / num(r.head)) + ' a head' : '') : '';
-      const held = (r.animalIds || []).map(id => [id, onHold(id, r.date)]).filter(x => x[1]);
-      if (held.length) t += '\n⚠ Still in medicine withdrawal on this date: ' + held.map(x => tagOf(x[0]) + ' (' + x[1].product + ' until ' + fmtShort(clearDate(x[1])) + ')').join(', ');
-      return t;
-    },
-    after: r => { (r.animalIds || []).forEach(id => { const a = animal(id); if (a && a.status === 'Active') { a.status = 'Sold'; a.statusDate = r.date; } }); }
-  },
   expenses: {
     one: 'expense', title: 'Expenses',
     fields: [
+      {k: 'preset', label: 'Pick a saved expense', type: 'select', options: () => [''].concat(S.expPresets.map(p => p.name)), newOnly: true, hint: 'Fills in the kind, unit and usual cost. Manage the list at the bottom of the Expenses tab.'},
       {k: 'date', label: 'Date', type: 'date', required: true, def: today, half: true},
       {k: 'owner', label: 'Whose', type: 'owner', required: true, half: true},
       {k: 'category', label: 'Kind', type: 'select', options: EXP_CATS, required: true, def: 'Feed & grain'},
@@ -273,9 +296,24 @@ const COLS = {
       {k: 'miles', label: 'Miles (round trip)', type: 'number', show: r => r.category === 'Travel / fuel', hint: 'Leave the cost empty to use the mileage rate from Settings.'},
       {k: 'cost', label: 'Cost ($)', type: 'money'},
       {k: 'lot', label: 'Group name (optional)', type: 'text', hint: 'Charge it to a traded group to include it in that group’s profit.'},
-      {k: 'notes', label: 'Notes', type: 'textarea'}
+      {k: 'notes', label: 'Notes', type: 'textarea'},
+      {k: 'savePreset', label: 'Add “What” to the saved expenses menu', type: 'check', newOnly: true, show: r => !r.preset && !!r.item && !S.expPresets.some(p => p.name.toLowerCase() === String(r.item).toLowerCase())}
     ],
-    computed: r => { const c = expenseCost(r), q = num(r.qty); return c ? money(c) + (q && r.unit ? ' · ' + money(c / q) + ' per ' + r.unit.replace(/s$/, '') : '') : ''; }
+    computed: r => { const c = expenseCost(r), q = num(r.qty); return c ? money(c) + (q && r.unit ? ' · ' + money(c / q) + ' per ' + r.unit.replace(/s$/, '') : '') : ''; },
+    after: (r, isNew) => {
+      if (isNew && r.savePreset && r.item && !S.expPresets.some(p => p.name.toLowerCase() === r.item.toLowerCase()))
+        S.expPresets.push({id: uid(), name: r.item, category: r.category, unit: r.unit || '', cost: r.cost === '' ? '' : r.cost});
+    }
+  },
+  expPresets: {
+    one: 'saved expense', title: 'Saved expenses',
+    fields: [
+      {k: 'name', label: 'Name in the menu', type: 'text', required: true, hint: 'e.g. Cow feed, 20% cubes, Round bales'},
+      {k: 'category', label: 'Kind', type: 'select', options: EXP_CATS, required: true, def: 'Feed & grain'},
+      {k: 'unit', label: 'Unit', type: 'select', options: ['', 'bags', 'lb', 'tons', 'bales', 'gallons', 'head', 'doses', 'each'], half: true},
+      {k: 'cost', label: 'Usual cost ($, optional)', type: 'money', half: true}
+    ],
+    validate: (r, old) => S.expPresets.some(p => p !== old && p.name.trim().toLowerCase() === String(r.name).trim().toLowerCase()) ? {name: 'That name is already in the menu.'} : null
   },
   treatments: {
     one: 'treatment', title: 'Treatments',
@@ -336,7 +374,7 @@ function fieldHtml(f, rec) {
   let input;
   switch (f.type) {
     case 'textarea': input = `<textarea id="${id}" name="${f.k}"${desc}>${esc(v || '')}</textarea>`; break;
-    case 'select': input = `<select id="${id}" name="${f.k}"${desc}>${f.options.map(o => `<option value="${esc(o)}"${o === (v || '') ? ' selected' : ''}>${esc(o || '—')}</option>`).join('')}</select>`; break;
+    case 'select': input = `<select id="${id}" name="${f.k}"${desc}>${(typeof f.options === 'function' ? f.options() : f.options).map(o => `<option value="${esc(o)}"${o === (v || '') ? ' selected' : ''}>${esc(o || '—')}</option>`).join('')}</select>`; break;
     case 'owner': {
       const cur = v || (ownerFilter !== 'all' ? ownerFilter : owners()[0].id);
       input = `<select id="${id}" name="${f.k}">${owners().map(o => `<option value="${o.id}"${o.id === cur ? ' selected' : ''}>${esc(o.name)}</option>`).join('')}</select>`; break;
@@ -391,6 +429,7 @@ function applyShow(fields, rec) {
   document.querySelectorAll('#drawerBody .row2').forEach(row => { const vis = [...row.children].filter(c => !c.hidden).length; row.style.display = vis ? '' : 'none'; row.style.gridTemplateColumns = vis === 1 ? '1fr' : ''; });
 }
 function openForm(key, rec, preset) {
+  $('drawerBody').onclick = null; $('drawer').classList.remove('wide');
   const def = COLS[key];
   const fields = def.fields;
   editing = {key, rec: rec || null, fields, draftOwner: (rec && rec.owner) || (preset && preset.owner) || (ownerFilter !== 'all' ? ownerFilter : owners()[0].id)};
@@ -412,6 +451,18 @@ function openForm(key, rec, preset) {
       const wd = $('f-withdrawalDays');
       if (med && med.withdrawalDays !== '' && med.withdrawalDays != null && wd && !wd.dataset.touched) { wd.value = med.withdrawalDays; cur.withdrawalDays = med.withdrawalDays; }
     }
+    // a saved expense picked from the menu fills in the rest
+    if (key === 'expenses' && cur.preset !== editing.lastPreset) {
+      const prev = S.expPresets.find(p => p.name === editing.lastPreset), p = S.expPresets.find(x => x.name === cur.preset);
+      editing.lastPreset = cur.preset;
+      if (p) {
+        const set = (k, v) => { const el = $('f-' + k); if (el) { el.value = v; cur[k] = v; } };
+        set('category', p.category);
+        if (!cur.item || (prev && cur.item === prev.name)) set('item', p.name);
+        if (p.unit) set('unit', p.unit);
+        if (num(p.cost) != null && (cur.cost === '' || (prev && num(cur.cost) === num(prev.cost)))) set('cost', p.cost);
+      }
+    }
     applyShow(fields, cur);
     if (def.computed) { const t = def.computed(cur); const c = $('computed'); c.hidden = !t; c.textContent = t; c.style.whiteSpace = 'pre-line'; }
   };
@@ -420,7 +471,7 @@ function openForm(key, rec, preset) {
   refresh();
   setTimeout(() => { const first = $('drawerBody').querySelector('input:not([type=checkbox]),select,textarea'); if (first) first.focus(); }, 30);
 }
-function closeForm() { $('drawer').hidden = true; editing = null; }
+function closeForm() { $('drawer').hidden = true; $('drawer').classList.remove('wide'); $('drawerBody').onclick = null; editing = null; }
 function submitForm(e) {
   e.preventDefault(); if (!editing) return;
   const {key, rec, fields} = editing, def = COLS[key];
@@ -453,6 +504,10 @@ function submitForm(e) {
   toast((isNew ? 'Added ' : 'Saved ') + def.one);
 }
 function deleteRecord() {
+  if (editing && editing.special === 'ticket' && editing.rec) {
+    if (!confirm('Delete this sale ticket?')) return;
+    S.sales = S.sales.filter(x => x !== editing.rec); save(); closeForm(); render(); toast('Deleted sale'); return;
+  }
   if (!editing || !editing.rec) return;
   const {key, rec} = editing, def = COLS[key];
   if (key === 'animals' && (S.calvings.some(c => c.cowId === rec.id) || S.breedings.some(b => b.cowId === rec.id))) {
@@ -616,7 +671,11 @@ const VIEWS = {
 
   money() {
     const P = S.purchases.filter(inFilter).filter(p => matches('mSearch', [p.lot, p.what, p.place, p.notes].join(' '))).sort((a, b) => a.date < b.date ? 1 : -1);
-    const Sx = S.sales.filter(inFilter).filter(s => matches('mSearch', [s.lot, s.what, s.place, s.notes].join(' '))).sort((a, b) => a.date < b.date ? 1 : -1);
+    const year = searches.saleYear || 'All';
+    const years = [...new Set(S.sales.map(x => yearOf(x.date)).filter(Boolean))].sort().reverse();
+    const T = S.sales.filter(inFilter).filter(x => year === 'All' || yearOf(x.date) === year)
+      .filter(x => matches('mSearch', [x.lot, x.what, x.place, x.ticket, x.notes].concat(saleLines(x).map(l => [l.tag, l.desc, l.comments].join(' '))).join(' ')))
+      .sort((a, b) => a.date < b.date ? 1 : -1);
     const pcols = [
       {label: 'Date', get: r => fmtDate(r.date)},
       {label: 'What', get: r => (r.lot ? r.lot + ' · ' : '') + (r.what || '')},
@@ -626,38 +685,36 @@ const VIEWS = {
       {label: '$/cwt', num: true, get: r => num(r.pricePerCwt) != null ? money(num(r.pricePerCwt)) : (num(r.pricePerHead) != null ? money(num(r.pricePerHead)) + '/hd' : ''), sm: true},
       {label: 'Total cost', num: true, get: r => money(purchaseCost(r)), total: rs => money(sum(rs, purchaseCost))}
     ];
-    const scols = [
-      {label: 'Date', get: r => fmtDate(r.date)},
-      {label: 'What', get: r => (r.lot ? r.lot + ' · ' : '') + (r.what || '')},
-      ...(showOwnerCol() ? [ownerCol] : []),
-      {label: 'Head', num: true, get: r => r.head, total: rs => whole(sum(rs, r => num(r.head)))},
-      {label: 'Avg wt', num: true, get: r => num(r.head) && num(r.totalWeight) ? whole(num(r.totalWeight) / num(r.head)) + ' lb' : '', sm: true},
-      {label: '$/cwt', num: true, get: r => num(r.pricePerCwt) != null ? money(num(r.pricePerCwt)) : (num(r.pricePerHead) != null ? money(num(r.pricePerHead)) + '/hd' : ''), sm: true},
-      {label: 'Net', num: true, get: r => money(saleNet(r)), total: rs => money(sum(rs, saleNet))}
-    ];
     // profit by group: sales net − purchase cost − expenses charged to the group
     const lots = [...new Set([...S.purchases, ...S.sales].filter(inFilter).map(x => (x.lot || '').trim()).filter(Boolean))];
     const lotRows = lots.map(l => {
       const same = x => (x.lot || '').trim().toLowerCase() === l.toLowerCase() && inFilter(x);
       const bought = S.purchases.filter(same), sold = S.sales.filter(same), ex = S.expenses.filter(same);
-      const cost = sum(bought, purchaseCost) + sum(ex, expenseCost), inc = sum(sold, saleNet), headB = sum(bought, p => num(p.head)), headS = sum(sold, s => num(s.head));
-      const days = bought.length && sold.length ? daysFrom(bought.map(b => b.date).sort()[0], sold.map(s => s.date).sort().slice(-1)[0]) : null;
+      const cost = sum(bought, purchaseCost) + sum(ex, expenseCost), inc = sum(sold, saleNet), headB = sum(bought, p => num(p.head)), headS = sum(sold, saleHead);
+      const days = bought.length && sold.length ? daysFrom(bought.map(b => b.date).sort()[0], sold.map(x => x.date).sort().slice(-1)[0]) : null;
       return {id: l, lot: l, headB, headS, cost, inc, profit: inc - cost, days, open: headS < headB};
     }).sort((a, b) => a.lot.localeCompare(b.lot));
     return `
       <h3 class="sec">Bought &amp; sold</h3>
-      <p class="lede">Cattle bought and sold, at Farmington or anywhere else. Give traded cattle a group name when you buy them, and use the same name when they sell, to see what each group made.</p>
+      <p class="lede">Enter each sale like the barn ticket: every animal or lot on its own line, and the barn’s charges (commission, insurance, yardage and the rest) once for the whole ticket.</p>
       <div class="toolbar">
-        <button type="button" class="btn" data-add="sales">Record a sale</button>
+        <button type="button" class="btn" data-add="sales">Record a sale ticket</button>
         <button type="button" class="btn ghost" data-add="purchases">Record a purchase</button>
-        ${searchBox('mSearch', 'Search group, what, where')}
+        ${searchBox('mSearch', 'Search tag, ticket, what, where')}
+        <select class="search" id="saleYear" aria-label="Year of sales">${['All'].concat(years).map(y => `<option${y === year ? ' selected' : ''}>${y}</option>`).join('')}</select>
       </div>
+      ${T.length ? `<div class="cards">
+        <div class="stat"><div class="k">Head sold</div><div class="v">${whole(sum(T, saleHead))}</div><div class="s">${year === 'All' ? 'all years' : year}</div></div>
+        <div class="stat"><div class="k">Gross sales</div><div class="v">${money(sum(T, saleGross), false)}</div><div class="s">before barn charges</div></div>
+        <div class="stat"><div class="k">Barn charges</div><div class="v">${money(sum(T, saleDeductions), false)}</div><div class="s">${sum(T, saleGross) ? (sum(T, saleDeductions) / sum(T, saleGross) * 100).toFixed(1) + '% of gross' : ''}</div></div>
+        <div class="stat"><div class="k">Checks</div><div class="v">${money(sum(T, saleNet), false)}</div><div class="s">${T.length} ticket${T.length === 1 ? '' : 's'}</div></div>
+      </div>` : ''}
       ${lotRows.length ? `<h4 class="sec" style="font-size:1.1rem;margin:18px 0 8px">Profit by group</h4>
       <div class="table-wrap"><table class="rows"><thead><tr><th>Group</th><th class="num">Bought</th><th class="num">Sold</th><th class="num hide-sm">Days</th><th class="num">Cost + expenses</th><th class="num">Sales net</th><th class="num">Profit</th></tr></thead><tbody>
       ${lotRows.map(r => `<tr><td><b>${esc(r.lot)}</b>${r.open ? ' <span class="pill warn">still on hand</span>' : ''}</td><td class="num">${whole(r.headB)}</td><td class="num">${whole(r.headS)}</td><td class="num hide-sm">${r.days == null ? '' : r.days}</td><td class="num">${money(r.cost)}</td><td class="num">${money(r.inc)}</td><td class="num"><b style="color:${r.profit < 0 ? 'var(--barn)' : 'var(--ok)'}">${money(r.profit)}</b>${r.headS ? `<br><small>${money(r.profit / r.headS)} a head</small>` : ''}</td></tr>`).join('')}
       </tbody></table></div>` : ''}
       <h4 class="sec" style="font-size:1.1rem;margin:22px 0 8px">Sold</h4>
-      ${table(Sx, scols, {key: 'sales', empty: 'No sales recorded yet.'})}
+      ${T.length ? T.map(ticketCard).join('') : `<div class="panel"><p class="empty">No sales ${year === 'All' ? 'recorded yet' : 'in ' + year}.</p></div>`}
       <h4 class="sec" style="font-size:1.1rem;margin:22px 0 8px">Bought</h4>
       ${table(P, pcols, {key: 'purchases', empty: 'No purchases recorded yet.'})}`;
   },
@@ -685,7 +742,13 @@ const VIEWS = {
         <select class="search" id="expYear" aria-label="Year">${years.concat(['All']).map(y => `<option${y === year ? ' selected' : ''}>${y}</option>`).join('')}</select>
       </div>
       ${byCat.length ? `<div class="cards">${byCat.sort((a, b) => b[1] - a[1]).slice(0, 6).map(([c, v]) => `<div class="stat"><div class="k">${esc(c)}</div><div class="v">${money(v, false)}</div><div class="s">${Math.round(v / total * 100)}% of ${year === 'All' ? 'all years' : year}</div></div>`).join('')}</div>` : ''}
-      ${table(E, cols, {key: 'expenses', empty: 'No expenses for this year yet.'})}`;
+      ${table(E, cols, {key: 'expenses', empty: 'No expenses for this year yet.'})}
+      <h4 class="sec" style="font-size:1.1rem;margin:26px 0 4px">Saved expenses</h4>
+      <p class="lede" style="margin-bottom:10px">The menu at the top of Add expense. Click one to change it, or add your own.</p>
+      <div class="toolbar"><button type="button" class="btn ghost small" data-add="expPresets">Add a saved expense</button></div>
+      ${table(S.expPresets.slice().sort((a, b) => a.name.localeCompare(b.name)), [
+        {label: 'Name', get: r => r.name}, {label: 'Kind', get: r => r.category}, {label: 'Unit', get: r => r.unit || '', sm: true},
+        {label: 'Usual cost', num: true, get: r => num(r.cost) != null ? money(num(r.cost)) : ''}], {key: 'expPresets', empty: 'No saved expenses yet.'})}`;
   },
 
   health() {
@@ -801,6 +864,14 @@ const VIEWS = {
           </div>
           <div class="field"><label for="set-barn">Usual sale barn</label><input id="set-barn" data-set="saleBarn" value="${esc(st.saleBarn)}"></div>
         </section>
+        <section class="panel"><h4>Sale barn charges</h4>
+          <p class="empty" style="margin-bottom:4px">Used by “Fill in the barn’s charges” on a sale ticket. Set to what Farmington took out on the 2026 tickets.</p>
+          <div class="row2">
+            ${[['commissionPct', 'Commission (% of gross)'], ['insurancePct', 'Insurance (% of gross)'], ['yardagePerHead', 'Yardage ($ a head)'], ['beefCouncilPerHead', 'Beef council ($ a head)'],
+              ['vetInspectionPerHead', 'Vet inspection ($ a head)'], ['vetPerCow', 'Vet ($ a cow)'], ['vetPerHeifer', 'Vet ($ a heifer)']].map(([k, l]) =>
+              `<div class="field"><label for="rate-${k}">${l}</label><input id="rate-${k}" inputmode="decimal" data-rate="${k}" value="${esc(st.barnRates[k])}"></div>`).join('')}
+          </div>
+        </section>
         <section class="panel"><h4>Keep it safe <span class="count">${counts} records</span></h4>
           <p class="empty" style="margin-bottom:10px">The book is saved in this browser on this device. Make a backup now and then, or let it save itself to a folder (OneDrive works) on a computer.</p>
           <div class="toolbar" style="flex-direction:column;align-items:stretch">
@@ -885,6 +956,7 @@ function calcBeef() {
 
 /* ------------------------------------------------------------ special forms: bull turn-in, a sale's prices */
 function openTurnIn() {
+  $('drawerBody').onclick = null; $('drawer').classList.remove('wide');
   const cows = S.animals.filter(a => a.status === 'Active' && (a.type === 'Cow' || a.type === 'Heifer') && inFilter(a)).sort((a, b) => a.tag.localeCompare(b.tag, undefined, {numeric: true}));
   const bulls = animalOptions(['Bull']);
   editing = {special: 'turnin'};
@@ -906,6 +978,7 @@ function saveTurnIn() {
   save(); closeForm(); render(); toast('Recorded ' + ids.length + ' cow' + (ids.length === 1 ? '' : 's'));
 }
 function openWeek() {
+  $('drawerBody').onclick = null; $('drawer').classList.remove('wide');
   editing = {special: 'week'};
   $('drawerTitle').textContent = 'A sale’s prices';
   $('drawerBody').innerHTML = `<p class="lede" style="margin-top:12px">Fill in only the classes you follow; leave the rest empty. Prices are $ per cwt, except bred cows and pairs ($ per head).</p>
@@ -930,13 +1003,154 @@ function saveWeek() {
   save(); closeForm(); render(); toast('Saved ' + n + ' price' + (n === 1 ? '' : 's'));
 }
 
+/* ------------------------------------------------------------ sale tickets */
+const DESC_OPTIONS = ['Steer feeder', 'Heifer feeder', 'Steer calf', 'Heifer calf', 'Bull calf', 'Cow', 'Bred cow', 'Cow-calf pair', 'Heifer', 'Bull'];
+function ticketCard(x) {
+  const L = saleLines(x), g = saleGross(x), w = saleWeight(x), net = saleNet(x);
+  const allCwt = L.length && L.every(l => l.per !== 'head');
+  const deds = DEDS.filter(([k]) => num(x[k]));
+  const chk = num(x.checkAmount), off = chk != null && Math.abs(chk - net) >= 0.01;
+  const held = L.filter(l => l.animalId && onHold(l.animalId, x.date));
+  const sub = [x.place, x.ticket ? 'Ticket ' + x.ticket : '', showOwnerCol() ? ownerName(x.owner) : '', x.lot ? 'Group: ' + x.lot : ''].filter(Boolean).join(' · ');
+  return `<section class="panel ticket">
+    <div class="ticket-head"><h4>${esc(fmtDate(x.date))}<span class="count">${esc(sub)}</span></h4>
+      <button type="button" class="btn ghost small" data-ticket="${x.id}" aria-label="Edit the ${esc(fmtDate(x.date))} sale">Edit</button></div>
+    <div class="table-wrap flat"><table class="rows">
+      <thead><tr><th>Tag</th><th class="num">Head</th><th>Description</th><th class="num">Weight</th><th class="num">Price</th><th class="num">Amount</th></tr></thead>
+      <tbody>${L.map(l => `<tr><td>${esc(l.tag || '—')}</td><td class="num">${esc(l.head)}</td><td>${esc(l.desc || '')}${l.comments ? ` <span class="pill warn">${esc(l.comments)}</span>` : ''}</td>
+        <td class="num">${num(l.weight) != null ? whole(num(l.weight)) + ' lb' + (num(l.head) > 1 ? `<br><small>avg ${whole(Math.floor(num(l.weight) / num(l.head)))}</small>` : '') : ''}</td>
+        <td class="num">${num(l.price) != null ? money(num(l.price)) + (l.per === 'head' ? '/hd' : '/cwt') : ''}</td><td class="num">${money(lineAmount(l))}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td>Total</td><td class="num">${whole(saleHead(x))}</td><td></td><td class="num">${w ? whole(w) + ' lb' : ''}</td><td class="num">${allCwt && w ? money(g / w * 100) + '/cwt' : ''}</td><td class="num">${money(g)}</td></tr></tfoot>
+    </table></div>
+    <div class="ticket-foot">
+      <dl class="deds">${deds.length ? deds.map(([k, l]) => `<div><dt>${l}</dt><dd>${money(num(x[k]))}</dd></div>`).join('') : '<div><dt>Barn charges</dt><dd>none entered</dd></div>'}</dl>
+      <dl class="totals"><div><dt>Total charges</dt><dd>${money(saleDeductions(x))}</dd></div><div class="check"><dt>Check</dt><dd>${money(net)}</dd></div>
+        ${saleHead(x) ? `<div><dt>Per head</dt><dd>${money(net / saleHead(x))}</dd></div>` : ''}</dl>
+    </div>
+    ${off ? `<p class="warnline">The ticket says ${money(chk)}; these lines and charges add up to ${money(net)}. Check the numbers.</p>` : ''}
+    ${held.length ? `<p class="warnline">Still in medicine withdrawal on the sale date: ${held.map(l => esc(tagOf(l.animalId))).join(', ')}</p>` : ''}
+    ${x.notes ? `<p class="note">${esc(x.notes)}</p>` : ''}
+  </section>`;
+}
+function ticketLineHtml(l, n) {
+  const id = l.id || uid(), f = k => `tl-${k}-${id}`;
+  const animals = S.animals.filter(a => a.status === 'Active' || a.id === l.animalId).sort((a, b) => a.tag.localeCompare(b.tag, undefined, {numeric: true}));
+  return `<fieldset class="tline" data-id="${id}">
+    <legend>Animal or lot <span class="ln">${n}</span></legend>
+    <button type="button" class="btn ghost small danger tl-remove" aria-label="Remove line ${n}">Remove</button>
+    <div class="tgrid">
+      <div class="field"><label for="${f('head')}">Head</label><input id="${f('head')}" data-l="head" inputmode="numeric" value="${esc(l.head ?? 1)}"></div>
+      <div class="field"><label for="${f('tag')}">Tag</label><input id="${f('tag')}" data-l="tag" value="${esc(l.tag || '')}"></div>
+      <div class="field wide2"><label for="${f('desc')}">Description</label><input id="${f('desc')}" data-l="desc" list="descList" value="${esc(l.desc || '')}" placeholder="e.g. Steer feeder (BLK)"></div>
+      <div class="field"><label for="${f('weight')}">Weight (lb)</label><input id="${f('weight')}" data-l="weight" inputmode="decimal" value="${esc(l.weight ?? '')}"></div>
+      <div class="field"><label for="${f('price')}">Price ($)</label><input id="${f('price')}" data-l="price" inputmode="decimal" value="${esc(l.price ?? '')}"></div>
+      <div class="field"><label for="${f('per')}">Per</label><select id="${f('per')}" data-l="per"><option value="cwt"${l.per !== 'head' ? ' selected' : ''}>cwt</option><option value="head"${l.per === 'head' ? ' selected' : ''}>head</option></select></div>
+      <div class="field amt"><span class="label">Amount</span><output data-l="amount">${money(lineAmount(l))}</output></div>
+      <div class="field wide2"><label for="${f('animalId')}">From the herd list (optional)</label><select id="${f('animalId')}" data-l="animalId"><option value="">—</option>${animals.map(a => `<option value="${a.id}"${a.id === l.animalId ? ' selected' : ''}>${esc(a.tag + ' · ' + a.type + (owners().length > 1 ? ' · ' + ownerName(a.owner) : ''))}</option>`).join('')}</select></div>
+      <div class="field wide2"><label for="${f('comments')}">Comments</label><input id="${f('comments')}" data-l="comments" value="${esc(l.comments || '')}" placeholder="e.g. Fancy, Open"></div>
+    </div>
+  </fieldset>`;
+}
+function openTicket(rec) {
+  const x = rec || {date: today(), owner: ownerFilter !== 'all' ? ownerFilter : owners()[0].id, place: S.settings.saleBarn, what: 'Calves', lines: [{id: uid(), head: 1, per: 'cwt'}]};
+  editing = {special: 'ticket', rec: rec || null};
+  $('drawer').classList.add('wide');
+  $('drawerTitle').textContent = rec ? 'Edit sale ticket' : 'Record a sale ticket';
+  const whats = ['Calves', 'Feeder steers', 'Feeder heifers', 'Cull cows', 'Bred cows', 'Cow-calf pairs', 'Bull', 'Beef sold direct', 'Other'];
+  $('drawerBody').innerHTML = `<p class="lede" style="margin-top:12px">Copy the barn ticket: one line per animal or lot, then the barn’s charges once for the whole ticket.</p>
+    <div class="row2"><div class="field"><label for="tk-date">Sale date *</label><input type="date" id="tk-date" value="${esc(x.date || '')}"></div>
+      <div class="field"><label for="tk-owner">Whose</label><select id="tk-owner">${owners().map(o => `<option value="${o.id}"${o.id === x.owner ? ' selected' : ''}>${esc(o.name)}</option>`).join('')}</select></div></div>
+    <div class="row2"><div class="field"><label for="tk-place">Where</label><input id="tk-place" value="${esc(x.place || '')}"></div>
+      <div class="field"><label for="tk-ticket">Ticket number</label><input id="tk-ticket" value="${esc(x.ticket || '')}"></div></div>
+    <div class="row2"><div class="field"><label for="tk-what">What sold</label><select id="tk-what">${whats.map(w => `<option${w === x.what ? ' selected' : ''}>${w}</option>`).join('')}</select></div>
+      <div class="field"><label for="tk-lot">Group name (optional)</label><input id="tk-lot" value="${esc(x.lot || '')}"><span class="hint">Same name as when bought, for traded cattle.</span></div></div>
+    <datalist id="descList">${DESC_OPTIONS.map(d => `<option value="${esc(d)}">`).join('')}</datalist>
+    <div id="tk-lines">${saleLines(x).map((l, i) => ticketLineHtml(l, i + 1)).join('')}</div>
+    <button type="button" class="btn ghost" id="tk-addline" style="margin-top:10px">+ Add another animal or lot</button>
+    <fieldset class="tline deds-box"><legend>The barn’s charges (whole ticket)</legend>
+      <button type="button" class="btn ghost small" id="tk-fill" style="margin:6px 0 2px">Fill in the barn’s charges</button>
+      <span class="hint" style="display:block">Uses the rates in Settings &amp; data. Change any number to match the ticket.</span>
+      <div class="row2">${DEDS.map(([k, l]) => `<div class="field"><label for="tk-${k}">${l} ($)</label><input id="tk-${k}" data-ded="${k}" inputmode="decimal" value="${esc(x[k] ?? '')}"></div>`).join('')}</div>
+    </fieldset>
+    <div class="field"><label for="tk-check">Check amount on the ticket (optional)</label><input id="tk-check" inputmode="decimal" value="${esc(x.checkAmount ?? '')}"><span class="hint">If you type it, the book warns you when the lines and charges don’t add up to it.</span></div>
+    <div class="field"><label for="tk-notes">Notes</label><textarea id="tk-notes">${esc(x.notes || '')}</textarea></div>
+    <div class="computed" id="computed"></div>`;
+  $('drawerDelete').hidden = !rec; $('drawer').hidden = false;
+  const body = $('drawerBody');
+  body.oninput = e => {
+    const sel = e.target.closest('[data-l="animalId"]');
+    if (sel && sel.value) { const t = sel.closest('.tline').querySelector('[data-l="tag"]'); if (!t.value) t.value = tagOf(sel.value); }
+    updateTicket();
+  };
+  body.onchange = body.oninput;
+  body.onclick = e => {
+    if (e.target.id === 'tk-addline') {
+      const n = body.querySelectorAll('#tk-lines .tline').length + 1;
+      $('tk-lines').insertAdjacentHTML('beforeend', ticketLineHtml({id: uid(), head: 1, per: 'cwt'}, n));
+      body.querySelector('#tk-lines .tline:last-child [data-l="tag"]').focus(); updateTicket();
+    } else if (e.target.classList.contains('tl-remove')) {
+      const fs = e.target.closest('.tline');
+      if (body.querySelectorAll('#tk-lines .tline').length === 1) { fs.querySelectorAll('input').forEach(i => { i.value = i.dataset.l === 'head' ? '1' : ''; }); }
+      else fs.remove();
+      body.querySelectorAll('#tk-lines .ln').forEach((s, i) => { s.textContent = i + 1; });
+      updateTicket();
+    } else if (e.target.id === 'tk-fill') {
+      const c = barnCharges(readTicket().lines);
+      Object.entries(c).forEach(([k, v]) => { $('tk-' + k).value = v ? v.toFixed(2) : ''; });
+      updateTicket(); toast('Barn charges filled in');
+    }
+  };
+  updateTicket();
+  setTimeout(() => $('tk-date').focus(), 30);
+}
+const numOr = v => { v = String(v ?? '').trim(); if (v === '') return ''; const n = num(v); return n == null ? v : n; };
+function readTicket() {
+  const v = id => $(id).value.trim();
+  const lines = [...document.querySelectorAll('#tk-lines .tline')].map(fs => {
+    const q = k => fs.querySelector(`[data-l="${k}"]`).value.trim();
+    return {id: fs.dataset.id, head: numOr(q('head')), tag: q('tag'), desc: q('desc'), weight: numOr(q('weight')), price: numOr(q('price')), per: q('per'), animalId: q('animalId'), comments: q('comments')};
+  });
+  const r = {date: v('tk-date'), owner: v('tk-owner'), place: v('tk-place'), ticket: v('tk-ticket'), what: v('tk-what'), lot: v('tk-lot'), lines, checkAmount: numOr(v('tk-check')), notes: v('tk-notes')};
+  DEDS.forEach(([k]) => { r[k] = numOr(v('tk-' + k)); });
+  return r;
+}
+function updateTicket() {
+  const r = readTicket();
+  document.querySelectorAll('#tk-lines .tline').forEach((fs, i) => { fs.querySelector('[data-l="amount"]').textContent = money(lineAmount(r.lines[i])) || '$0.00'; });
+  const g = saleGross(r), d = saleDeductions(r), net = saleNet(r), head = saleHead(r);
+  let t = `${whole(head)} head · gross ${money(g)} · barn charges ${money(d)} · check ${money(net)}` + (head ? ` (${money(net / head)} a head)` : '');
+  const chk = num(r.checkAmount);
+  if (chk != null && Math.abs(chk - net) >= 0.01) t += `\n⚠ The ticket says ${money(chk)}, ${money(Math.abs(chk - net))} ${chk > net ? 'more' : 'less'} than these numbers.`;
+  const held = r.lines.filter(l => l.animalId && onHold(l.animalId, r.date));
+  if (held.length) t += '\n⚠ Still in medicine withdrawal on this date: ' + held.map(l => tagOf(l.animalId) + ' (' + onHold(l.animalId, r.date).product + ' until ' + fmtShort(clearDate(onHold(l.animalId, r.date))) + ')').join(', ');
+  const c = $('computed'); c.textContent = t; c.style.whiteSpace = 'pre-line';
+}
+function saveTicket() {
+  const r = readTicket();
+  r.lines = r.lines.filter(l => [l.tag, l.desc, l.weight, l.price, l.animalId, l.comments].some(x => x !== '' && x != null));
+  document.querySelectorAll('#drawerBody .bad').forEach(b => b.classList.remove('bad'));
+  const bad = [];
+  if (!r.date) bad.push($('tk-date'));
+  document.querySelectorAll('#tk-lines .tline').forEach(fs => ['head', 'weight', 'price'].forEach(k => { const el = fs.querySelector(`[data-l="${k}"]`); if (el.value.trim() && num(el.value) == null) bad.push(el); }));
+  DEDS.concat([['check']]).forEach(([k]) => { const el = $('tk-' + k); if (el && el.value.trim() && num(el.value) == null) bad.push(el); });
+  if (bad.length) { bad.forEach(el => el.closest('.field').classList.add('bad')); bad[0].focus(); toast(r.date ? 'Some numbers aren’t numbers' : 'Pick the sale date'); return; }
+  if (!r.lines.length) { toast('Add at least one animal or lot'); return; }
+  r.lines.forEach(l => { if (l.head === '') l.head = 1; });
+  const isNew = !editing.rec;
+  if (isNew) S.sales.push({id: uid(), ...r}); else Object.assign(editing.rec, r);
+  r.lines.forEach(l => { const a = l.animalId && animal(l.animalId); if (a && a.status === 'Active') { a.status = 'Sold'; a.statusDate = r.date; } });
+  save(); closeForm(); render(); toast(isNew ? 'Sale recorded' : 'Sale saved');
+}
+
 /* ------------------------------------------------------------ Excel + backups */
 const SHEETS = [
   ['Herd', 'animals', [['Tag', r => r.tag], ['Herd', r => ownerName(r.owner)], ['Type', r => r.type], ['Calf sex', r => r.sex || ''], ['Breed', r => r.breed || ''], ['Color / markings', r => r.markings || ''], ['Year born', r => r.birthYear || ''], ['Date born', r => r.birthDate || ''], ['Dam', r => r.damId ? tagOf(r.damId) : ''], ['Raised / bought', r => r.source || ''], ['Date bought', r => r.boughtDate || ''], ['Price paid', r => num(r.boughtPrice)], ['Weight bought', r => num(r.boughtWeight)], ['Bought from', r => r.boughtFrom || ''], ['Status', r => r.status], ['Status date', r => r.statusDate || ''], ['Calves', r => calvingsOf(r.id).length || ''], ['Next due', r => { const b = currentBreeding(r.id); return b ? dueDate(b) : ''; }], ['Notes', r => r.notes || '']]],
   ['Breeding', 'breedings', [['Cow', r => tagOf(r.cowId)], ['Herd', r => ownerName(r.owner)], ['Date bred / exposed', r => r.date], ['Bull', r => r.method === 'AI' ? 'AI' : (r.bullId ? tagOf(r.bullId) : '')], ['Preg check', r => r.pregCheck || ''], ['Checked on', r => r.pregDate || ''], ['Due', r => dueDate(r)], ['Notes', r => r.notes || '']]],
   ['Calvings', 'calvings', [['Date', r => r.date], ['Cow', r => tagOf(r.cowId)], ['Herd', r => ownerName(r.owner)], ['Calf tag', r => r.calfTag || ''], ['Calf', r => r.calfSex || ''], ['Birth weight', r => num(r.birthWeight)], ['Calving', r => r.ease || ''], ['Calf status', r => r.calfStatus || ''], ['Notes', r => r.notes || '']]],
   ['Bought', 'purchases', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Where', r => r.place || ''], ['Group', r => r.lot || ''], ['What', r => r.what || ''], ['Head', r => num(r.head)], ['Total weight', r => num(r.totalWeight)], ['$/cwt', r => num(r.pricePerCwt)], ['$/head', r => num(r.pricePerHead)], ['Fees', r => num(r.fees)], ['Trucking', r => num(r.trucking)], ['Total cost', r => +purchaseCost(r).toFixed(2)], ['Notes', r => r.notes || '']]],
-  ['Sold', 'sales', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Where', r => r.place || ''], ['Group', r => r.lot || ''], ['What', r => r.what || ''], ['Animals', r => (r.animalIds || []).map(tagOf).join(', ')], ['Head', r => num(r.head)], ['Total weight', r => num(r.totalWeight)], ['$/cwt', r => num(r.pricePerCwt)], ['$/head', r => num(r.pricePerHead)], ['Gross', r => +saleGross(r).toFixed(2)], ['Commission & fees', r => num(r.fees)], ['Trucking', r => num(r.trucking)], ['Net', r => +saleNet(r).toFixed(2)], ['Notes', r => r.notes || '']]],
+  ['Sale tickets', 'sales', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Where', r => r.place || ''], ['Ticket', r => r.ticket || ''], ['Group', r => r.lot || ''], ['What', r => r.what || ''], ['Head', r => saleHead(r)], ['Total weight', r => saleWeight(r)], ['Gross', r => saleGross(r)]]
+    .concat(DEDS.map(([k, l]) => [l, r => num(r[k])])).concat([['Total charges', r => saleDeductions(r)], ['Check', r => saleNet(r)], ['Notes', r => r.notes || '']])],
+  ['Sold animals', 'saleLines', [['Date', r => r.sale.date], ['Herd', r => ownerName(r.sale.owner)], ['Ticket', r => r.sale.ticket || ''], ['Tag', r => r.tag || ''], ['Head', r => num(r.head)], ['Description', r => r.desc || ''], ['Comments', r => r.comments || ''], ['Weight', r => num(r.weight)], ['Avg weight', r => num(r.head) && num(r.weight) ? Math.floor(num(r.weight) / num(r.head)) : ''], ['Price', r => num(r.price)], ['Per', r => r.per === 'head' ? 'head' : 'cwt'], ['Amount', r => lineAmount(r)]]],
   ['Expenses', 'expenses', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Kind', r => r.category], ['What', r => r.item || ''], ['Quantity', r => num(r.qty)], ['Unit', r => r.unit || ''], ['Miles', r => num(r.miles)], ['Cost', r => +expenseCost(r).toFixed(2)], ['Group', r => r.lot || ''], ['Notes', r => r.notes || '']]],
   ['Treatments', 'treatments', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Animals', r => r.herdWide ? 'Whole herd' : (r.animalIds || []).map(tagOf).join(', ')], ['Medicine', r => r.product], ['Dose', r => r.dose || ''], ['Given', r => r.route || ''], ['Withdrawal days', r => num(r.withdrawalDays)], ['Clear to sell', r => clearDate(r)], ['Why', r => r.reason || ''], ['Given by', r => r.givenBy || ''], ['Notes', r => r.notes || '']]],
   ['Medicine cabinet', 'medicines', [['Medicine', r => r.name], ['Kind', r => r.kind || ''], ['Herd', r => ownerName(r.owner)], ['Withdrawal days', r => num(r.withdrawalDays)], ['Expires', r => r.expires || ''], ['On hand', r => num(r.onHand)], ['Unit', r => r.unit || ''], ['Cost', r => num(r.cost)], ['Bought', r => r.boughtDate || ''], ['Lot / serial', r => r.lotNo || ''], ['Notes', r => r.notes || '']]],
@@ -947,7 +1161,8 @@ function exportXlsx() {
   if (!needXlsx()) return;
   const wb = XLSX.utils.book_new();
   SHEETS.forEach(([name, key, cols]) => {
-    const rows = S[key].slice().sort((a, b) => (a.date || a.tag || a.name || '') < (b.date || b.tag || b.name || '') ? -1 : 1).map(r => Object.fromEntries(cols.map(([h, g]) => [h, g(r) ?? ''])));
+    const src = key === 'saleLines' ? S.sales.flatMap(x => saleLines(x).map(l => ({...l, sale: x, date: x.date}))) : S[key];
+    const rows = src.slice().sort((a, b) => (a.date || a.tag || a.name || '') < (b.date || b.tag || b.name || '') ? -1 : 1).map(r => Object.fromEntries(cols.map(([h, g]) => [h, g(r) ?? ''])));
     const ws = XLSX.utils.json_to_sheet(rows, {header: cols.map(c => c[0])});
     ws['!cols'] = cols.map(([h]) => ({wch: Math.max(10, Math.min(40, h.length + 4))}));
     XLSX.utils.book_append_sheet(wb, ws, name);
@@ -964,7 +1179,7 @@ async function restoreJson() {
     const d = JSON.parse(await f.text());
     if (!d || d.version !== 1 || !Array.isArray(d.animals)) throw Error('That is not a Herd Book backup file.');
     if (!confirm('Replace everything in this book with the backup from ' + (d.savedAt ? new Date(d.savedAt).toLocaleString() : 'that file') + '?')) return;
-    const b = blank(); S = {...b, ...d, settings: {...b.settings, ...d.settings}, beef: {...b.beef, ...d.beef}, bid: {...b.bid, ...d.bid}};
+    S = normalize(d);
     save(); render(); toast('Backup restored');
   } catch (e) { alert('Could not restore: ' + e.message); }
 }
@@ -1049,6 +1264,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('drawerForm').addEventListener('submit', e => {
     if (editing && editing.special === 'turnin') { e.preventDefault(); saveTurnIn(); return; }
     if (editing && editing.special === 'week') { e.preventDefault(); saveWeek(); return; }
+    if (editing && editing.special === 'ticket') { e.preventDefault(); saveTicket(); return; }
     submitForm(e);
   });
   $('tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; tab = b.dataset.tab; closeForm(); render(); $('view').scrollTop = 0; });
@@ -1061,7 +1277,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const view = $('view');
   view.addEventListener('click', e => {
-    const add = e.target.closest('[data-add]'); if (add) { openForm(add.dataset.add); return; }
+    const add = e.target.closest('[data-add]'); if (add) { if (add.dataset.add === 'sales') openTicket(); else openForm(add.dataset.add); return; }
+    const tk = e.target.closest('[data-ticket]'); if (tk) { const rec = S.sales.find(r => r.id === tk.dataset.ticket); if (rec) openTicket(rec); return; }
     const row = e.target.closest('tr[data-col]'); if (row) { const key = row.dataset.col, rec = S[key].find(r => r.id === row.dataset.id); if (rec) openForm(key, rec); return; }
     const id = e.target.id;
     if (id === 'turnIn') openTurnIn();
@@ -1081,11 +1298,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (t.dataset.bid) { S.bid[t.dataset.bid] = t.value; save(true); calcBid(); return; }
     if (t.dataset.beef) { S.beef[t.dataset.beef] = t.type === 'checkbox' ? t.checked : t.value; save(true); calcBeef(); return; }
     if (t.dataset.set) { const k = t.dataset.set; S.settings[k] = (k === 'gestation' || k === 'mileRate') ? (num(t.value) ?? t.value) : t.value; save(true); $('bookTitle').textContent = S.settings.farmName || "Michelle’s Herd Book"; return; }
+    if (t.dataset.rate) { S.settings.barnRates[t.dataset.rate] = num(t.value) ?? t.value; save(true); return; }
     if (t.dataset.ownerName) { const o = owners().find(x => x.id === t.dataset.ownerName); if (o) { o.name = t.value; save(true); renderOwnerSwitch(); } }
   });
   view.addEventListener('change', e => {
     const t = e.target;
-    if (t.id === 'herdStatus' || t.id === 'expYear') { searches[t.id] = t.value; render(); }
+    if (t.id === 'herdStatus' || t.id === 'expYear' || t.id === 'saleYear') { searches[t.id] = t.value; render(); }
     else if (t.id === 'mktClass') { searches.mktClass = t.value; drawChart(); }
     else if (t.id === 'imp-sheet') showImport(t.value);
     else if (t.dataset.beef && t.type === 'checkbox') { S.beef[t.dataset.beef] = t.checked; save(true); calcBeef(); }
