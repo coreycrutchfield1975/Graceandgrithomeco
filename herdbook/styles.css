@@ -161,6 +161,15 @@ table.rows .tag { font: 700 1rem var(--slab); color: var(--pasture); }
 .ticket-foot .totals .check dt { color: var(--ink); }
 .warnline { margin: 10px 0 0; padding: 8px 12px; border-radius: 8px; background: var(--gold-soft); color: #7a4f05; font-weight: 600; font-size: .92rem; }
 
+/* cow profit */
+.inline-sel { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: .92rem; color: var(--muted); }
+.cow-table .rank { display: inline-block; min-width: 26px; color: var(--muted); font-weight: 700; font-size: .85rem; }
+.cow-table tr.open td { background: #f4f6ef; }
+.cow-table .up { color: var(--ok); font-weight: 700; }
+.cow-table .down { color: var(--barn); font-weight: 700; }
+.cow-detail td { background: #fbfbf8; padding: 6px 12px 14px !important; }
+.cow-calves table.mini { font-size: .9rem; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+
 /* calculators */
 .calc { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 18px; align-items: start; }
 .calc .panel > h4 + .field { margin-top: 4px; }
