@@ -195,6 +195,18 @@ function barnCharges(lines) {
     vet: r2(sum(lines.filter(isCowLine), l => num(l.head)) * (num(R.vetPerCow) || 0) + sum(lines.filter(isHeiferLine), l => num(l.head)) * (num(R.vetPerHeifer) || 0))
   };
 }
+// what an animal sold for and where: from the sale ticket line she's linked on, or what was typed on her record
+function soldInfo(a) {
+  const hits = [];
+  S.sales.forEach(x => saleLines(x).forEach(l => { if (l.animalId === a.id) hits.push({x, l}); }));
+  hits.sort((p, q) => p.x.date < q.x.date ? 1 : -1);
+  if (hits.length) {
+    const {x, l} = hits[0], g = saleGross(x), amt = lineAmount(l);
+    return {amt, net: r2(amt - (g ? saleDeductions(x) * amt / g : 0)), where: x.place || '', date: x.date, ticket: true};
+  }
+  const amt = num(a.soldPrice);
+  return amt == null && !a.soldWhere ? null : {amt, net: null, where: a.soldWhere || '', date: a.statusDate, ticket: false};
+}
 function expenseCost(e) { const c = num(e.cost); if (c != null) return c; const m = num(e.miles); return m != null ? m * (Number(S.settings.mileRate) || 0) : 0; }
 
 /* ------------------------------------------------------------ choices */
@@ -233,6 +245,8 @@ const COLS = {
       {k: 'boughtFrom', label: 'Bought from / where', type: 'text', half: true, show: r => r.source === 'Bought'},
       {k: 'status', label: 'Status', type: 'select', options: ['Active', 'Sold', 'Died', 'Culled'], def: 'Active'},
       {k: 'statusDate', label: 'Date', type: 'date', show: r => r.status && r.status !== 'Active'},
+      {k: 'soldPrice', label: 'Sold for ($)', type: 'money', half: true, show: r => r.status === 'Sold', hint: 'Filled in from the sale ticket when she’s on one'},
+      {k: 'soldWhere', label: 'Where sold', type: 'text', half: true, show: r => r.status === 'Sold'},
       {k: 'notes', label: 'Notes', type: 'textarea'}
     ],
     validate: (r, old) => S.animals.some(a => a.id !== (old && old.id) && a.status === 'Active' && a.tag.trim().toLowerCase() === String(r.tag).trim().toLowerCase() && a.owner === r.owner) ? {tag: 'Another active animal in this herd already has this tag.'} : null
@@ -631,9 +645,19 @@ const VIEWS = {
       {label: 'Status', html: r => r.status === 'Active' ? (onHold(r.id) ? '<span class="pill warn">withdrawal</span>' : '<span class="pill ok">Active</span>') : `<span class="pill">${esc(r.status)}</span>`}
     ];
     const st = searches.herdStatus || 'Active';
+    // on the Sold (or All) list, show what each one brought and where
+    if (st === 'Sold' || st === 'All') {
+      const si = r => r.status === 'Sold' ? soldInfo(r) : null;
+      cols.splice(cols.length - 1, 0,
+        {label: 'Sold', get: r => { const i = si(r); return i && i.date ? fmtShort(i.date) : (r.status === 'Sold' && r.statusDate ? fmtShort(r.statusDate) : ''); }, sm: true},
+        {label: 'Where sold', get: r => { const i = si(r); return i ? i.where : ''; }},
+        {label: 'Sold for', num: true, get: r => { const i = si(r); return i && i.amt != null ? money(i.amt) : ''; }, total: rs => money(sum(rs, r => { const i = si(r); return i && i.amt != null ? i.amt : 0; }))},
+        {label: 'After barn fees', num: true, sm: true, get: r => { const i = si(r); return i && i.net != null ? money(i.net) : ''; }});
+      if (st === 'Sold') { cols.splice(cols.findIndex(c => c.label === 'Due'), 1); cols.splice(cols.findIndex(c => c.label === 'Last calved'), 1); }
+    }
     return `
       <h3 class="sec">Herd</h3>
-      <p class="lede">Every animal, by tag. Select a row to see or change it.</p>
+      <p class="lede">${st === 'Sold' ? 'Every animal you’ve sold: what it brought and where. “Sold for” comes from the sale ticket when the animal is picked on a ticket line (“From the herd list”); otherwise open the animal and type it in.' : 'Every animal, by tag. Select a row to see or change it. Choose “Sold” to see what each sold animal brought and where.'}</p>
       <div class="toolbar">
         <button type="button" class="btn" data-add="animals">Add animal</button>
         ${searchBox('herdSearch', 'Search tags, breed, notes')}
@@ -1220,13 +1244,17 @@ function saveTicket() {
   r.lines.forEach(l => { if (l.head === '') l.head = 1; });
   const isNew = !editing.rec;
   if (isNew) S.sales.push({id: uid(), ...r}); else Object.assign(editing.rec, r);
-  r.lines.forEach(l => { const a = l.animalId && animal(l.animalId); if (a && a.status === 'Active') { a.status = 'Sold'; a.statusDate = r.date; } });
+  r.lines.forEach(l => {
+    const a = l.animalId && animal(l.animalId); if (!a) return;
+    if (a.status === 'Active') { a.status = 'Sold'; a.statusDate = r.date; }
+    if (a.status === 'Sold') { a.soldPrice = lineAmount(l); a.soldWhere = r.place || ''; }
+  });
   save(); closeForm(); render(); toast(isNew ? 'Sale recorded' : 'Sale saved');
 }
 
 /* ------------------------------------------------------------ Excel + backups */
 const SHEETS = [
-  ['Herd', 'animals', [['Tag', r => r.tag], ['Herd', r => ownerName(r.owner)], ['Type', r => r.type], ['Calf sex', r => r.sex || ''], ['Breed', r => r.breed || ''], ['Color / markings', r => r.markings || ''], ['Year born', r => r.birthYear || ''], ['Date born', r => r.birthDate || ''], ['Dam', r => r.damId ? tagOf(r.damId) : ''], ['Raised / bought', r => r.source || ''], ['Date bought', r => r.boughtDate || ''], ['Price paid', r => num(r.boughtPrice)], ['Weight bought', r => num(r.boughtWeight)], ['Bought from', r => r.boughtFrom || ''], ['Status', r => r.status], ['Status date', r => r.statusDate || ''], ['Calves', r => calvingsOf(r.id).length || ''], ['Next due', r => { const b = currentBreeding(r.id); return b ? dueDate(b) : ''; }], ['Notes', r => r.notes || '']]],
+  ['Herd', 'animals', [['Tag', r => r.tag], ['Herd', r => ownerName(r.owner)], ['Type', r => r.type], ['Calf sex', r => r.sex || ''], ['Breed', r => r.breed || ''], ['Color / markings', r => r.markings || ''], ['Year born', r => r.birthYear || ''], ['Date born', r => r.birthDate || ''], ['Dam', r => r.damId ? tagOf(r.damId) : ''], ['Raised / bought', r => r.source || ''], ['Date bought', r => r.boughtDate || ''], ['Price paid', r => num(r.boughtPrice)], ['Weight bought', r => num(r.boughtWeight)], ['Bought from', r => r.boughtFrom || ''], ['Status', r => r.status], ['Status date', r => r.statusDate || ''], ['Sold for', r => { const i = r.status === 'Sold' && soldInfo(r); return i && i.amt != null ? i.amt : ''; }], ['Where sold', r => { const i = r.status === 'Sold' && soldInfo(r); return i ? i.where : ''; }], ['Calves', r => calvingsOf(r.id).length || ''], ['Next due', r => { const b = currentBreeding(r.id); return b ? dueDate(b) : ''; }], ['Notes', r => r.notes || '']]],
   ['Breeding', 'breedings', [['Cow', r => tagOf(r.cowId)], ['Herd', r => ownerName(r.owner)], ['Date bred / exposed', r => r.date], ['Bull', r => r.method === 'AI' ? 'AI' : (r.bullId ? tagOf(r.bullId) : '')], ['Preg check', r => r.pregCheck || ''], ['Checked on', r => r.pregDate || ''], ['Due', r => dueDate(r)], ['Notes', r => r.notes || '']]],
   ['Calvings', 'calvings', [['Date', r => r.date], ['Cow', r => tagOf(r.cowId)], ['Herd', r => ownerName(r.owner)], ['Calf tag', r => r.calfTag || ''], ['Calf', r => r.calfSex || ''], ['Birth weight', r => num(r.birthWeight)], ['Calving', r => r.ease || ''], ['Calf status', r => r.calfStatus || ''], ['Notes', r => r.notes || '']]],
   ['Bought', 'purchases', [['Date', r => r.date], ['Herd', r => ownerName(r.owner)], ['Where', r => r.place || ''], ['Group', r => r.lot || ''], ['What', r => r.what || ''], ['Head', r => num(r.head)], ['Total weight', r => num(r.totalWeight)], ['$/cwt', r => num(r.pricePerCwt)], ['$/head', r => num(r.pricePerHead)], ['Fees', r => num(r.fees)], ['Trucking', r => num(r.trucking)], ['Total cost', r => +purchaseCost(r).toFixed(2)], ['Notes', r => r.notes || '']]],
