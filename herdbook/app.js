@@ -64,6 +64,11 @@ function normalize(s) {
     x.otherFees = x.fees || '';
     ['head', 'totalWeight', 'pricePerCwt', 'pricePerHead', 'fees'].forEach(k => delete x[k]);
   });
+  // the herd is Angus: fill in any breed left blank, once (so a breed cleared on purpose stays cleared)
+  if (!out.settings.angusFilled) {
+    out.animals.forEach(a => { if (!String(a.breed || '').trim()) a.breed = 'Angus'; });
+    out.settings.angusFilled = true;
+  }
   return out;
 }
 function load() {
@@ -216,7 +221,7 @@ const COLS = {
       {k: 'owner', label: 'Whose', type: 'owner', required: true},
       {k: 'type', label: 'Type', type: 'select', options: TYPES, required: true, def: 'Cow'},
       {k: 'sex', label: 'Calf sex', type: 'select', options: ['', 'Bull calf', 'Heifer calf', 'Steer'], show: r => r.type === 'Calf'},
-      {k: 'breed', label: 'Breed', type: 'text', half: true},
+      {k: 'breed', label: 'Breed', type: 'text', half: true, def: 'Angus'},
       {k: 'markings', label: 'Color / markings', type: 'text', half: true},
       {k: 'birthYear', label: 'Year born', type: 'number', half: true, show: r => r.type !== 'Calf'},
       {k: 'birthDate', label: 'Date born', type: 'date', half: true, show: r => r.type === 'Calf'},
@@ -264,7 +269,7 @@ const COLS = {
       if (!isNew || !r.addCalf || r.calfStatus !== 'Alive') return;
       const cow = animal(r.cowId);
       S.animals.push({id: uid(), tag: r.calfTag || ('Calf of ' + (cow ? cow.tag : '?')), owner: cow ? cow.owner : owners()[0].id, type: 'Calf',
-        sex: r.calfSex || '', birthDate: r.date, damId: r.cowId, source: 'Raised', status: 'Active', breed: cow ? cow.breed : '', notes: ''});
+        sex: r.calfSex || '', birthDate: r.date, damId: r.cowId, source: 'Raised', status: 'Active', breed: (cow && cow.breed) || 'Angus', notes: ''});
     }
   },
   purchases: {
@@ -1305,7 +1310,7 @@ function runImport() {
     if (S.animals.some(a => a.owner === owner && a.status === 'Active' && a.tag.toLowerCase() === tag.toLowerCase())) { skipped++; return; }
     const by = String(map.birthYear ? row[map.birthYear] : '').trim();
     const year = /^\d{4}$/.test(by) ? by : (/^\d{1,2}$/.test(by) ? String(new Date().getFullYear() - Number(by)) : (dateOf(by) || '').slice(0, 4));
-    S.animals.push({id: uid(), tag, owner, type: typeOf(map.type ? row[map.type] : ''), breed: map.breed ? String(row[map.breed]).trim() : '', markings: map.markings ? String(row[map.markings]).trim() : '',
+    S.animals.push({id: uid(), tag, owner, type: typeOf(map.type ? row[map.type] : ''), breed: (map.breed ? String(row[map.breed]).trim() : '') || 'Angus', markings: map.markings ? String(row[map.markings]).trim() : '',
       birthYear: year, source: map.boughtDate && row[map.boughtDate] ? 'Bought' : 'Raised', boughtDate: map.boughtDate ? dateOf(row[map.boughtDate]) : '', boughtPrice: map.boughtPrice ? num(row[map.boughtPrice]) ?? '' : '',
       status: 'Active', notes: map.notes ? String(row[map.notes]).trim() : ''});
     added++;
