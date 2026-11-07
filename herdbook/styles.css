@@ -212,3 +212,15 @@ table.rows .tag { font: 700 1rem var(--slab); color: var(--pasture); }
   .book { position: static; width: auto; height: auto; box-shadow: none; }
   .book-body { overflow: visible; }
 }
+
+/* ------------------------------------------------------------ cloud sync */
+.sync-status { font-size: .8em; color: var(--grass); margin-left: .5em; }
+.sync-status.sync-off { color: var(--barn); }
+.sync-status.sync-on { color: var(--grass); }
+.pin-label { margin-left: auto; font-size: .8em; opacity: .7; }
+.pin-label input { width: 5em; }
+.land-pin { margin-top: .5rem; font-size: .85rem; color: rgba(255,255,255,.7); }
+.land-pin label { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.land-pin input { width: 6em; padding: .25rem .4rem; border: 1px solid rgba(255,255,255,.3); border-radius: .35rem; background: rgba(0,0,0,.2); color: #fff; }
+.land-pin small { display: block; font-size: .75rem; opacity: .7; margin-top: .2rem; }
+.book-foot { display: flex; align-items: center; flex-wrap: wrap; gap: .3em; }

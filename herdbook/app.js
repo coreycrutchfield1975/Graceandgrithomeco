@@ -1,11 +1,12 @@
 /* Herd Book — a cattle record book for a cow-calf herd and weekly sale-barn trading.
-   Everything is kept in this browser (localStorage), optionally mirrored to a folder
-   the owner picks (e.g. OneDrive) and exportable to Excel. No server, no account.
+   Kept in this browser (localStorage), synced to Supabase so the same book opens
+   on any device (phone, laptop) after entering the PIN once, and exportable to Excel.
    All user text is escaped before it is put into the page. */
 'use strict';
 
 /* ------------------------------------------------------------ basics */
 const KEY = 'herdbook.v1';
+const PIN_KEY = 'herdbook.pin';
 const FARMINGTON_REPORT = 'https://www.ams.usda.gov/mnreports/AMS_1812.pdf';
 const MMN = 'https://mymarketnews.ams.usda.gov/';
 const $ = id => document.getElementById(id);
@@ -79,7 +80,89 @@ function load() {
   return blank();
 }
 let S = load();
+let cloudPin = localStorage.getItem(PIN_KEY) || '';
+let cloudTimer = 0, cloudBusy = false, cloudOnline = false;
 let ownerFilter = 'all';
+
+/* ------------------------------------------------------------ cloud sync (Supabase) */
+// Same project as the gallery; one JSON blob per PIN, no auth account needed.
+const SUPABASE_URL = 'https://ljznxojddfnfwnedhxzu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqem54b2pkZGZuZnduZWRoeHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTg2OTEsImV4cCI6MjA5NDY3NDY5MX0.juN2sGipRnNKDX604Hvj_ELt2CeMnBXmzU9HBfTvR4g'; // anon key — safe for client-side (RLS protected)
+
+function cloudHeaders() {
+  return {'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'};
+}
+
+// Push the current book state to Supabase (upsert by PIN)
+function syncUp() {
+  if (!cloudPin) return;
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(async () => {
+    if (cloudBusy) return; cloudBusy = true;
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/herdbooks?pin=eq.' + encodeURIComponent(cloudPin), {
+        method: 'POST',
+        headers: {...cloudHeaders(), 'Prefer': 'return=minimal'},
+        body: JSON.stringify({pin: cloudPin, data: S, saved_at: S.savedAt || new Date().toISOString()})
+      });
+      if (!res.ok && res.status !== 409) throw Error('HTTP ' + res.status);
+      if (res.status === 409 || !res.ok) {
+        const u = await fetch(SUPABASE_URL + '/rest/v1/herdbooks?pin=eq.' + encodeURIComponent(cloudPin), {
+          method: 'PATCH',
+          headers: cloudHeaders(),
+          body: JSON.stringify({data: S, saved_at: S.savedAt || new Date().toISOString()})
+        });
+        if (!u.ok) throw Error('HTTP ' + u.status);
+      }
+      cloudOnline = true;
+      updateSyncStatus();
+    } catch (e) {
+      cloudOnline = false;
+      updateSyncStatus();
+    }
+    cloudBusy = false;
+  }, 800);
+}
+
+// Pull the latest book from Supabase (returns the data or null)
+async function syncDown() {
+  if (!cloudPin) return null;
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/herdbooks?pin=eq.' + encodeURIComponent(cloudPin) + '&select=data,saved_at&limit=1', {
+      headers: cloudHeaders()
+    });
+    if (!res.ok) throw Error('HTTP ' + res.status);
+    const rows = await res.json();
+    if (rows.length > 0 && rows[0].data) {
+      cloudOnline = true;
+      return {data: rows[0].data, savedAt: rows[0].saved_at};
+    }
+    cloudOnline = false;
+    return null;
+  } catch (e) {
+    cloudOnline = false;
+    return null;
+  }
+}
+
+// Try to pull from cloud on startup; if cloud is newer, use it
+async function cloudInit() {
+  if (!cloudPin) return;
+  const cloud = await syncDown();
+  if (cloud && cloud.data && cloud.data.savedAt && (!S.savedAt || cloud.data.savedAt > S.savedAt)) {
+    S = normalize(cloud.data);
+    save(true);
+    render();
+  }
+}
+
+// Sync status indicator
+function updateSyncStatus() {
+  const el = $('syncStatus'); if (!el) return;
+  if (!cloudPin) { el.textContent = ''; el.className = 'sync-status'; return; }
+  el.className = 'sync-status ' + (cloudOnline ? 'sync-on' : 'sync-off');
+  el.textContent = cloudOnline ? '\u2601 Synced' : '\u2601 Offline';
+}
 let tab = 'overview';
 
 const owners = () => S.settings.owners;
@@ -95,6 +178,7 @@ function save(quiet) {
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) { saveLine('Could not save on this device — export a backup now (Settings & data).', true); return; }
   if (folder) { clearTimeout(folderTimer); folderTimer = setTimeout(writeFolder, 400); }
+  syncUp();
   saveLine();
   if (!quiet) renderGlance();
 }
@@ -1422,5 +1506,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // reconnect a remembered folder silently when the browser still allows it
   recallFolder().then(async h => { if (h && h.queryPermission && (await h.queryPermission({mode: 'readwrite'})) === 'granted') useFolder(h); });
+  // pull from cloud if a PIN was set on this device before
+  cloudInit();
   if (location.hash === '#book') openBook();
+
+  // Cloud PIN inputs (landing + footer)
+  const landPinEl = $('landPin');
+  if (landPinEl) {
+    landPinEl.value = cloudPin;
+    landPinEl.addEventListener('input', () => {
+      cloudPin = landPinEl.value.trim();
+      localStorage.setItem(PIN_KEY, cloudPin);
+      const footPin = $('cloudPinInput'); if (footPin) footPin.value = cloudPin;
+      if (cloudPin) { cloudInit(); updateSyncStatus(); }
+    });
+  }
+  const footPinEl = $('cloudPinInput');
+  if (footPinEl) {
+    footPinEl.value = cloudPin;
+    footPinEl.addEventListener('input', () => {
+      cloudPin = footPinEl.value.trim();
+      localStorage.setItem(PIN_KEY, cloudPin);
+      if (landPinEl) landPinEl.value = cloudPin;
+      if (cloudPin) { cloudInit(); updateSyncStatus(); }
+    });
+  }
+  updateSyncStatus();
 });

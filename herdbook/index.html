@@ -24,6 +24,7 @@
     <h1 id="landTitle">Michelle’s Herd Book</h1>
     <p class="land-sub" id="landSub">Every cow, calf, sale and dollar, in one place.</p>
     <button type="button" class="land-open" id="openBook">Open the herd book</button>
+    <div class="land-pin"><label>Cloud sync PIN <input id="landPin" type="password" inputmode="numeric" placeholder="4+ digits" size="8"></label><small>Enter the same PIN on any device to sync your herd book.</small></div>
     <ul class="land-glance" id="landGlance" aria-label="At a glance"></ul>
   </div>
 </main>
@@ -37,7 +38,7 @@
   </header>
   <nav class="tabs" aria-label="Sections" id="tabs"></nav>
   <div class="book-body" id="view" tabindex="-1"></div>
-  <footer class="book-foot" id="saveLine">Saved on this device.</footer>
+  <footer class="book-foot"><span id="saveLine">Saved on this device.</span> <span class="sync-status" id="syncStatus"></span> <label class="pin-label">Cloud PIN: <input id="cloudPinInput" type="password" inputmode="numeric" placeholder="4+ digits" size="6"></label></footer>
 
   <!-- Entry drawer -->
   <section class="drawer" id="drawer" hidden aria-labelledby="drawerTitle">
